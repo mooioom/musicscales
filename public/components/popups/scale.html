@@ -1,0 +1,550 @@
+<style>
+    .scale-popup{
+        position: relative;
+    }
+    .scale-popup .content{
+        position: relative;
+        height: 100%;
+    }
+    .scale-popup .editor{
+        position: relative;
+        top: 0;
+        background: #fff;
+        width: 100%;
+        height: 100%;
+    }
+    .scale-popup .scale-settings{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+        top:0;
+    }
+    .scale-popup .scale-settings .setting{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .scale-popup .scale-settings .setting > .value{
+        width: 100px;
+        text-align: end;
+    }
+    /* .scale-popup .edit-mode .title{
+        font-size: 18px;
+        text-align: center;
+        padding: 5px;
+        border-bottom: 1px solid #efefef;
+    } */
+    .scale-popup .name input{
+        width: 100%;
+        border: none;
+        text-align: center;
+        font-size: 25px;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+    .scale-popup .menu{
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+    .scale-popup .menu > div{
+        display: flex;
+    }
+    .scale-popup .menu > div > div{
+        cursor: pointer;
+    }
+    .scale-popup .menu img{
+        width: 30px;
+        height: 25px;
+    }
+    .scale-popup .menu .menu-button{
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    .scale-popup .steps{
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .scale-popup .steps .step{
+        display: flex;
+        height: 50px;
+        cursor: pointer;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        flex: 0 0 33.3%;
+    }
+    .scale-popup .steps .menu-button{
+        display: inline-block;
+        width: 45px;
+        cursor: pointer;
+    }
+    .scale-popup .octave:not(:empty){
+        text-align: center;
+        background: #f5f5f5;
+        padding: 10px;
+    }
+    .scale-popup .edit-scale-notes{
+        padding: 10px;
+        display: flex;
+        flex-flow: wrap;
+    }
+    .scale-popup .edit-scale-notes > div{
+        display: flex;
+        width: 100%;
+        margin-bottom: 6px;
+    }
+    .scale-popup .edit-scale-notes > div:nth-child(odd){
+        flex-direction: row-reverse;
+        align-items: flex-end;
+    }
+    .scale-popup .edit-scale-notes .note{
+        width: 20%;
+        height: 50px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .scale-popup .edit-scale-notes .note.root{}
+    .scale-popup .edit-scale-notes .note.root .note-content{}
+    .scale-popup .edit-scale-notes .note.root .note-content::after{
+        position: absolute;
+        content: ' ';
+        width: 10px;
+        height: 10px;
+        background-color: var(--select-color);
+        border-radius: 20px;
+        top:5px;
+        left: 5px;
+    }
+    .scale-popup .note-content{
+        position: relative;
+        pointer-events: none;
+        font-size: 27px;
+        margin: 3px;
+        background: #efefef;
+        font-weight: bold;
+        border-radius: 3px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .scale-popup .edit-scale-notes .note.selected  .note-content{
+        background-color: var(--select-color);
+        color: #fff;
+    }
+    .scale-popup .edit-scale-notes .note.playing  .note-content{
+        background-color: #333 !important;
+        color: #fff;
+    }
+    .scale-popup .save{
+        width: 100%;
+        font-size: 25px;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        background-color: var(--select-color);
+        color: #fff;
+        box-sizing: border-box;
+    }
+    .scale-popup .save{
+
+    }
+    .scale-popup .bottom-bar{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+</style>
+<script>
+    this.getOptions = () => {
+        let steps = [];
+        Object.keys(app.getScales()).forEach((scale, id) => {
+            steps.push({
+                id,
+                title: app.getScales()[scale].title,
+                value: scale,
+            });
+        })
+        return steps;
+    }
+
+    this.setScale = (option) => {
+        app.set({
+            scale: option.value,
+            mode: 1,
+        });
+        // popup.hide();
+        this.setEditData();
+        app.change();
+    }
+
+    this.setEditData = ()=>{
+
+        const scale = app.getScales()[app.settings.scale];
+
+        this.editData = {
+            title: app.getCustomScales()[scale.title] ? scale.title : `New ${scale.title}`,
+            steps: [...scale.steps],
+            originalSteps: [...scale.steps],
+            scale: {...scale},
+            selectedStep: null,
+            stepSize: 0.25,
+            octave: 3,
+            sequencialNotation: !scale.noSequencialNotation,
+        }
+
+    }
+
+    this.showSettings = false;
+
+    this.setEditData();
+
+    this.titleChange = (e)=>{
+        this.editData.title = e.target.value;
+        this.render();
+    }
+
+    this.stepChange = (value, id)=>{
+        this.editData.steps[id] = Number(value);
+        this.render();
+    }
+
+    this.getNotes = ()=>{
+
+        let scale = nigun.getScale({
+            root: app.settings.key + this.editData.octave,
+            steps: this.editData.steps,
+            shift: app.settings.mode - 1,
+            align: this.editData.sequencialNotation,
+        })
+
+        return scale.slice(0, (this.editData.steps.length * 2) + 1);
+
+    }
+
+    this.showSelected = ()=>{
+        const id = this.editData.selectedStep;
+        if(id === null) return;
+        Array.from(document.querySelectorAll('.scale-popup .note')).forEach(($n, idx)=>{
+            $n.classList.remove('selected');
+            if(idx === id || idx === id + 1) $n.classList.add('selected');
+        })
+    }
+
+    this.selectStep = (id)=>{
+        this.editData.selectedStep = id;
+        this.render();
+    }
+
+    this.getTotalTones = ()=>{
+        return this.editData.steps.reduce((a,b)=>{
+            a+=b;
+            return a;
+        }, 0)
+    }
+
+    let source = null;
+    let isDragging = null;
+
+    const startNote = (note)=>{
+        source = nigun.instruments.synth1.startFrequency(note.fq);
+        source.$el = note.$el;
+        note.$el.classList.add('playing');
+    }
+
+    this.playNote = (note)=>{
+        startNote(note);
+        isDragging = true;
+    }
+
+    this.releaseNote = (note)=>{
+        if (isDragging) {
+            source._stop();
+            source.$el.classList.remove('playing');
+            isDragging = false;
+        }
+    }
+
+    const mousemove = (ev)=>{
+
+        if (isDragging) {
+            let target = ev.target;
+            if (ev.touches) target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY);
+            if (!target || this.dragTarget === target || !target.note) return;
+            if (source) {
+                source._stop();
+                source.$el.classList.remove('playing');
+            }
+            startNote(target.note);
+            this.dragTarget = target;
+        }
+
+    }
+
+    document.removeEventListener('mouseup', this.releaseNote);
+    document.addEventListener('mouseup', this.releaseNote);
+
+    document.removeEventListener('mousemove', mousemove);
+    document.removeEventListener('touchmove', mousemove);
+    document.addEventListener('mousemove', mousemove);
+    document.addEventListener('touchmove', mousemove);
+
+    this.onrender = ()=>{
+
+        this.notes.innerHTML = '';
+
+        let notes = this.getNotes();
+
+        let $container = document.createElement('div');
+
+        notes.forEach((note, idx)=>{
+
+            if(idx % 5 === 0){
+                this.notes.appendChild($container);
+                $container = document.createElement('div');
+            }
+
+            const $note = document.createElement('div');
+
+            note.$el = $note;
+
+            $note.classList.add('note');
+
+            if(note.scaleDegree === 1) $note.classList.add('root');
+
+            $note.onmousedown=()=>{this.playNote(note)};
+            $note.ontouchstart=()=>{this.playNote(note)};
+            $note.onmouseup=()=>{this.releaseNote(note)};
+            $note.ontouchend=()=>{this.releaseNote(note)};
+
+            $note.note = note;
+
+            $note.$content = document.createElement('div');
+            $note.$content.classList.add('note-content');
+
+            $note.appendChild($note.$content);
+
+            $note.$content.innerHTML = `${note.name.toUpperCase()}<span class="accidental">${note.accidental}</span>`;
+
+            $container.appendChild($note);
+
+        });
+
+        this.notes.appendChild($container);
+
+        this.showSelected();
+
+        this.octave.innerHTML = '';
+
+        if(this.getTotalTones() !== 6){
+            this.octave.innerHTML = `${this.roundToTwo(6 - this.getTotalTones())} / Octave`
+        }
+
+    }
+
+    this.roundToTwo = (num)=>{    
+        return +(Math.round(num + "e+2")  + "e-2");
+    }
+
+    this.canSave = ()=>{
+
+        let canSave = true;
+
+        if(!this.editData.title) return false;
+
+        if(!this.editData.steps.length) return false;
+
+        Object.keys(CONSTANTS.SCALES).forEach((k)=>{
+            const s = CONSTANTS.SCALES[k];
+            if(s.title === this.editData.title.trim()) canSave = false;
+        })
+
+        return canSave;
+
+    }
+
+    this.save = ()=>{
+
+        const scale = {
+            title: this.editData.title.trim(),
+            steps: this.editData.steps,
+            noSequencialNotation: !this.editData.sequencialNotation,
+            isCustom: true,
+        };
+
+        const customScales = app.getCustomScales();
+        customScales[scale.title] = scale;
+
+        app.setCustomScales(customScales);
+
+        app.setScale(scale.title);
+        popup.hide();
+
+    }
+
+    this.toggleSettings = ()=>{
+
+        this.showSettings = !this.showSettings;
+        this.render();
+
+    }
+
+    this.deleteScale = ()=>{
+
+        showConfirm({
+            title: `Remove ${this.editData.title}?`,
+            text: 'This cannot be undone',
+            onconfirm: ()=>{
+                const customScales = app.getCustomScales();
+                delete customScales[this.editData.title.trim()];
+                app.setCustomScales(customScales);
+                app.setScale();
+                popup.hide();
+            }
+        })
+
+    }
+
+    this.addStep = (last)=>{
+        if(last){
+            this.editData.steps.push(1);
+            this.render();
+            return;
+        }
+        if(this.editData.selectedStep === null) return;
+        this.editData.steps.splice(this.editData.selectedStep, 0, 1);
+        this.render();
+    }
+
+    this.removeStep = ()=>{
+        if(this.editData.selectedStep === null) return;
+        this.editData.steps.splice(this.editData.selectedStep, 1);
+        this.editData.selectedStep = null;
+        this.render();
+    }
+
+    this.reset = ()=>{
+
+        showConfirm({
+            title: `Reset ${this.editData.title}?`,
+            text: 'This cannot be undone',
+            onconfirm: ()=>{
+                this.editData.steps = [...this.editData.originalSteps];
+                this.render();
+            }
+        })
+
+    }
+
+    window.__editScale = this;
+
+</script>
+<div class="scale-popup" ref="popup">
+    <edit-mode>
+        <!-- <div class="title">
+            Scale Creator
+        </div> -->
+        <div class="content">
+            <div class="name">
+                <input type="text" onkeyup="this.titleChange($event)" value="{{this.editData.title}}" />
+            </div>
+            <div if="!this.showSettings" class="menu space-between">
+                <div>
+                    <div class="settings menu-button" onclick="this.toggleSettings()">
+                        <img class="icon" src="assets/gears.svg" />
+                    </div>
+                    <div if="JSON.stringify(this.editData.steps) != JSON.stringify(this.editData.originalSteps)" class="reset menu-button" onclick="this.reset()">
+                        <img class="icon" src="assets/reset.svg" />
+                    </div>
+                    <div class="remove menu-button" onclick="this.deleteScale()">
+                        <img class="icon" src="assets/bin.svg" />
+                    </div>
+                </div>
+                <div if="this.editData.selectedStep !== null" class="actions menu-button">
+                    <div class="delete-step menu-button" onclick="this.removeStep()">
+                        <img class="icon" src="assets/delete_step.svg" />
+                    </div>
+                    <div class="add-step menu-button" onclick="this.addStep()">
+                        <img class="icon" src="assets/create_step.svg" />
+                    </div>
+                </div>
+            </div>
+            <div if="this.showSettings" class="menu space-between">
+                <div>
+                    <div class="settings menu-button" onclick="this.toggleSettings()">
+                        <img class="icon" src="assets/note.svg" />
+                    </div>
+                </div>
+            </div>
+            <div class="editor">
+                <div class="steps">
+                    <div class="step" for="step in this.editData.steps">
+                        <stepper 
+                            value="{{step}}" 
+                            index="{{$index}}" 
+                            size="{{this.editData.stepSize}}"
+                            onchange="this.stepChange"
+                            onclick="this.selectStep"
+                            classname="{{this.editData.selectedStep === Number($index) ? 'selected' : ''}}"
+                        ></stepper>
+                    </div>
+                    <div class="add-step menu-button" onclick="this.addStep(true)">
+                        <img class="icon" src="assets/create_step.svg" />
+                    </div>
+                </div>
+                <div class="octave" ref="octave"></div>
+                <div class="edit-scale-notes" ref="notes"></div>
+                <div if="this.showSettings" class="scale-settings">
+                    <div class="setting">
+                        <div class="title">
+                            Step Size / Tones
+                        </div>
+                        <div class="value">
+                            <stepper
+                                value="{{this.editData.stepSize}}" 
+                                size="0.05"
+                                onchange="(size)=>{
+                                    this.editData.stepSize = size;
+                                    this.render();
+                                }"
+                                onclick="this.selectStep"
+                            ></stepper>
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">
+                            Sequencial Notation
+                        </div>
+                        <div class="value">
+                            <switch onchange="(value)=>{
+                                this.editData.sequencialNotation = value;
+                                this.render();
+                            }" on="this.editData.sequencialNotation"></switch>
+                        </div>
+                    </div>
+                    <!-- sequencial notation -->
+                </div>
+            </div>
+            <div if="this.canSave()" class="bottom-bar">
+                <div class="save" onclick="this.save()">
+                    Save
+                </div>
+            </div>
+        </div>
+    </edit-mode>
+    <list ref="select" bullets options="this.getOptions()" onselect="this.setScale" selected="app.settings.scale"></list>
+</div>

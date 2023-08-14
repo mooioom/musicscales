@@ -1,0 +1,359 @@
+<style>
+    .program-popup{}
+
+    .program-popup .content{
+        position: relative;
+    }
+
+    .program-popup .content > .title input{
+        width: 100%;
+        border: none;
+        text-align: center;
+        font-size: 25px;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .program-popup .content > .menu{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .program-popup .content > .menu .menu-item{}
+
+    .program-popup .program-title{
+        text-align: center;
+    }
+
+    .program-popup .steps{
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .program-popup .step{
+        /* border: 1px solid #ccc; */
+        margin-bottom: 10px;
+        cursor: pointer;
+        background-color: #efefef;
+    }
+
+    .program-popup .step-header{
+        display: flex;
+        justify-content: space-between;
+        background-color: #f5f5f5;
+    }
+
+    .program-popup .step-menu{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .program-popup .step-menu-item{
+        width: 15px;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .program-popup .step:nth-child(1) .step-delete{
+        display: none;
+    }
+    
+    .program-popup .step-number{
+        text-align: start;
+        padding: 3px;
+    }
+    
+    .program-popup .step-title{
+        text-align: start;
+        /* color: #fff; */
+        padding: 5px;
+        border-top-left-radius: 10px;
+    }
+
+    .program-popup .step .step-pattern{
+        text-align: center;
+        background-color: #efefef;
+    }
+
+    .program-popup .step.selected .step-number{
+        background-color: var(--select-color);
+        color: #fff;
+    }
+
+    .program-popup .step .step-properties{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .program-popup .step .step-data{
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 100%;
+        border: 1px solid;
+    }
+
+    .program-popup .step .step-data td{
+        text-align: center;
+    }
+
+    .program-popup .step .step-data .header{
+        
+    }
+
+    .program-popup .step .step-data .header td{
+        font-size: 10px;
+        background: #333;
+        color: #fff;
+    }
+
+    .program-popup .step .step-data .data td{
+        font-size: 20px;
+        padding: 5px;
+        border: 1px solid #dadada;
+    }
+
+    .program-popup .add-step{
+        text-align: end;
+    }
+    
+    .program-popup .add-step img{
+        width: 40px;
+    }
+
+    .program-popup .step-editor{
+        position: absolute;
+        top:0;
+        background: #fff;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .program-popup .step-editor .editor-menu{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .program-popup .step-editor .editor-menu-item{
+        width: 20px;
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    .program-popup .step-editor .setting{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .program-popup .step-editor .setting .title{
+        padding: 10px;
+    }
+
+    .program-popup .step-editor .setting .value{
+        padding: 10px;
+    }
+
+</style>
+<script>
+
+    this.getOptions = ()=>{
+        const programs = app.getPrograms();
+        return Object.keys(programs).map((p)=>{ return { 
+            title: programs[p].title, 
+            description: programs[p].description,
+            value: p 
+        }});
+    }
+
+    this.setProgram = (v)=>{
+        app.setProgram(v.value);
+        // popup.hide();
+        this.setEditData();
+    }
+
+    /* --- edit mode --- */
+
+    this.setEditData = ()=>{
+
+        const program = app.getPrograms()[app.settings.program];
+
+        this.editData = {
+            loop: program.loop,
+            title: program.title,
+            steps: [...program.steps || []],
+            currentStep: null,
+        };
+
+    }
+
+    this.editor = false;
+
+    this.setEditData();
+
+    this.titleChange = (e)=>{
+        this.editData.title = e.target.value;
+        this.render();
+    }
+
+    this.getStepData = (step)=>{
+        // console.log(step);
+        return {
+            key: 'G#',
+            octave: 3,
+            mode: 1,
+            position: functions.integerToRoman(step.position) || 'I',
+            repeat: step.repeat || '',
+        }
+    }
+
+    this.addStep = ()=>{
+
+        this.editData.steps.push({
+            pattern: app.DEFAULTS.pattern
+        });
+
+        this.render();
+
+    }
+
+    this.selectStep = (idx)=>{
+        this.editData.currentStep = idx;
+        this.render();
+    }
+
+    this.deleteStep = (idx)=>{
+        showConfirm({
+            title: `Delete this step?`,
+            text: 'This cannot be undone',
+            onconfirm: ()=>{
+                this.editData.steps.splice(idx, 1);
+                this.render();
+            }
+        })
+    }
+
+    this.editStep = (idx)=>{
+        this.editor = idx;
+        this.render();
+    }
+
+    this.editorClose = ()=>{
+        this.editor = false;
+        this.render();
+    }
+
+    window._programEdit = this;
+
+</script>
+<div class="program-popup">
+    <!-- <edit-mode>
+        <div class="content">
+            <div class="title">
+                <input type="text" onkeyup="this.titleChange($event)" value="{{this.editData.title}}" />
+            </div>
+            <div class="menu">
+                <div class="left"></div>
+                <div class="right"></div>
+            </div>
+            <div class="program-title">Program Stages</div>
+            <div class="steps">
+                <div for="step in this.editData.steps" class="step {{this.editData.currentStep === $index ? 'selected' : ''}}">
+                    <div class="step-header">
+                        <div if="step.title" class="step-title">#{{$index + 1}} {{step.title || ''}}</div>
+                        <div class="step-menu">
+                            <div class="step-menu-item step-delete" onclick="this.deleteStep($index)">
+                                <img class="icon" src="assets/bin.svg" />
+                            </div>
+                            <div class="step-menu-item step-edit" onclick="this.editStep($index)">
+                                <img class="icon" src="assets/pencil.svg" />
+                            </div>
+                        </div>
+                    </div>
+                    <table class="step-data">
+                        <tr class="header">
+                            <td>PATTERN</td>
+                            <td>KEY</td>
+                            <td>POSITION</td>
+                            <td>REPEAT</td>
+                        </tr>
+                        <tr class="data">
+                            <td>{{step.pattern}}</td>
+                            <td>{{this.getStepData(step).key}}</td>
+                            <td>{{this.getStepData(step).position}}</td>
+                            <td>{{this.getStepData(step).repeat}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="add-step" onclick="this.addStep()">
+                    <img class="icon" src="assets/create_step.svg" />
+                </div>
+            </div>
+            <div if="this.editor !== false" class="step-editor">
+                <div class="editor-menu">
+                    <div class="editor-menu-item" onclick="this.editorClose()">
+                        <img class="icon" src="assets/back.svg" />
+                    </div>
+                </div>
+                <div class="editor-content">
+                    <div class="setting">
+                        <div class="title">Title</div>
+                        <div class="value">
+                            <input type="text" value="{{this.editData.title}}" />
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Description</div>
+                        <div class="value">
+                            <input type="text" value="{{this.editData.description}}" />
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Pattern</div>
+                        <div class="value">
+                            <select>
+                                <option>UP</option>
+                                <option>DOWN</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Scale</div>
+                        <div class="value">
+                            <select>
+                                <option>UP</option>
+                                <option>DOWN</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Transpose</div>
+                        <div class="value">
+
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Key (Static)</div>
+                        <div class="value">-</div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Position</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Tempo</div>
+                        <div class="value">+20</div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Tempo (Static)</div>
+                        <div class="value">+20</div>
+                    </div>
+                    <div class="setting">
+                        <div class="title">Repeat</div>
+                        <div class="value">2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </edit-mode> -->
+    <list ref="select" options="this.getOptions()" onselect="this.setProgram" selected="app.settings.program"></list>
+</div>

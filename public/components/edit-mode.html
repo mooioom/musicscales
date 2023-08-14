@@ -1,0 +1,75 @@
+<style>
+    .edit-mode{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    .edit-mode .edit-button{
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        border: 2px solid #202020;
+        pointer-events: all;
+    }
+    .edit-mode .edit-button-wrapper{
+        position: absolute;
+        bottom: 65px;
+        right: 65px;
+    }
+    .edit-mode .edit-button img{
+        width: 90%;
+    }
+    .edit-mode .edit-mode-content{
+        width: 100%;
+        height: 100%;
+        top: 100%;
+        left: 0%;
+        position: absolute;
+        background: #fff;
+        transition: all 0.3s ease-out;
+        pointer-events: all;
+    }
+    .edit-mode .edit-mode-content.on{
+        top:0%;
+    }
+    .edit-mode .edit-mode-content .close{
+        position: absolute;
+        cursor: pointer;
+        left: 5px;
+        top:5px;
+        z-index: 1;
+    }
+    .edit-mode .edit-mode-content .close img{
+        width: 20px;
+    }
+</style>
+<script>
+
+    this.editMode = false;
+
+    this.edit = ()=>{
+        this.editMode = !this.editMode;
+        this.render();
+    }
+
+</script>
+<div class="edit-mode">
+    <div class="edit-button-wrapper">
+        <div class="edit-button" onclick="this.edit()">
+            <img class="icon" src="{{'assets/pencil.svg'}}" />
+        </div>
+    </div>
+    <div class="edit-mode-content {{this.editMode ? 'on' : ''}}">
+        <div class="close" onclick="this.edit()">
+            <img class="icon" src="assets/x.svg" />
+        </div>
+        {{this.props.children}}
+    </div>
+</div>

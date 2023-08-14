@@ -1,0 +1,93 @@
+<style>
+    .mixer{
+        padding: 10px;
+    }
+    .mixer .title{
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    .mixer .part{
+        margin-bottom: 15px;
+    }
+    .mixer .part .title{
+        margin-bottom: 10px;
+    }
+    .mixer .settings{
+        margin-top: 20px;
+    }
+    .mixer .setting{
+        margin-top: 15px;
+    }
+</style>
+<script>
+
+    this.changeMasterGain = (value)=>{
+        nigun.masterGain.gain.value = value;
+    }
+
+    this.changePadGain = (value)=>{
+        nigun['_'+app.settings.padInstrument].gainNode.gain.value = value;
+    }
+    this.changeMetronomeGain = (value)=>{
+        nigun.Metronome.gainNode.gain.value = value;
+    }
+
+    this.changeInstrumentGain = (value)=>{
+        nigun['_'+app.settings.instrument].gainNode.gain.value = value;
+    }
+
+    this.changeKeyboardGain = (value)=>{
+        nigun['_'+app.settings.keyboardInstrument].gainNode.gain.value = value;
+    }
+
+    this.a = {on:'I', off:'O'};
+
+</script>
+<div class="mixer">
+    <div class="title">Mixer</div>
+    <div class="part">
+        <div class="title">MASTER GAIN</div>
+        <div class="slider-wrapper">
+            <slider onchange="this.changeMasterGain" value="{{nigun.masterGain.gain.value}}" size="20"></slider>
+        </div>
+    </div>
+    <div class="part">
+        <div class="title">MAIN INSTRUMENT GAIN</div>
+        <div class="slider-wrapper">
+            <slider onchange="this.changeInstrumentGain" value="{{nigun['_'+app.settings.instrument].gainNode.gain.value}}" size="20"></slider>
+        </div>
+    </div>
+    <div class="part">
+        <div class="title">PAD GAIN</div>
+        <div class="slider-wrapper">
+            <slider onchange="this.changePadGain" value="{{nigun['_'+app.settings.padInstrument].gainNode.gain.value}}" size="20"></slider>
+        </div>
+    </div>
+    <div class="part">
+        <div class="title">METRONOME GAIN</div>
+        <div class="slider-wrapper">
+            <slider onchange="this.changeMetronomeGain" value="{{nigun.Metronome.gainNode.gain.value}}" size="20"></slider>
+        </div>
+    </div>
+    <div if="!functions.isMobile()" class="part">
+        <div class="title">KEYBOARD GAIN</div>
+        <div class="slider-wrapper">
+            <slider onchange="this.changeKeyboardGain" value="{{nigun['_'+app.settings.keyboardInstrument].gainNode.gain.value}}" size="20"></slider>
+        </div>
+    </div>
+    <div class="sounds"></div>
+    <div class="settings">
+        <div class="title">Settings</div>
+        <div class="setting space-between">
+            <div>DARK MODE</div>
+            <div>
+                <switch onchange="(value)=>{
+                    app.setTheme(value ? 'DARK' : 'DEFAULT');
+                }" on="app.settings.theme === 'DARK'"></switch>
+            </div>
+        </div>
+        <div class="setting pointer" onclick="functions.fullscreen()">
+            <div>Fullscreen</div>
+        </div>
+    </div>
+</div>

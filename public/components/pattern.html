@@ -1,0 +1,29 @@
+<style>
+    .pattern{
+        text-align: center;
+        pointer-events: all;
+    }
+    .pattern .title{
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .theme-dark .pattern .title{
+        color: #1ab2b1;
+    }
+    .pattern .steps{
+        margin-top: 5px;
+    }
+</style>
+
+<script>
+
+    this.getPatternHTML = ()=>{
+        return app.getPattern().join(` - `);
+    }
+
+</script>
+
+<div class="pattern pointer" ref="pattern" onclick="popup.show('pattern')">
+    <div class="title">{{app.settings.pattern}}</div>
+    <!-- <div class="steps">{{this.getPatternHTML()}}</div> -->
+</div>

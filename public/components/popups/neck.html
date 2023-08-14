@@ -1,0 +1,27 @@
+<style>
+    .neck-popup{}
+    .neck-popup .item{
+        padding: 10px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 25px;
+    }
+    .neck-popup .item:hover{
+        background: #efefef;
+    }
+    .theme-dark .neck-popup .item:hover{
+        background: #ff0645;
+    }
+</style>
+<script>
+    this.INSTRUMENTS = this.props.neck._INSTRUMENTS;
+    this.INSTRUMENTS_SETUP = this.props.neck._INSTRUMENTS_SETUP;
+    this.setInstrument = (instrument)=>{
+        this.props.neck.settings = this.props.neck._INSTRUMENTS_SETUP[instrument];
+        this.props.neck.onrender();
+        popup.hide();
+    }   
+</script>
+<div class="neck-popup">
+    <div class="item" for="instrument in Object.keys(this.INSTRUMENTS)" onclick="this.setInstrument(instrument)">{{this.INSTRUMENTS_SETUP[instrument].title}}</div>
+</div>

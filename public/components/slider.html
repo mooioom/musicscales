@@ -1,0 +1,98 @@
+<style>
+    .slider {
+        padding: 10px;
+        border-radius: 20px;
+        /* background: #f7f7f7; */
+        box-sizing: border-box;
+        touch-action: none;
+    }
+
+    .slider .slider-bar {
+        width: 100%;
+        height: 2px;
+        background: #000;
+        position: relative;
+    }
+
+    .theme-dark .slider .slider-bar{
+        background: #1ab2b1;
+    }
+
+    .slider .slider-knob {
+        width: 10px;
+        height: 10px;
+        position: relative;
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 50px;
+        top: -6px;
+        left: calc(50% - 5px);
+        cursor: pointer;
+    }
+
+    .theme-dark .slider .slider-knob{
+        background-color: aqua;
+    }
+
+
+</style>
+
+<script>
+    this.value = this.props.value || 1;
+    this.knobSize = this.props.size || 10;
+    this.onchange = this.props.onchange ? this.props.onchange : (v) => {};
+    this.width = this.props.width || '100%';
+
+    this.isDragging = false;
+
+    this.setValue = (v) => {
+        this.value = v;
+        this.knob.style.left = `calc(${v * 100}% - ${this.knobSize / 2}px)`;
+        this.onchange(v);
+    }
+
+    this.onmousedown = (ev) => {
+        this.isDragging = true;
+    }
+    this.onmouseup = () => {
+        this.isDragging = false;
+    }
+
+    this.documentmousemove = (ev) => {
+        ev.preventDefault();
+
+        if (this.isDragging) {
+
+            const sliderBB = this.slider.getBoundingClientRect();
+            const localX = ev.changedTouches ? ev.changedTouches[0].clientX : ev.clientX;
+            const x = sliderBB.x;
+            const w = sliderBB.width;
+            let p = (localX - x) / (w);
+
+            if (p > 1) p = 1;
+            if (p < 0) p = 0;
+
+            this.setValue(p);
+
+        }
+
+    }
+
+    document.addEventListener('mousemove', this.documentmousemove);
+    document.addEventListener('touchmove', this.documentmousemove);
+    document.addEventListener('mouseup', this.onmouseup);
+    document.addEventListener('touchend', this.onmouseup);
+</script>
+
+<div class="slider" style="width:{{this.width}}">
+    <div class="slider-bar" ref="slider">
+        <div ref="knob" class="slider-knob" onmousedown="this.onmousedown($event)"
+            ontouchstart="this.onmousedown($event)" style="
+                width:{{this.knobSize}}px;
+                height:{{this.knobSize}}px;
+                top:-{{this.knobSize/2}}px;
+                left:calc({{this.props.value* 100}}% - {{this.knobSize/ 2}}px)
+            ">
+        </div>
+    </div>
+</div>

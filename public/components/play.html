@@ -1,0 +1,79 @@
+<style>
+    .play{
+        display: flex;
+        justify-content: center;
+        position: relative;
+        top: -20px;
+        pointer-events: none;
+    }
+    .play .play-button{
+        pointer-events: all;
+        text-align: center;
+        border: 2px solid #fff;
+        border-radius: 40px;
+        width: 80px;
+        height: 77px;
+        display: flex;
+        justify-content: center;
+        font-size: 45px;
+        user-select: none;
+        box-shadow: 0px 5px 10px rgb(0 0 0 / 35%);
+        cursor: pointer;
+        background: #ffffffd3;
+    }
+    .theme-dark .play .symbol img{
+        filter: invert();
+    }
+    .theme-dark .play .play-button{
+        background: #000000da;
+        border: 2px solid #000;
+        box-shadow: 0px 0px 10px #1bfefa8b;
+    }
+    .play .play-button.playing-mode{
+        border: 2px solid #4be90a;
+        box-shadow: none;
+    }
+    .theme-dark .play .play-button.playing-mode{
+        border: 2px solid #e90a55;
+    }
+    .play .play-button.playing-mode .symbol{
+        top: -5px;
+        left: 0px;
+        font-size: 54px;
+    }
+    .play .symbol{
+        display: flex;
+        align-self: center;
+        justify-content: center;
+    }
+    .play .symbol img{
+        width: 30px;
+    }
+    .play .play-move{
+        position: relative;
+        left: 3px;
+    }
+</style>
+
+<script>
+
+    this.play = ()=>{
+        app.play();
+        this.render();
+    }
+
+    this.stop = ()=>{
+        app.stop();
+        this.render();
+    }
+
+</script>
+
+<div class="play">
+    <div class="play-button {{nigun.IS_PLAYING ? 'playing-mode' : ''}}" onmousedown="nigun.IS_PLAYING ? this.stop() : this.play()">
+        <div class="symbol">
+            <img if="nigun.IS_PLAYING" src="assets/stop-button.svg" />
+            <img if="!nigun.IS_PLAYING" src="assets/play-button.svg" class="play-move" />
+        </div>
+    </div>
+</div>

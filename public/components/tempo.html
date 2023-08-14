@@ -1,0 +1,27 @@
+<script>
+
+    this.tempo.onmousewheel = (e)=>{
+
+        event.deltaY < 0 ? nigun.settings.bpm++ : nigun.settings.bpm--;
+
+        app.render();
+
+    }
+
+    this.toggleMetronome = ()=>{
+        app.settings.metronome = !app.settings.metronome;
+        app.render();
+    }
+
+</script>
+
+<style>
+    .tempo{}
+    .tempo-popup-wrapper{
+        width: 150px !important;
+    }
+</style>
+
+<div class="tempo pointer" ref="tempo" onclick="popup.show('tempo')"> <!--onclick="popup.show('tempo')"-->
+    <value-box title="BPM" value="nigun.settings.bpm"></value-box>
+</div>

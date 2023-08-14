@@ -1,0 +1,35 @@
+<style>
+    .button{
+        text-align: center;
+        padding: 5px;
+        background: #eee;
+        border-radius: 20px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .button:hover{
+        cursor: pointer;
+    }
+    .button.on{
+        background: #4be90a;
+        color: white;
+    }
+    .button.small{
+        font-size: 12px;
+    }
+    .button img{
+        width: 20px;
+        border: none;
+        outline: none;
+        background: none;
+    }
+</style>
+
+<div 
+    class="button noselect {{this.props.class || ''}} {{this.props.type || ''}}" 
+    onclick="this.props.onclick()"
+><span if="this.props.title">
+    {{this.props.title}}
+</span>
+<img class="icon" if="this.props.icon" src="{{this.props.icon}}" />
+</div>

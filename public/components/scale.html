@@ -1,0 +1,361 @@
+<style>
+    .scale{
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+    .scale .mode{
+        background: #dddddd;
+        border-radius: 20px;
+        display: inline-block;
+        width: 18px;
+        display: inline-flex;
+        height: 15px;
+        font-size: 10px;
+        align-items: baseline;
+        justify-content: center;
+        position: relative;
+        top: -10px;
+        padding-top: 3px;
+    }
+    .theme-dark .scale .mode{
+        background: #333;
+        color: #fff;
+    }
+    .scale-header{
+        padding-top: 0px;
+        background: #fff;
+        padding-bottom: 12px;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+        box-shadow: 0px 13px 0px rgb(0 0 0 / 7%);
+    }
+    .theme-dark .scale-header{
+        background: none;
+        box-shadow: 0px 13px 0px rgb(0 137 136);
+    }
+    .notes{
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        font-size: 18px;
+        font-weight: normal;
+        margin-top: 6px;
+        /* text-transform: capitalize; */
+        user-select: none;
+    }
+    .notes .note{
+        margin-left: 2px;
+        margin-right: 2px;
+        /* text-transform: capitalize; */
+        padding: 10px;
+        background: #ffffff14;
+        color: #383838;
+        text-align: center;
+        font-weight: bold;
+        width: 12px;
+        border-radius: 10px;
+        height: 25px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+    .theme-dark .notes .note{
+        background: #080c15de;
+        color: #1bfefc;
+    }
+    .theme-dark .scale-title{
+            color: #1ab2b1;
+        }
+    .notes .note.playing{
+        border: 2px solid #4be90a;
+        box-shadow: none;
+    }
+    .theme-dark .notes .note.playing{
+        border: 2px solid #e90a55;
+    }
+    .notes .accidental{
+        font-size: 14px;
+        /* font-weight: bold; */
+        position: relative;
+        top: -5px;
+    }
+    .scale .scale-button img{
+        width: 13px;
+    }
+    .theme-dark .scale .scale-button img{
+        filter: invert();
+        opacity: 0.1;
+    }
+    .scale [ref="next"] img{
+        transform: rotate(180deg);
+    }
+    .scale .scale-button{
+        position: relative;
+        cursor: pointer;
+        font-size: 20px;
+        background: #ebebeb;
+        padding: 4px;
+        top:0px;
+        border-radius: 30px;
+        display: inline-block;
+        width: 25px;
+        text-align: center;
+        color: #ccc;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 30px;
+    }
+    .theme-dark .scale .scale-button{
+        background: none;
+    }
+
+    .scale .scale-button:active{
+        background: #50db09;
+        color: #fff;
+    }
+    
+    .scale .scale-button:active img{
+        filter: invert();
+    }
+    
+    @media (hover: hover) {
+
+        .scale .scale-button:hover{
+            background: #50db09;
+            color: #fff;
+        }
+
+        .theme-dark .scale .scale-button:hover{
+            background-color: #182d4e;
+        }
+
+        .scale .scale-button:hover img{
+            filter: invert();
+        }
+
+        .notes .note:hover{
+            background: #333;
+            color: #fff;
+            box-shadow: 0px 0px 10px rgb(0 0 0 / 30%);
+        }
+
+        .theme-dark .notes .note:hover{
+            background: #383838d4;
+            color: #fff;
+            box-shadow: 0px 0px 10px rgb(0 0 0 / 30%);
+        }
+
+        .theme-dark .scale .scale-button:hover img{
+            opacity: 1;
+        }
+
+    }
+    @media screen and (max-width: 290px) {
+        .notes .note{
+            width: 1px;
+        }
+        .scale-header{
+            font-size: 18px;
+        }
+    }
+
+    @media only screen and (min-width: 550px) {
+        /* CSS rules for screens wider than 550px */
+        .scale-button{
+            vertical-align: text-bottom;
+        }
+        .notes .note{
+            font-size: 30px;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding: 10px;
+        }
+        .scale-header{
+            height: 27px;
+            padding-bottom: 20px;
+        }
+        .scale-title{
+            font-size: 36px;
+        }
+        .scale-header-content{
+            position: relative;
+            top: -10px;
+        }
+    }
+    @media only screen and (min-width: 1000px) {
+        /* CSS rules for screens wider than 768px */
+        .notes .note{
+            font-size: 40px;
+            margin-left: 15px;
+            margin-right: 15px;
+            padding: 15px;
+        }
+        .scale-header{
+            height: 27px;
+            padding-bottom: 20px;
+        }
+        .scale-title{
+            font-size: 42px;
+        }
+        .scale-header-content{
+            position: relative;
+            top: -20px;
+        }
+    }
+</style>
+
+<script>
+
+    this.set = (next)=>{
+        const scales = Object.keys(app.getScales());
+
+        let idx = scales.indexOf(app.settings.scale);
+
+        idx = idx + (next ? 1 : -1);
+
+        if(idx >= scales.length) idx = 0;
+        else if(idx < 0) idx = scales.length - 1;
+
+        app.setScale(Object.keys(app.getScales())[idx]);
+        app.settings.mode = 1;
+
+        cache.set('mode', app.settings.mode);
+
+        app.render();
+        app.change();
+
+    }
+
+    this.scale.onmousewheel = (e)=>{
+        this.set(event.deltaY < 0);
+    }
+
+    this.next.onclick = ()=>{
+        this.set(true);
+    }
+
+    this.prev.onclick = ()=>{
+        this.set();
+    }
+
+    const capitalize = (str)=>{
+        let arr = str.split('');
+        arr[0] = arr[0].toUpperCase();
+        return arr.join('');
+    }
+
+    this.getNotes = ()=>{
+        return app.getScale().slice( 0, app.getScaleLength() + 1 )
+    }
+
+    let source = null;
+    let isDragging = null;
+
+    const startNote = (note)=>{
+        Array.from(document.querySelectorAll('[note]')).forEach(a=>{
+            a.classList.remove('playing');
+            if(a.getAttribute('note') === note.uniformFullname) a.classList.add('playing');
+        });
+        source = nigun.instruments.synth1.startFrequency(note.fq);
+    }
+
+    const clearNotes = ()=>{
+        Array.from(document.querySelectorAll('[note]')).forEach(a=>{
+            a.classList.remove('playing');
+        });
+    }
+
+    this.playNote = (note)=>{
+        startNote(note);
+        isDragging = true;
+    }
+
+    this.releaseNote = (note)=>{
+        if (isDragging) {
+            clearNotes();
+            source._stop();
+            isDragging = false;
+        }
+    }
+
+    const mousemove = (ev)=>{
+
+        if (isDragging) {
+            let target = ev.target;
+            if (ev.touches) target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY);
+            if (!target || this.dragTarget === target || !target.note) return;
+            if (source) {
+                clearNotes();
+                source._stop();
+            }
+            startNote(target.note);
+            this.dragTarget = target;
+        }
+
+    }
+
+    document.removeEventListener('mouseup', this.releaseNote);
+    document.addEventListener('mouseup', this.releaseNote);
+
+    document.removeEventListener('mousemove', mousemove);
+    document.removeEventListener('touchmove', mousemove);
+    document.addEventListener('mousemove', mousemove);
+    document.addEventListener('touchmove', mousemove);
+
+    function stripParenthesisAndText(inputString) {
+        return inputString.replace(/\([^()]*\)/g, '');
+    }
+
+    this.getTitle = (parenthesis=false)=>{
+        return app.getScales()[app.settings.scale].title;
+    }
+
+    this.onrender = ()=>{
+
+        this.notes.innerHTML = '';
+
+        const notes = this.getNotes();
+
+        notes.forEach(note=>{
+
+            const $note = document.createElement('span');
+
+            $note.classList.add('note');
+
+            $note.setAttribute('note', note.uniformFullname);
+
+            $note.onmousedown=()=>{this.playNote(note)};
+            $note.ontouchstart=()=>{this.playNote(note)};
+            $note.onmouseup=()=>{this.releaseNote(note)};
+            $note.ontouchend=()=>{this.releaseNote(note)};
+
+            $note.note = note;
+
+            $note.innerHTML = `${note.name.toUpperCase()}<span class="accidental">${note.accidental}</span>`;
+
+            this.notes.appendChild($note);
+
+        });
+
+    }
+
+</script>
+
+<div class="scale" ref="scale">
+    <div class="scale-header">
+        <div class="scale-header-content">
+            <span class="scale-button" ref="prev">
+                <img src="assets/left-arrow.svg" />
+            </span> <span class="scale-title pointer" onclick="popup.show('scale')">{{this.getTitle()}} <span class="mode {{app.settings.mode === 1 ? 'hidden' : ''}}">{{app.settings.mode}}</span></span>
+            <span class="scale-button" ref="next">
+                <img src="assets/left-arrow.svg" />
+            </span>
+        </div>
+    </div>
+    <div class="notes" ref="notes"></div>
+</div>

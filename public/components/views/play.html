@@ -1,0 +1,205 @@
+<style>
+    .play-view {
+        width: 100%;
+        height: 100%;
+    }
+
+    .play-view .row {
+        display: flex;
+    }
+
+    .play-view .cell {
+        font-size: 20px;
+        display: inline-flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        outline: 1px solid #00000010;
+        cursor: pointer;
+        color: #969696;
+        position: relative;
+        background: rgb(255,255,255);
+        background: radial-gradient(circle, rgba(255,255,255,0) 22%, rgba(255,255,255,0.04543067226890751) 22%, rgba(255,255,255,0.02663515406162467) 40%, rgba(255,255,255,0) 40%);
+        /* box-shadow: inset 0px 0px 6px rgb(0 0 0 / 90%); */
+    }
+
+    .theme-dark .play-view .cell{
+        outline: 1px solid #ffffff0a;
+    }
+
+    .play-view .cell.root{
+        font-weight: bold;
+        color: #333;
+    }
+
+    .theme-dark .play-view .cell.root{
+        color: #fff;
+    }
+
+    .play-view .cell.playing {
+        background: #4be90a !important;
+        opacity: 1;
+        color: #fff;
+        /* background: radial-gradient(circle, rgba(255,255,255,0) 22%, rgba(255, 255, 255, 0.263) 22%, rgba(255, 255, 255, 0.29) 40%, rgba(255,255,255,0) 40%); */
+    }
+
+    .theme-dark .play-view .cell.playing {
+        background-color: #e90a55;
+    }
+
+    .theme-dark .play-view .cell.root::after {
+        background-color: aqua;
+    }
+
+    .play-view td span {}
+
+    @media(hover:hover) {
+        .play-view .cell:hover {
+            opacity: 1;
+            background-color: #333 !important;
+            color: #fff;
+        }
+    }
+
+    @media only screen and (max-width: 550px) {
+        .play-view .cell {
+            font-size: 16px;
+        }
+    }
+
+</style>
+<script>
+    let source = null;
+
+    this.set = () => {}
+
+    this.clear = () => {
+        this.view.innerHTML = '';
+    }
+
+    this.onrender = () => {
+        const scale = app.getScale(1);
+        this.view.innerHTML = '';
+
+        const scaleStepsLength = app.getScaleLength();
+
+        let counter = 0;
+        let rows = [];
+
+        for (let x = 0; x < scaleStepsLength; x++) {
+
+            const $tr = document.createElement('div');
+            $tr.classList.add('row');
+
+            for (let y = 0; y < scaleStepsLength; y++) {
+
+                const note = scale[counter];
+
+                if (!note) continue;
+
+                counter++;
+
+                const $td = document.createElement('div');
+                $td.classList.add('cell');
+                $td.style.width = `calc(100% / ${scaleStepsLength})`;
+
+                if (note.scaleDegree === 1) $td.classList.add('root');
+
+                $td.note = note;
+                $td.isPlayElement = true;
+
+                $td.setAttribute('note', note.uniformFullname);
+                $td.innerHTML = functions.capitalize(note.name + note.accidental + note.octave);
+
+                const start = () => {
+                    this.isDragging = true;
+                    this.dragTarget = $td;
+                    source = nigun.instruments[app.settings.keyboardInstrument].startFrequency(note.fq);
+                    source.$el = $td;
+                    $td.classList.add('playing');
+                }
+
+                const stop = () => {
+                    this.isDragging = false;
+                    if (source) {
+                        source._stop();
+                        $td.classList.remove('playing');
+                        if (source.$el) source.$el.classList.remove('playing');
+                        source = null;
+                    }
+                }
+
+                $td.onmousedown = start;
+                $td.onmouseup = stop;
+                $td.ontouchstart = start;
+                $td.ontouchend = stop;
+
+                $tr.appendChild($td);
+
+            }
+
+            const fullTr = $tr.childNodes.length === scaleStepsLength;
+
+            if (x % 2 !== 0) {
+
+                var children = Array.from($tr.children);
+                children.reverse();
+                $tr.innerHTML = "";
+                children.forEach(function (child) {
+                    $tr.appendChild(child);
+                });
+
+            }
+
+            if (x === 0 || x > 5) continue;
+
+            this.view.appendChild($tr);
+            rows.push($tr);
+
+        }
+
+        rows.forEach(r => {
+            r.style.height = `calc(100% / ${rows.length - 1})`;
+        })
+
+    }
+
+    const release = () => {
+        if (source) {
+            if (source.$el) source.$el.classList.remove('playing');
+            source._stop();
+            source = null;
+            this.isDragging = false;
+        }
+    }
+
+    const mousemove = (ev) => {
+
+        if (this.isDragging) {
+            let target = ev.target;
+            if (ev.touches) {
+                target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY);
+            }
+            if (!target || this.dragTarget === target || !target.isPlayElement) return;
+            if (source) {
+                if (source.$el) source.$el.classList.remove('playing');
+                source._stop();
+            }
+            target.classList.add('playing');
+            source = nigun.instruments[app.settings.keyboardInstrument].startFrequency(target.note.fq);
+            source.$el = target;
+            this.dragTarget = target;
+        }
+
+    }
+
+    document.removeEventListener('mouseup', release);
+    document.addEventListener('mouseup', release);
+    document.removeEventListener('mousemove', mousemove);
+    document.removeEventListener('touchmove', mousemove);
+    document.addEventListener('mousemove', mousemove);
+    document.addEventListener('touchmove', mousemove);
+
+</script>
+<div class="play-view" ref="view"></div>

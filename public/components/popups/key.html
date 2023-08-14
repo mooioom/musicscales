@@ -1,0 +1,148 @@
+<style>
+    .keys-popup {}
+
+    .keys-popup .title {
+        padding: 10px;
+        font-size: 20px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .theme-dark .keys-popup .title{
+        border-bottom: 1px solid #272727;
+    }
+
+    .keys-popup .keys {
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .keys-popup .keys .key {
+        display: flex;
+        height: 50px;
+        cursor: pointer;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        flex: 0 0 33.3%;
+    }
+
+    .keys-popup .keys .key .label {
+        background: #efefef;
+        width: calc(100% - 10px);
+        height: calc(100% - 10px);
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        box-shadow: 0px 3px 0px rgb(224 224 224);
+        font-weight: bold;
+    }
+
+    .theme-dark .keys-popup .keys .key .label {
+        background: #191919;
+        box-shadow: 0px 3px 0px rgb(47 47 47);
+    }
+
+    .keys-popup .keys .key.selected .label {
+        background: var(--select-color);
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .theme-dark .keys-popup .keys .key.selected .label {
+        background: var(--select-color);
+    }
+
+    .keys-popup .octaves {
+        display: flex;
+    }
+
+    .keys-popup .switch-box {
+        display: inline-flex;
+        text-align: center;
+        justify-content: center;
+        padding: 5px;
+        cursor: pointer;
+        width: -webkit-fill-available;
+    }
+
+    .keys-popup .switch-box.selected {
+        background: var(--select-color);
+        color: #fff;
+    }
+</style>
+<script>
+    //todo: a=440
+
+    this.setKey = (key) => {
+        app.setKey(key);
+        app.change();
+        // popup.hide();
+    }
+
+    this.setOctave = (octave) => {
+        app.settings.octave = octave;
+        cache.set('octave', app.settings.octave);
+        app.change();
+        app.render();
+    }
+
+    this.setMode = (mode) => {
+        app.setMode(mode);
+        app.change();
+    }
+
+    this.onrender = () => {
+        const current = this.popup.querySelector('.step.current');
+        if (current) {
+            current.scrollIntoView({
+                behavior: 'auto',
+                block: 'center',
+                inline: 'center'
+            });
+        }
+    }
+
+    this.setAccidental = (accidental) => {
+        app.settings.accidental = accidental;
+        cache.set('accidental', app.settings.accidental);
+        app.change();
+        app.render();
+    }
+
+    this.text = {
+        on: '#',
+        off: 'b'
+    };
+
+    this.getOctaves = () => {
+        return [1, 2, 3, 4, 5];
+    }
+
+    this.getModes = () => {
+        return app.getScaleSteps().map((a,b)=>{
+            return b+1;
+        })
+    }
+</script>
+<div class="keys-popup column" ref="popup">
+    <div class="title">KEY</div>
+    <div class="keys">
+        <div class="key {{app.settings.key === key ? 'selected' : ''}}" for="key in app.ALL_KEYS"
+            onclick="this.setKey(key)">
+            <div class="label">{{key}}</div>
+        </div>
+    </div>
+    <div class="title">OCTAVE</div>
+    <div class="octaves flex">
+        <div onclick="this.setOctave(octave)" for="octave in this.getOctaves()"
+            class="switch-box octave {{app.settings.octave === octave ? 'selected' : ''}}">{{octave}}</div>
+    </div>
+    <div class="title">MODE</div>
+    <div class="modes flex">
+        <div onclick="this.setMode(mode)" for="mode in this.getModes()"
+            class="switch-box mode {{app.settings.mode == mode ? 'selected' : ''}}">{{mode}}</div>
+    </div>
+</div>

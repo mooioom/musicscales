@@ -1,0 +1,36 @@
+<style>
+    .accordion {}
+
+    .accordion .accordion-tab-title {}
+
+    .accordion .accordion-tab-content {}
+</style>
+<script>
+    
+    this.set = (tab) => {
+        console.log(tab);
+    }
+
+    this.onrender = () => {
+        Array.from(this.accordion.children).forEach(($tab, idx) => {
+            const $content = $tab.querySelector('.accordion-tab-content');
+            $content.innerHTML = '';
+            const tab = this.props.tabs[idx];
+            _modular.createComponent({
+                name: tab.name,
+                html: tab.html,
+                container: $content,
+                context: this._parent.context,
+            });
+        })
+    }
+    
+</script>
+<div class="accordion" ref="accordion">
+    <div class="accordion-tab" for="tab in this.props.tabs">
+        <div class="accordion-tab-title" onclick="this.set(tab)">
+            {{tab.title}}
+        </div>
+        <div class="accordion-tab-content"></div>
+    </div>
+</div>

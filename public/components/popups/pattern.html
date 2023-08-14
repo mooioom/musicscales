@@ -1,0 +1,25 @@
+<style>
+    .pattern-popup{}
+</style>
+<script>
+    this.getPatterns = ()=>{
+        let steps = [];
+        app.PATTERNS.forEach((pattern)=>{
+            steps.push({
+                title: pattern,
+                steps: nigun.CONSTANTS.SEQUENCER_PATTERNS[pattern],
+                value: pattern,
+            });
+        })
+        return steps;
+    }
+
+    this.setPattern = (option)=>{
+        app.setPattern(option.value);
+        popup.hide();
+    }
+
+</script>
+<div class="pattern-popup" ref="popup">
+    <list onselect="this.setPattern" selected="app.settings.pattern" options="this.getPatterns()"></list>
+</div>

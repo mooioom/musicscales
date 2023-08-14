@@ -1,0 +1,631 @@
+<style>
+    .neck-stage-wrapper{
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    .neck-stage-wrapper .buttons{
+        position: absolute;
+        bottom: 0;
+        display: flex;
+    }
+    .neck-stage-wrapper .button{
+        background: transparent;
+        cursor: pointer;
+    }
+    .neck-stage {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        transform: scale(1) translate(0px, 0px);
+        transform-origin: center;
+    }
+
+    .neck-stage .background-image{
+        position: absolute;
+    }
+
+    .neck {
+        background: #272727;
+        /* background: linear-gradient(0deg, rgba(71,71,71,1) 0%, rgba(66,66,66,1) 100%); */
+        position: absolute;
+    }
+
+    .neck .nut {
+        background: #fff;
+        position: absolute;
+    }
+
+    .neck .fret {
+        background: #fff;
+        position: absolute;
+    }
+
+    .neck .finger-box {
+        position: absolute;
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .neck .finger-box .title{
+        display: none;
+    }
+
+    .neck .finger-box .marker{
+        display: none;
+    }
+
+    .neck .finger-box .degree{
+        display: none;
+    }
+
+    .neck .finger-box.root-note .marker,
+    .neck .finger-box.root-note .title,
+    .neck .finger-box.root-note .degree
+    {
+        background-color: #ff0645;
+    }
+
+    .neck.marker .finger-box.scale-note-on .marker{
+        display: block;
+    }
+
+    .neck.title .finger-box.scale-note-on .title{
+        display: flex;
+        text-transform: capitalize;
+    }
+
+    .neck.degree .finger-box.scale-note-on .degree{
+        display: flex;
+    }
+
+    .neck .finger-box.scale-note-on div{
+        display: none;
+        z-index: 3;
+        color: #fff;
+        font-weight: bold;
+        text-shadow: 0px 0px 1px #000;
+        font-size: 7px;
+        background: #7a7a7a;
+        border-radius: 20px;
+        width: 12px;
+        min-width: 12px;
+        height: 90%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .neck .finger-box.playing > div{
+        background-color: #0096ff !important
+    }
+
+    .neck .finger-box.scale-note-on.root-note .title{
+        background-color: #ff0645;
+    }
+
+    .neck .string {
+        position: absolute;
+        /* background: grey; */
+        z-index: 1;
+        box-shadow: 0px 2px 1px #00000020;
+        background: linear-gradient(0deg, rgba(2,0,36,0) 0%, rgba(89,89,89,1) 30%, rgba(136,136,136,1) 70%, rgba(255,255,255,0) 100%);
+    }
+</style>
+<script>
+
+    const INSTRUMENTS = {
+        GUITAR: 'GUITAR',
+        BASS_GUITAR: 'BASS_GUITAR',
+        VIOLIN: 'VIOLIN',
+        CELLO: 'CELLO',
+        OUD: 'OUD',
+    };
+
+    this._INSTRUMENTS = INSTRUMENTS;
+
+    const INSTRUMENTS_SETUP = {
+
+        [INSTRUMENTS.GUITAR]: {
+            title: 'Guitar',
+            length: 65,
+            width: 4.2,
+            frets: true,
+            numFrets: 22,
+            notes: [
+                'E2',
+                'A2',
+                'D3',
+                'G3',
+                'B3',
+                'E4',
+            ],
+            nut: true,
+            TET12: true,
+        },
+
+        [INSTRUMENTS.BASS_GUITAR]: {
+            title: 'Bass Guitar',
+            length: 65,
+            width: 4.2,
+            frets: true,
+            numFrets: 22,
+            notes: [
+                'E2',
+                'A2',
+                'D3',
+                'G3',
+            ],
+            nut: true,
+            TET12: true,
+        },
+
+        [INSTRUMENTS.VIOLIN]: {
+            title: 'Violin',
+            length: 33,
+            width: 2.5,
+            frets: false,
+            numFrets: 22,
+            notes: [
+                'G3',
+                'D4',
+                'A4',
+                'E5',
+            ],
+            nut: true,
+        },
+
+        [INSTRUMENTS.CELLO]: {
+            title: 'Cello',
+            length: 69,
+            width: 3.1,
+            frets: false,
+            numFrets: 22,
+            notes: [
+                'C2',
+                'G2',
+                'D3',
+                'A3',
+            ],
+            nut: true,
+        },
+
+        [INSTRUMENTS.OUD]: {
+            title: 'Oud (Arabic Tuning)',
+            length: 60,
+            width: 5.8,
+            frets: false,
+            numFrets: 22,
+            doubleStringed: true,
+            notes: [
+                'C2',
+                'F2',
+                'A2',
+                'D3',
+                'G3',
+                'C4',
+            ],
+            singleNotes: [0],
+            nut: true,
+        },
+
+    };
+
+    const VIEW_MODES = {
+        'TITLE': 'TITLE',
+        'DEGREE': 'DEGREE',
+    }
+
+    this.currentView = VIEW_MODES.DEGREE;
+
+    this._INSTRUMENTS_SETUP = INSTRUMENTS_SETUP;
+
+    this.settings = INSTRUMENTS_SETUP[INSTRUMENTS.GUITAR];
+    this.flip = false;
+
+    const TET24 = new Array(24).fill(0.25);
+
+    this.set = (note) => {
+
+    }
+
+    this.clear = () => {
+
+    }
+
+    this.toggleViewMode = ()=>{
+        const keys = Object.keys(VIEW_MODES);
+        let id = keys.indexOf(this.currentView)
+        id = (id + 1) % keys.length;
+        this.currentView = keys[id];
+        this.init();
+        this.onrender();
+
+    }
+
+    function calculateFretPosition(scaleLength, fretNumber, TET = 12) {
+        const pos = scaleLength - (scaleLength / Math.pow(2, fretNumber / TET));
+        return Number(pos.toFixed(2));
+    }
+
+    const getNote = (fullname, scale = [])=>{
+        const s = scale.filter((a)=>a.uniformFullname === fullname);
+        return s.length ? s[0] : null;
+    };
+
+    const getNotesFromNote = (fullname, scale = [])=>{
+        const notes = scale.map(a=>a.uniformFullname);
+        const idx = notes.indexOf(fullname);
+        return scale.slice(idx);
+    };
+
+    const createTitle = ($el, note)=>{
+        $el.$title = document.createElement('div');
+        $el.$title.classList.add('title');
+        $el.$title.innerHTML = note.name + note.accidental;
+
+        $el.$degree = document.createElement('div');
+        $el.$degree.classList.add('degree');
+
+        $el.$degree.innerHTML = note.scaleDegree;
+
+        $el.appendChild($el.$title);
+        $el.appendChild($el.$degree);
+    }
+
+    this.init = (settings = this.settings) => {
+
+        const direction = this.flip ? 'right' : 'left';
+
+        let allNotes = nigun.getScale({
+            steps: TET24,
+            root: settings.notes[0],
+            align: false,
+        });
+
+        const scale = app.getScale(1);
+
+        const dictionary = {};
+
+        scale.forEach(n=>{ dictionary[n.uniformFullname] = n; });
+
+        const physicalLength = 700;
+        const ratio = physicalLength / settings.length;
+        const fretWidth = 0.1;
+        const stringsPadding = ratio * settings.padding;
+        const neckHeight = physicalLength * (settings.width / settings.length);
+
+        this.stage.innerHTML = '';
+
+        const $background = document.createElement('img');
+        $background.classList.add('background-image');
+        // $background.src = 'assets/start_guitar.jpg';
+
+        this.stage.appendChild($background);
+
+        const $neck = document.createElement('div');
+        // $neck.classList.add('neck');
+        $neck.className = `neck ${this.currentView.toLowerCase()}`
+
+        $neck.style.width = physicalLength + 'px';
+        $neck.style.height = neckHeight + 'px';
+
+        this.stage.appendChild($neck);
+
+        const $nut = document.createElement('div');
+        $nut.classList.add('nut');
+
+        $nut.style.width = (fretWidth * ratio) + 'px';
+        $nut.style.height = '100%';
+
+        $neck.appendChild($nut);
+
+        for (let string = 0; string < settings.notes.length; string++) { // base fingerboxes
+
+            const note = getNote(settings.notes[string].toLowerCase(), allNotes);
+
+            const $fingerBox = document.createElement('div');
+            $fingerBox.classList.add('finger-box');
+            $fingerBox.setAttribute('scale-note',note.uniformFullname);
+
+            $fingerBox.style.height = (neckHeight / settings.notes.length) + 'px';
+            $fingerBox.style.width = '0px';
+            $fingerBox.style.top = (string * (neckHeight / settings.notes.length)) + 'px';
+            $fingerBox.style[direction] = '0px';
+
+            $fingerBox.setAttribute('note', note.uniformFullname);
+
+            if(dictionary[note.uniformFullname]) createTitle($fingerBox, dictionary[note.uniformFullname]);
+
+            $neck.appendChild($fingerBox);
+
+        }
+
+        if (settings.frets) for (let fret = 0; fret <= settings.numFrets; fret++) {
+
+            const fretPosition = ratio * calculateFretPosition(settings.length, fret + 1);
+
+            const $fret = document.createElement('div');
+            $fret.classList.add('fret');
+
+            $fret.style.width = (fretWidth * ratio) + 'px';
+            $fret.style.height = '100%';
+
+            $fret.style[direction] = fretPosition + 'px';
+
+            $neck.appendChild($fret);
+
+        }
+
+
+        for (let string = 0; string < settings.notes.length; string++) {
+
+            const stringNotes = getNotesFromNote(settings.notes[string].toLowerCase(), allNotes);
+
+            let idx = 1;
+            let note = null;
+
+            for (let fret = 0; fret <= settings.numFrets; fret++) {
+
+                const fretPosition = ratio * calculateFretPosition(settings.length, fret + 1);
+                const lastFretPosition = ratio * calculateFretPosition(settings.length, fret);
+
+                note = stringNotes[idx];
+
+                const fingerBoxWidth = ((fretPosition - lastFretPosition) / 2);
+                const fingerBoxWidthFull = ((fretPosition - lastFretPosition));
+                const fingerBoxLeft = (lastFretPosition + ((fretWidth * ratio) / 2));
+                const fingerBoxTop = (string * (neckHeight / settings.notes.length));
+                const fingerBoxHeight = (neckHeight / settings.notes.length);
+
+                const $fingerBox = document.createElement('div');
+                $fingerBox.classList.add('finger-box');
+
+                $fingerBox.style.height = fingerBoxHeight + 'px';
+                $fingerBox.style.width = fingerBoxWidth + 'px';
+                $fingerBox.style.top = fingerBoxTop + 'px';
+                $fingerBox.style[direction] = fingerBoxLeft + 'px';
+
+                $fingerBox.setAttribute('scale-note', note.uniformFullname);
+                $fingerBox.setAttribute('note', note.uniformFullname);
+
+                if(dictionary[note.uniformFullname]) createTitle($fingerBox, dictionary[note.uniformFullname]);
+
+                $neck.appendChild($fingerBox);
+
+                idx++;
+                note = stringNotes[idx];
+
+                const $fingerBox2 = document.createElement('div');
+                $fingerBox2.classList.add('finger-box');
+
+                $fingerBox2.style.height = fingerBoxHeight + 'px';
+                $fingerBox2.style.width = (settings.TET12 ? fingerBoxWidthFull : fingerBoxWidth) + 'px';
+                $fingerBox2.style.top = fingerBoxTop + 'px';
+                $fingerBox2.style[direction] = (fingerBoxLeft + (settings.TET12 ? 0 : fingerBoxWidth)) + 'px';
+
+                if(dictionary[note.uniformFullname]) createTitle($fingerBox2, dictionary[note.uniformFullname]);
+
+                $fingerBox2.setAttribute('scale-note', note.uniformFullname);
+                $fingerBox2.setAttribute('note', note.uniformFullname);
+
+                $neck.appendChild($fingerBox2);
+
+                idx++;
+
+            }
+
+            const $string = document.createElement('div');
+            $string.classList.add('string');
+
+            const boxHeight = neckHeight / settings.notes.length;
+
+            $string.style.height = (ratio * 0.05) + 'px';
+            $string.style.width = '100%';
+            $string.style.top = ((string * boxHeight  + (boxHeight / 2))) + 'px';
+            $string.style[direction] = '0px';
+
+            $neck.appendChild($string);
+
+            if(settings.singleNotes && settings.singleNotes.indexOf(string) !== -1 ) continue;
+
+            if(settings.doubleStringed){
+                const $double = $string.cloneNode();
+                $string.style.top = ((string * boxHeight  + (boxHeight / 2) - 1)) + 'px';
+                $double.style.top = ((string * boxHeight  + (boxHeight / 2) + 1)) + 'px';
+                $neck.appendChild($double);
+            }
+
+        }
+
+    }
+
+    this.onrender = ()=>{
+
+        this.init();
+
+        Array.from(document.querySelectorAll('[scale-note]')).forEach(a=>{
+            a.classList.remove('scale-note-on');
+            a.classList.remove('root-note');
+        });
+
+        const scale = app.getScale(1);
+
+        scale.forEach((note)=>{
+            Array.from(document.querySelectorAll('[scale-note="'+note.uniformFullname+'"]')).forEach($el=>$el.classList.add('scale-note-on'));
+        });
+
+        scale.filter(a=>a.scaleDegree === 1).forEach((note)=>{
+            Array.from(document.querySelectorAll('[scale-note="'+note.uniformFullname+'"]')).forEach($el=>$el.classList.add('root-note'));
+        })
+
+        if(this.lastStageTransform) this.stage.style.transform = this.lastStageTransform;
+
+    }
+
+    let isDragging = false;
+
+    let lastMouse = {
+        x: 0,
+        y: 0
+    };
+
+    let transform = {
+        x: 180,
+        y: 0,
+        scale: 1.5
+    };
+
+    let lastDistance = null;
+
+    const handleDragStart = (event) => {
+        isDragging = true;
+        lastMouse.x = event.clientX || event.touches[0].clientX;
+        lastMouse.y = event.clientY || event.touches[0].clientY;
+        // event.preventDefault(); // Prevent scrolling
+    };
+
+    const handleDragMove = (event) => {
+        if (isDragging) {
+            try{
+                const clientX = event.clientX || event.touches[0].clientX;
+                const clientY = event.clientY || event.touches[0].clientY;
+                const deltaX = clientX - lastMouse.x;
+                const deltaY = clientY - lastMouse.y;
+                transform.x += deltaX / transform.scale;
+                transform.y += deltaY / transform.scale;
+                lastMouse.x = clientX;
+                lastMouse.y = clientY;
+
+                updateStageTransform();
+                event.preventDefault(); // Prevent scrolling
+            }catch(e){}
+        }
+    };
+
+    const handleDragEnd = () => {
+        isDragging = false;
+    };
+
+    const handleMouseWheel = (event) => {
+        event.preventDefault();
+
+        const factor = 0.0005;
+        const scaleDelta = 1 + event.deltaY * -factor;
+
+        const rect = this.stage.getBoundingClientRect();
+        const mouse = {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+        };
+
+        const newScale = transform.scale * scaleDelta;
+        const delta = {
+            x: (mouse.x - transform.x) * (1 - scaleDelta),
+            y: (mouse.y - transform.y) * (1 - scaleDelta)
+        };
+
+        transform.scale = newScale;
+
+        updateStageTransform();
+    };
+
+    const handlePinchStart = (event) => {
+        if (event.touches.length >= 2) {
+            const touch1 = event.touches[0];
+            const touch2 = event.touches[1];
+
+            const distX = touch2.clientX - touch1.clientX;
+            const distY = touch2.clientY - touch1.clientY;
+            const distance = Math.sqrt(distX * distX + distY * distY);
+            lastDistance = distance;
+
+            event.preventDefault(); // Prevent scrolling
+        }
+    };
+
+    const handlePinchZoom = (event) => {
+        if (event.touches.length >= 2) {
+            const touch1 = event.touches[0];
+            const touch2 = event.touches[1];
+
+            const distX = touch2.clientX - touch1.clientX;
+            const distY = touch2.clientY - touch1.clientY;
+            const distance = Math.sqrt(distX * distX + distY * distY);
+
+            if (!lastDistance) {
+                lastDistance = distance;
+                return;
+            }
+
+            const scaleDelta = distance / lastDistance;
+            lastDistance = distance;
+
+            const rect = this.stage.getBoundingClientRect();
+            const center = {
+                x: (touch1.clientX + touch2.clientX) / 2 - rect.left,
+                y: (touch1.clientY + touch2.clientY) / 2 - rect.top
+            };
+
+            const newScale = transform.scale * scaleDelta;
+            const delta = {
+                x: (center.x - transform.x) * (1 - scaleDelta),
+                y: (center.y - transform.y) * (1 - scaleDelta)
+            };
+
+            transform.scale = newScale;
+
+            updateStageTransform();
+            event.preventDefault(); // Prevent scrolling
+        }
+    };
+
+    const handlePinchEnd = () => {
+        lastDistance = null;
+    };
+
+    const updateStageTransform = () => {
+        this.stage.style.transform = `scale(${transform.scale}) translate(${transform.x}px, ${transform.y}px)`;
+        this.lastStageTransform = this.stage.style.transform;
+    };
+
+    updateStageTransform();
+
+    this.wrapper.addEventListener('mousedown', handleDragStart);
+    this.wrapper.addEventListener('touchstart', handleDragStart);
+
+    document.addEventListener('mousemove', handleDragMove);
+    document.addEventListener('touchmove', handleDragMove);
+
+    document.addEventListener('mouseup', handleDragEnd);
+    document.addEventListener('touchend', handleDragEnd);
+
+    this.wrapper.addEventListener('wheel', handleMouseWheel);
+    this.wrapper.addEventListener('touchstart', handlePinchStart);
+    this.wrapper.addEventListener('touchmove', handlePinchZoom);
+    this.wrapper.addEventListener('touchend', handlePinchEnd);
+
+</script>
+
+<div class="neck-stage-wrapper" ref="wrapper">
+    <div class="neck-stage" ref="stage"></div>
+    <div class="buttons">
+        <button icon="assets/guitar.svg" onclick="()=>{
+            popup.show('neck', {
+                neck: this,
+            })
+        }"></button>
+        <button icon="assets/tag.svg" onclick="()=>{
+            this.toggleViewMode();
+        }"></button>
+        <button icon="assets/flip.svg" onclick="()=>{
+            this.flip = !this.flip;
+            this.init(this.settings);
+            this.render();
+        }"></button>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
+  <base href="/">
+
+  <script src="js/abc.js"></script>
+
+  <title>Music Scales - Explore and Practice Scales</title>
+
+  <style>
+    button {
+      border: none;
+    }
+  </style>
+
+</head>
+
+<body>
+  <script type="module">
+
+    import './js/functions.js';
+    import './js/dom.js';
+    // import GuitarTuner from './js/guitartuner.js';
+    import Modular from './js/modular.js';
+    import Nigun from './js/nigun.2.js';
+    import * as CONSTANTS from './js/constants.js';
+
+    window.CONSTANTS = CONSTANTS;
+    window.Nigun = Nigun;
+    window.__app = new Modular;
+    // window.Factory = Factory;
+    // window.GuitarTuner = GuitarTuner;
+
+    window.$ = (q)=>{
+      return document.querySelector(q);
+    }
+
+    _modular.preload([
+      'views/neck',
+      'views/play',
+      'views/score',
+      'popups/scale',
+      'popups/key',
+      'popups/pattern',
+      'edit-mode',
+      'stepper'
+    ])
+
+    </script>
+</body>
+
+</html>

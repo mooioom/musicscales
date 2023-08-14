@@ -1,0 +1,554 @@
+<style>
+    body,
+    html {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        /* font-family: 'Roboto', sans-serif; */
+        font-family: 'fira', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .theme-dark {
+        background: rgb(15, 23, 33);
+        background: linear-gradient(90deg, rgba(15, 23, 33, 1) 0%, rgba(27, 33, 45, 1) 100%);
+    }
+
+    :root {
+        --select-color: #3adc41;
+    }
+
+    :root .theme-dark {
+        --select-color: #e91e63;
+    }
+
+    .app {
+        height: 100%;
+        user-select: none;
+        background-image: 
+            radial-gradient(rgb(245, 245, 245) 10%, transparent 10%),
+            radial-gradient(rgb(245, 245, 245) 10%, transparent 10%);
+        background-position: 0px 0px, 12px 12px;
+        background-size: 24px 24px;
+        background-color: rgb(255, 255, 255);
+        display: flex;
+    }
+
+    .theme-dark .app{
+        background-image: 
+            radial-gradient(rgb(0, 0, 0) 10%, transparent 10%),
+            radial-gradient(rgb(18, 18, 18) 10%, transparent 10%);
+        background-position: 0px 0px, 12px 12px;
+        background-size: 24px 24px;
+        background-color: rgb(8, 8, 8);
+    }
+
+    :not(:root):fullscreen::backdrop {
+        background: #fff;
+    }
+
+    .theme-dark:not(:root):fullscreen::backdrop {
+        background: rgb(15, 23, 33);
+        background: linear-gradient(90deg, rgba(15, 23, 33, 1) 0%, rgba(27, 33, 45, 1) 100%);
+    }
+
+    @font-face {
+        font-family: fira;
+        src: url('assets/FiraSansCondensed-Regular.ttf');
+    }
+
+    body>div {
+        height: 100%;
+    }
+
+    .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .overflow-hidden{
+        overflow: hidden !important;
+        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+    }
+
+    .text-center{
+        text-align: center;
+    }
+
+    .icon{
+        filter: brightness(0);
+        width: 100%;
+        height: 100%;
+    }
+
+    .theme-dark .icon{
+        filter: brightness(1) hue-rotate(80deg);
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .no-padding {
+        padding: 0;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .space-between {
+        display: flex;
+        justify-content: space-between;
+    }
+    .flex-middle{
+        display: flex;
+        align-items: center;
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .column>div {
+        overflow-x: hidden;
+        overflow-y: auto;
+        flex: none;
+    }
+
+    .app-header {
+        padding: 10px;
+        box-sizing: border-box;
+        background: #fff;
+        color: #565656;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .theme-dark .app-header {
+        background: none;
+    }
+
+    .app-header>div>div {
+        display: inline-block;
+        margin-inline-end: 5px;
+    }
+
+    .app-header .button {
+        background: transparent;
+        font-size: 10px;
+        border-radius: 5px;
+        margin-inline-end: 0px;
+        margin-inline-start: 5px;
+        width: 22px;
+        height: 22px;
+    }
+
+    .app-header .button.on {
+        background: #fff709;
+        color: white;
+        border-radius: 50px;
+    }
+
+    .theme-dark .app-header .button.on {
+        background: #e90a55;
+    }
+
+    .app-header .buttons {
+        display: flex;
+        align-items: center;
+    }
+
+    .grid {
+        width: 100%;
+        height: 100%;
+        border-collapse: collapse;
+    }
+
+    .grid td {
+        vertical-align: top;
+        padding: 0;
+    }
+
+    .zero-height {
+        height: 0;
+    }
+
+    .grid .app-footer {
+        height: 0;
+        position: relative;
+        top: -20px;
+        pointer-events: none;
+    }
+</style>
+
+<script>
+    window.app = this;
+
+    const PLANS = {
+        PRO: "PRO",
+        FREE: "FREE",
+    };
+
+    this.plan = PLANS.FREE;
+
+    const getWidth = () => { return document.body.getBoundingClientRect().width; };
+    const setMobile = () => { this.isMobile = (getWidth() <= 5000); }
+
+    this.width = getWidth();
+
+    setMobile();
+
+    window.onresize = () => {
+        setMobile();
+        this.width = getWidth();
+        this.render();
+    }
+
+    this.ALL_KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B'];
+    this.KEYS = ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B'];
+    this.keyIndex = cache.get('keyId') || 2; // A
+    
+    this.PATTERNS = Object.keys(CONSTANTS.SEQUENCER_PATTERNS);
+
+    const THEMES = {
+        DEFAULT: 'DEFAULT',
+        DARK: 'DARK',
+    }
+
+    const VIEWS = {
+        NECK: 'NECK',
+        SCORE: 'SCORE',
+        PLAY: 'PLAY',
+    };
+
+    const VIEW_TO_URL = {
+        [VIEWS.NECK]: 'instrument',
+        [VIEWS.SCORE]: 'notes',
+        [VIEWS.PLAY]: 'play',
+    }
+
+    this.DEFAULTS = {};
+
+    const DEFAULTS = {
+        scale: 'MAJOR',
+        pattern: 'UP',
+        program: 'UP',
+        key: 'D',
+        octave: 3,
+        mode: 1,
+        tempo: 140,
+        pitch: 440,
+        detune: 0,
+        accidental: CONSTANTS.ACCIDENTALS.FLAT,
+        theme: THEMES.DEFAULT,
+        view: VIEWS.SCORE,
+        subView: '',
+        metronome: false,
+    };
+
+    this.DEFAULTS = DEFAULTS;
+
+    this.settings = {
+        bpm: cache.get('bpm') ? Number(cache.get('bpm')) : DEFAULTS.tempo,
+        key: cache.get('key') || DEFAULTS.key,
+        octave: cache.get('octave') ? Number(cache.get('octave')) : DEFAULTS.octave,
+        scale: cache.get('scale') || DEFAULTS.scale,
+        pattern: cache.get('pattern') || DEFAULTS.pattern,
+        program: cache.get('program') || DEFAULTS.program,
+        mode: cache.get('mode') ? Number(cache.get('mode')) : DEFAULTS.mode,
+        accidental: cache.get('accidental') || DEFAULTS.accidental,
+        concertPitch: cache.get('pitch') ? Number(cache.get('pitch')) : DEFAULTS.pitch,
+        theme: cache.get('theme') || DEFAULTS.theme,
+        metronome: cache.get('metronome') === 'true' ? true : false,
+        loop: true,
+        mainView: cache.get('view') || DEFAULTS.view,
+        subView: cache.get('subview') || DEFAULTS.subView,
+        keyboardInstrument: 'synth1',
+        instrument: 'piano',
+        padInstrument: 'pad',
+        gains: {
+            master: cache.get('master-gain') ? Number(cache.get('master-gain')) : 1,
+            instrument: cache.get('instrument-gain') ? Number(cache.get('instrument-gain')) : 1,
+            pad: cache.get('pad-gain') ? Number(cache.get('pad-gain')) : 1,
+            metronome: cache.get('metronome-gain') ? Number(cache.get('metronome-gain')) : 1,
+            keyboard: cache.get('keyboard-gain') ? Number(cache.get('keyboard-gain')) : 1,
+        },
+    };
+
+    const path = location.pathname.slice(1);
+
+    if(path){
+
+    }
+
+    this.padIsPlaying = false;
+
+    window.nigun = new Nigun({
+        bpm: 120,
+        signature: '4/4',
+        oninit: ()=>{
+            nigun.toggleMetronome(this.settings.metronome);
+        },
+        onstop: ()=>{
+            functions.unlightAllNotes();
+        }
+    });
+
+    nigun.settings.bpm = this.settings.bpm;
+
+    this.init = () => {
+        this.setTheme();
+    }
+
+    this.play = async () => {
+
+        const timeline = nigun.sequencer({
+            scale: this.getScale(),
+            pattern: this.getPattern(),
+        })
+
+        const sequence1 = nigun.createSequence({timeline});
+
+        const track = nigun.createTrack({
+            name: 'melody',
+            instrument: nigun.instruments.piano,
+            sequences: [
+                sequence1,
+            ],
+            oneventstart: (ev) => {
+                functions.unlightAllNotes();
+                functions.lightNotes(ev.item.item.note.uniformFullname);
+            },
+            oneventend: (ev) => {},
+        });
+
+        nigun.setLengthByTrack(track);
+        nigun.play();
+
+    }
+
+    this.change = ()=>{
+        if(nigun.IS_PLAYING) this.play();
+    }
+
+    this.getCustomData = (type = 'scales')=>{
+        let data = [];
+        const d = localStorage.getItem(`custom_${type}`);
+        if(!d) localStorage.setItem(`custom_${type}`, '{}');
+        try{
+            data = JSON.parse(localStorage.getItem(`custom_${type}`) || {});
+        }catch(e){}
+        return data;
+    }
+
+    this.setCustomData = (d = {}, type='scales')=>{
+        localStorage.setItem(`custom_${type}`, JSON.stringify(d));
+    }
+
+    this.getCustomScales = ()=>{
+        return this.getCustomData();
+    }
+
+    this.setCustomScales = (newCustomScales = {})=>{
+        this.setCustomData(newCustomScales)
+    }
+
+    this.getScales = ()=>{
+        return {...this.getCustomScales(), ...CONSTANTS.SCALES};
+    }
+
+    this.getCustomPrograms = ()=>{
+        return this.getCustomData('programs');
+    }
+
+    this.setCustomPrograms = (d = {})=>{
+        this.setCustomData(d, 'programs')
+    }
+
+    this.getPrograms = ()=>{
+        return {...this.getCustomPrograms(), ...CONSTANTS.PROGRAMS};
+    }
+
+    this.getProgram = ()=>{
+        return this.getPrograms()[this.settings.program];
+    }
+
+    this.getScaleLength = () => {
+        const scale = app.getScales()[this.settings.scale];
+        let l = scale.steps.length;
+        return l;
+    }
+
+    this.getScaleSteps = () => {
+        const scale = app.getScales()[this.settings.scale];
+        let steps = scale.steps;
+        return steps;
+    }
+
+    this.getScale = (octave = this.settings.octave, key = this.settings.key) => {
+        const scale = app.getScales()[this.settings.scale]
+        return nigun.getScale({
+            root: key + octave,
+            // rootFrequency: 320.24370022528126, // e half flat
+            steps: scale.steps,
+            shift: this.settings.mode - 1,
+            concertPitch: this.settings.concertPitch,
+            // accidental: this.settings.accidental,
+            // dropNotes: scale.DROP,
+            align: !scale.noSequencialNotation,
+        })
+    }
+
+    this.getPattern = () => {
+        return CONSTANTS.SEQUENCER_PATTERNS[this.settings.pattern];
+    }
+
+    this.stop = () => {
+        nigun.stop();
+    }
+
+    this.set = (o)=>{
+        for(let x in o){
+            this.settings[x] = o[x];
+            cache.set(x, o[x]);
+        }
+        this.render();
+        this.setURL();
+    }
+
+    this.setKey = (key) => {
+        this.settings.key = key;
+        cache.set('key', this.settings.key);
+        cache.set('octave', this.settings.octave);
+        this.render();
+        this.setURL();
+    }
+
+    this.setConcertPitch = (pitch = DEFAULTS.pitch) => {
+        this.settings.concertPitch = pitch;
+        cache.set('pitch', this.settings.concertPitch);
+        this.render();
+        this.setURL();
+    }
+
+    this.setScale = (scale = DEFAULTS.scale) => {
+        this.settings.scale = scale;
+        cache.set('scale', scale);
+        this.render();
+        this.setURL();
+    }
+
+    this.setMode = (mode) => {
+        this.settings.mode = mode;
+        cache.set('mode', mode || 1);
+        this.render();
+        this.setURL();
+    }
+
+    this.setPattern = (pattern) => {
+        this.settings.pattern = pattern;
+        cache.set('pattern', pattern);
+        this.render();
+        this.change();
+    }
+
+    this.setProgram = (program) => {
+        this.settings.program = program;
+        cache.set('program', program);
+        this.render();
+    }
+
+    this.toggleView = () => {
+        const keys = Object.keys(VIEWS);
+        let id = keys.indexOf(this.settings.mainView);
+        id = (id + 1) % keys.length;
+        this.settings.mainView = keys[id];
+        cache.set('view', app.settings.mainView);
+        app._component.components.main.setView(this.settings.mainView);
+        // this.render();
+    }
+
+    this.setTheme = (theme = this.settings.theme) => {
+        document.body.className = '';
+        document.body.classList.add(`theme-${theme.toLowerCase()}`);
+        this.settings.theme = theme;
+        cache.set('theme', theme);
+    }
+
+    this.setURL = ()=>{
+        window.history.replaceState({page: 2}, null, `/${this.settings.key}-${this.settings.scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[this.settings.mainView]}`);
+    }
+
+    this.onrender = ()=>{
+        // console.log(1);
+    }
+
+    this.colorOrgan = () => {
+        let i = 150;
+        if (window.colorInterval) clearInterval(window.colorInterval);
+        window.colorInterval = setInterval(function () {
+            const box = $('.scale-header');
+            if (!box) return;
+            const hue = i % 360;
+            const shadowColor = `hsla(${hue}, 100%, 50%, 80%)`;
+            box.style.boxShadow = `0 13px 0px ${shadowColor}`;
+            i++;
+        }, 50);
+    }
+
+    // this.colorOrgan();
+
+    this.init();
+</script>
+
+<div class="app">
+    <table class="grid">
+        <tr>
+            <td class="zero-height">
+                <div class="app-header">
+                    <div class="header-base">
+                        <key></key>
+                        <tempo></tempo>
+                    </div>
+                    <div class="buttons">
+                        <button icon="assets/metronome.svg" onclick="functions.toggleMetronome" class="{{app.settings.metronome ? 'on' : ''}}"></button>
+                        <button icon="assets/pad.svg" onclick="functions.togglePad" class="{{app.padIsPlaying ? 'on' : ''}}"></button>
+                        <button icon="assets/mixer.svg" onclick="()=>{popup.show('mixer')}"></button>
+                        <button icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button>
+                    </div>
+                </div>
+                <scale></scale>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <main></main>
+            </td>
+        </tr>
+        <tr>
+            <td class="zero-height app-footer">
+                <play _name="play"></play>
+                <!-- <program></program> -->
+                <pattern></pattern>
+            </td>
+        </tr>
+    </table>
+    <sidebar></sidebar>
+    <popup></popup>
+    <keyboard-player></keyboard-player>
+    <!-- <welcome-page></welcome-page> -->
+</div>

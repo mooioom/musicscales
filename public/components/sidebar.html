@@ -1,0 +1,75 @@
+<style>
+    .sidebar{
+        background-color: #252525;
+        flex-basis: 320px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        font-size: 14px;
+    }
+    .sidebar .sidebar-top{
+        height: calc(100% - 270px);
+        color: #fff;
+        box-sizing: border-box;
+        position: relative;
+    }
+    .sidebar .sidebar-top > div{
+        padding: 15px;
+    }
+    .sidebar .title{
+        margin-bottom: 10px;
+        font-size: 20px;
+        background-color: #191919;
+    }
+    .sidebar .title small{
+        font-size: 11px;
+        color: #919191;
+        font-style: italic;
+    }
+    .sidebar .text{
+
+    }
+    .sidebar .bottom{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        font-size: 11px;
+        box-sizing: border-box;
+    }
+    .sidebar .bottom-button{
+        cursor: pointer;
+    }
+    .sidebar .bottom-button:hover{
+        text-decoration: underline;
+    }
+    .sidebar .ad-placeholder{
+        background: #333;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .sidebar .ad{
+        width: 300px;
+        height: 250px;
+        background: #525252;
+    }
+    @media only screen and (max-width: 950px) {
+        .sidebar{
+            display: none;
+        }
+    }
+</style>
+<script></script>
+<div class="sidebar">
+    <div class="sidebar-top">
+        <div class="title">Music Scales <small>by Eldad Eliyahu Levi</small></div>
+        <div class="text">
+            Explore and practice scales and maqams on a microtonal (24TET) scale player, instrument neck viewer and staff notation
+        </div>
+        <div class="bottom space-between">
+            <div></div>
+            <div class="bottom-button" onclick="window.location='sitemap.html'">SITEMAP</div>
+        </div>
+    </div>
+    <div class="ad-placeholder">
+        <div class="ad"></div>
+    </div>
+</div>

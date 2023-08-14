@@ -1,0 +1,20 @@
+<style>
+    .program{
+        text-align: center;
+        pointer-events: all;
+    }
+    .program .title{
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .theme-dark .program .title{
+        color: #1ab2b1;
+    }
+    .program .steps{
+        margin-top: 5px;
+    }
+</style>
+<script></script>
+<div class="program pointer" ref="program" onclick="popup.show('program')">
+    <div class="title">{{app.getProgram().title}}</div>
+</div>

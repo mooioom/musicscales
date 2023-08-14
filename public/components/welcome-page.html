@@ -1,0 +1,68 @@
+<style>
+    .welcome-page {
+        position: fixed;
+        top: 0px;
+        left: -200%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.815);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: left 0.5s ease-out;
+        cursor: pointer;
+        /* background-image: url('assets/welcome.jpg'); */
+        /* background-size: cover; */
+    }
+
+    .theme-dark .welcome-page{
+        background: rgba(0,0,0, 0.815);
+        color: #fff;
+    }
+
+    .welcome-page.on {
+        left: 0%;
+    }
+
+    .welcome-page .middle {
+        text-align: center;
+
+    }
+
+    .welcome-page .welcome-text {
+        margin-bottom: 10px;
+    }
+
+    .welcome-page .welcome-button {
+        font-size: 40px;
+        display: inline-block;
+        border: 3px solid #ccc;
+        border-radius: 50px;
+        padding: 20px;
+        padding-left: 40px;
+        padding-right: 40px;
+        font-weight: bold;
+    }
+    .theme-dark .welcome-page .welcome-button{
+        border: 3px solid aqua;
+        color: aqua;
+    }
+</style>
+<script>
+    this.loaded = false;
+    this.start = () => {
+        nigun.context.resume();
+        this.page.classList.remove('on');
+        this.loaded = true;
+    }
+</script>
+<div class="welcome-page {{!this.loaded ? 'on' : ''}}" ref="page" onclick="this.start()">
+    <div class="middle">
+        <div class="welcome-text">
+            <!-- <img src="assets/welcome.jpg" /> -->
+        </div>
+        <div class="welcome-button">
+            START
+        </div>
+    </div>
+</div>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground</title>
+    <style>
+        html, body{
+            padding: 20;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .polka {
+            background-image: 
+                radial-gradient(rgb(245, 245, 245) 10%, transparent 10%),
+                radial-gradient(rgb(245, 245, 245) 10%, transparent 10%);
+            background-position: 0px 0px, 12px 12px;
+            background-size: 24px 24px;
+            background-color: rgb(255, 255, 255);
+        }
+        .header{
+            display: flex;
+        }
+        .header .title{
+            font-size: 16px;
+        }
+        .button{
+            padding: 10px;
+            border:1px solid #ccc;
+            cursor: pointer;
+            margin-inline-end: 5px;
+            border-radius: 7px;
+            user-select: none;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .button:hover{
+            background-color: #efefef;
+        }
+        .value-box{
+            margin-inline-end: 10px;
+            text-align: center;
+        }
+        .value-box .value{
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .metronome{
+            width: 15px;
+            height: 15px;
+            background: #efefef;
+            border-radius: 30px;
+            margin-top: 5px;
+        }
+        .metronome.on{
+            background: #03a9f4;
+            box-shadow: 0px 0px 10px #0080004f;
+        }
+        .body{
+            margin-top: 20px;
+        }
+        .timeline{
+            width: 100%;
+            height: 100px;
+            background: #efefef;
+            position: relative;
+            display: flex;
+        }
+        .pointer{
+            width: 2px;
+            height: 100%;
+            position: absolute;
+            top:0px;
+            left: 0%;
+            background-color: #333;
+        }
+        .timeline .part{
+            width: 25%;
+            border-right: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body class="polka">
+    <div class="header">
+        <div class="tick value-box">
+            <div class="title">TICK</div>
+            <div class="value">
+                <div class="metronome"></div>
+            </div>
+        </div>
+        <div class="bpm value-box">
+            <div class="title">BPM</div>
+            <div class="value">120</div>
+        </div>
+        <div class="signature value-box">
+            <div class="title">SIGNATURE</div>
+            <div class="value">4/4</div>
+        </div>
+        <div class="time value-box">
+            <div class="title">TIME</div>
+            <div class="value">0</div>
+        </div>
+        <div class="button" onclick="nigun.play()">PLAY</div>
+        <div class="button" onclick="nigun.stop()">STOP</div>
+        <div class="button" onclick="nigun.pause()">PAUSE</div>
+        <div class="button" onclick="nigun.setTempo(nigun.settings.bpm + 30)">+30 BPM</div>
+        <div class="button" onclick="nigun.setTempo(nigun.settings.bpm - 30)">-30 BPM</div>
+        <div class="button" onclick="nigun.setCurrentTime(1)">Time</div>
+        <div class="button" onclick="nigun.toggleMetronome()">Metronome</div>
+        
+    </div>
+    <div class="header" style="margin-top: 20px;">
+        <div class="button" onclick="setScale(nigun.CONSTANTS.SCALES.MAJOR.steps)">Set major</div>
+        <div class="button" onclick="setScale(nigun.CONSTANTS.SCALES.MINOR.steps)">Set minor</div>
+        <div class="button" onclick="setScale(nigun.CONSTANTS.SCALES.MAQAM_RAST.steps)">Set rast</div>
+    </div>
+    <div class="body">
+        <div class="timeline">
+            <div class="pointer"></div>
+            <div class="part"></div>
+            <div class="part"></div>
+            <div class="part"></div>
+            <div class="part"></div>
+        </div>
+    </div>
+    <script type="module">
+
+        import Nigun from './js/nigun.2.js';
+
+        const init = async ()=>{
+
+            window.nigun = await new Nigun({
+                bpm: 150,
+                signature: '4/4',
+                onmetronomebeat: ()=>{
+                    document.querySelector('.metronome').classList.add('on');
+                    setTimeout(()=>{
+                        document.querySelector('.metronome').classList.remove('on');
+                    },20)
+                },
+                onrender: ()=>{
+                    document.querySelector('.pointer').style.left = ((nigun.time.current / nigun.time.end) * 100) + '%';
+                    document.querySelector('.time .value').innerHTML = nigun.time.current.toFixed(2);
+                    document.querySelector('.bpm .value').innerHTML = nigun.settings.bpm;
+                    const sig = nigun.utils.getSignature();
+                    document.querySelector('.signature .value').innerHTML = `${sig[0]}/${sig[1]}`;
+                },
+                ontimeset: ()=>{
+                    Array.from(document.querySelectorAll('.timeline .part')).forEach(p=>p.parentElement.removeChild(p));
+                    const m = nigun.utils.getMeasuresCount();
+                    for(let x = 0;x<m;x++){
+                        const $p = document.createElement('div');
+                        $p.classList.add('part');
+                        document.querySelector('.timeline').appendChild($p);
+                    }
+                }
+            });
+
+            nigun.render();
+
+            await nigun.createInstrument(nigun.settings.instruments[0]); // 2
+
+        }
+
+        await init();
+
+        window.setScale = async (steps = nigun.CONSTANTS.SCALES.MINOR.steps)=>{
+
+            const timeline = nigun.sequencer({
+                scale: nigun.getScale({
+                    steps
+                })
+            })
+
+            const sequence1 = nigun.createSequence({timeline});
+            const sequence2 = nigun.createSequence({timeline});
+
+            sequence2.shiftTime(nigun.utils.getTimelineLength(timeline));
+
+            const track = nigun.createTrack({
+                name: 'melody',
+                instrument: nigun.instruments.synth1,
+                sequences: [
+                    sequence1,
+                    sequence2
+                ],
+                oneventstart: (ev)=>{
+                    // console.log(ev);
+                },
+                oneventend: (ev)=>{
+                    // console.log(ev);
+                }
+            });
+
+            //debugger;
+
+            nigun.setLengthByTrack(track);
+
+            console.log(track);
+
+            nigun.reschedule();
+
+        }
+
+        setScale();
+        
+    </script>
+</body>
+</html>

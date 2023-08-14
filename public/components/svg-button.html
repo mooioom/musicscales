@@ -1,0 +1,38 @@
+<style>
+    .svg-button{
+        width: 22px;
+        height: 22px;
+    }
+</style>
+<script>
+
+    this.cache = {};
+    
+    this.setSVG = (data)=>{
+        this.svg.innerHTML = '';
+        const $el = document.createElement('div');
+        $el.innerHTML = data;
+        this.svg.innerHTML = $el.querySelector('svg').innerHTML;
+        const bb = this.svg.getBBox();
+        this.svg.setAttribute('viewBox',`0 0 ${bb.width + 10} ${bb.height + 11}`);
+    }
+
+    this.onrender = ()=>{
+
+        if(this.props.icon){
+            if(this.cache[this.props.icon]){
+                this.setSVG(this.cache[this.props.icon]);
+            }else{
+                fetch(this.props.icon).then((data)=>{
+                    const decoder = new TextDecoder();
+                    data.body.getReader().read().then((v)=>{
+                        const data = decoder.decode(v.value);
+                        this.cache[this.props.icon] = data;
+                        this.setSVG(data);
+                    });
+                })
+            }
+        }
+    }
+</script>
+<svg class="svg-button" ref="svg"></svg>

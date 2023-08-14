@@ -1,0 +1,61 @@
+<style>
+    .list{
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* text-align: center; */
+    }
+    .list .option{
+        /* text-align: center; */
+        padding: 10px;
+        cursor: pointer;
+        font-weight: normal;
+        /* border-bottom: 1px dashed #d4d4d4; */
+    }
+    .list.bullets .option img{
+        display: inline-block;
+    }
+    .list .option img{
+        display: none;
+        width: 18px;
+        margin-inline-end: 10px;
+        opacity: 0.1;
+    }
+    .list .option:hover{}
+    .list .option.selected{}
+    .list .option.selected{
+        background: var(--select-color) !important;
+        color: #fff;
+    }
+    .list .option .description:not(:empty){
+        font-size: 12px;
+    }
+</style>
+<script>
+
+    this.defaultFontSize = '25px';
+
+    this.focusSelected = ()=>{
+        const selected = this.select.querySelector('.option.selected');
+        if (selected) {
+            selected.scrollIntoView({
+                behavior: 'auto',
+                block: 'center',
+                inline: 'center'
+            });
+        }
+    }
+
+    this.onrender = ()=>{
+        this.focusSelected();
+    }
+
+</script>
+<div class="list {{this.props.hasOwnProperty('center') ? 'text-center' : ''}} {{this.props.hasOwnProperty('bullets') ? 'bullets' : ''}}" ref="select" style="font-size: {{this.props.size || this.defaultFontSize}};">
+    <div 
+        class="option {{this.props.selected === option.value ? 'selected' : ''}}" 
+        for="option in this.props.options" 
+        onclick="this.props.onselect(option)"
+    >{{option.title || option.value}}<div class="description">{{option.description || ''}}</div></div>
+</div>

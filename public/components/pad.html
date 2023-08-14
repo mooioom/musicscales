@@ -1,0 +1,27 @@
+<style>
+    .pad .pad-button {
+        display: inline-flex;
+        width: 30%;
+        height: 15px;
+        justify-content: center;
+        align-items: center;
+        background: #efefef;
+        margin-inline-end: 5px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        font-size: 11px;
+        border-radius: 50px;
+        user-select: none;
+    }
+    .pad .pad-button.on {
+        background-color: #4be90a;
+        color: #fff;
+    }
+    .pad {
+        padding-bottom: 0;
+    }
+</style>
+<script></script>
+<div class="pad" ref="pad">
+    <button title="PAD" onclick="functions.togglePad" class="{{app.padPlaying ? 'on' : ''}}"></button>
+</div>

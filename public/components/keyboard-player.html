@@ -1,0 +1,49 @@
+<script>
+    this.keyboardKeys = [
+        'i', 'o', 'p', '[', ']',
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '\\',
+        'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',
+    ];
+
+    let sourceByKeys = {};
+
+    this.onrender = () => {
+
+        const notes = app.getScale(2);
+        const keys = [];
+        const notesKeys = [];
+
+        this.oscillators = [];
+
+        document.onkeydown = (e) => {
+            if(document.activeElement.tagName === 'INPUT') return;
+            const instrument = nigun.instruments[app.settings.keyboardInstrument];
+            const keyId = this.keyboardKeys.indexOf(e.key);
+            if (keyId === -1) return;
+            e.preventDefault();
+            const note = notes[keyId];
+            if (instrument.type === 'SYNTH' && sourceByKeys[keyId]) return;
+            sourceByKeys[keyId] = instrument.startFrequency(note.fq);
+            functions.forEachNotesElements(note.uniformFullname, ($el) => {
+                $el.classList.add('playing');
+            })
+        }
+
+        document.onkeyup = (e) => {
+            const instrument = nigun.instruments[app.settings.keyboardInstrument];
+            const keyId = this.keyboardKeys.indexOf(e.key);
+            if (keyId === -1) return;
+            e.preventDefault();
+            const note = notes[keyId];
+            functions.forEachNotesElements(note.uniformFullname, ($el) => {
+                $el.classList.remove('playing');
+            })
+            if (instrument.type === 'SAMPLER') return; // to allow natural fade
+            if (sourceByKeys[keyId]) {
+                sourceByKeys[keyId].stop();
+                delete sourceByKeys[keyId];
+            }
+        }
+
+    }
+</script>

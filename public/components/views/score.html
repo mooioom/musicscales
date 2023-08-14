@@ -1,0 +1,172 @@
+<style>
+    .score-stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .score-stage .score {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        top: -10px;
+    }
+
+    .score-stage svg {
+        position: absolute;
+    }
+
+    .theme-dark .score-stage svg *{
+        fill: #1bfefc;
+    }
+
+    .score-stage .abcjs-note_selected{
+        fill: black;
+    }
+
+    .score-stage svg text {
+        font-family: 'fira';
+        font-size: 12px;
+    }
+
+    .score-stage .buttons {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        left: 0;
+    }
+
+    .score-stage .buttons .button {
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .score-stage .score-note.playing {
+        fill: #4be90a !important;
+    }
+
+    .theme-dark .score-stage .score-note.playing * {
+        fill: #e90a55 !important;
+    }
+
+    .score-stage .score-note.playing tspan {
+        fill: black;
+    }
+
+    .theme-dark .score-stage .score-note.playing tspan{
+        fill: #1bfefc !important;
+    }
+
+
+</style>
+<script>
+    const MODES = {
+        NOTES: 'NOTES',
+        INTERVALS: 'INTERVALS'
+    };
+
+    this.mode = MODES.NOTES;
+
+    this.toggleMode = () => {
+        if (this.mode === MODES.NOTES) this.mode = MODES.INTERVALS;
+        else this.mode = MODES.NOTES;
+        this.render();
+    }
+
+    this.set = () => {
+
+    }
+
+    this.clear = () => {
+
+    }
+
+    this.init = async () => {
+
+        this.stage.innerHTML = '';
+
+        // V1: clef=treble V: clef=bass
+
+        // var abc = 'K:C\n"F"_/E,2 "G#𝄳"_/B2 ^C2 _D2 E2 "F"_/E,2';
+
+        const steps = app.getScaleSteps();
+        const len = steps.length;
+        const scale = app.getScale().slice(0, len + 1);
+
+        // var abc = 'K:C\n"C"C "D"D "E"E "F"F "G"G "A"A "B"B "C"c';
+
+        let abc = 'K:C\n';
+
+        let startOctave = scale[0].octave;
+
+        const capitalize = (str) => {
+            return str.charAt(0).toUpperCase() + str.substr(1);
+        }
+
+        scale.forEach((step, idx) => {
+            let text = capitalize(step.name) + step.accidental;
+            if (this.mode === MODES.INTERVALS) {
+                text = steps[idx] || '';
+            }
+            abc +=
+                `"${text}"${step.quarterSymbol ? (step.quarterSymbol === '𝄳' ? '_/' : '^/') : ''}${step.shortname[1] === 'b' ? '_' : ''}${step.shortname.indexOf('#') !== -1 ? '^' : ''}${startOctave === step.octave ? step.shortname[0].toUpperCase() : step.shortname[0].toLowerCase()}2 `;
+        });
+
+        // abc = 'K:C\n^/C';
+
+        // console.log(abc);
+
+        const vs = await ABCJS.renderAbc(this.stage, abc, {});
+
+        const w = this.stage.querySelector('g').getBBox().width + (this.mode === MODES.INTERVALS ? 17 : 32);
+
+        const $svg = this.stage.querySelector('svg');
+
+        $svg.style.width = w + 'px';
+
+        const screenWidth = document.body.clientWidth;
+
+        const s = screenWidth > 1000 ? 1000 : screenWidth;
+
+        this.stage.style.zoom = (1 * s) / w;
+
+        if (this.mode === MODES.INTERVALS) {
+
+            Array.from(document.querySelectorAll('tspan')).forEach(a => {
+                if (a.getAttribute('done')) return;
+                a.setAttribute('x', Number(a.getAttribute('x')) + 25)
+                a.setAttribute('done', 1);
+            })
+
+        }
+
+        Array.from(document.querySelectorAll('g[data-name="note"]')).forEach((a, idx) => {
+            a.classList.add('score-note');
+            a.setAttribute('note', scale[idx].uniformFullname);
+        });
+
+        // $svg.style.height = h+'px';
+
+    }
+
+    // this.init();
+
+    this.onrender = () => {
+
+        this.init();
+
+    }
+</script>
+<div class="score-stage" id="stage">
+    <div class="score" ref="stage"></div>
+    <div class="buttons">
+        <button icon="assets/tag.svg" onclick="()=>{
+            this.toggleMode();
+        }"></button>
+    </div>
+</div>

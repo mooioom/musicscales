@@ -1,0 +1,14 @@
+<script>
+    this.onclick = ()=>{
+        app.settings.loop = !app.settings.loop;
+        app.render();
+    }
+</script>
+
+<style>
+    .loop{}
+</style>
+
+<div class="loop">
+    <button title="LOOP" onclick="this.onclick" class="{{app.settings.loop ? 'on' : ''}}"></button>
+</div>
