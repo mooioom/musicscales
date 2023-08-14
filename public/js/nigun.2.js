@@ -479,7 +479,7 @@ class Nigun {
 
         const DEFAULTS = {
             bpm: 120,
-            gain: 1,
+            gain: 0.32,
             signature: '4/4',
             onmetronomebeat: ()=>{},
             onrender: ()=>{},
