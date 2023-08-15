@@ -129,7 +129,7 @@
 
         $svg.style.width = w + 'px';
 
-        const screenWidth = document.body.clientWidth;
+        const screenWidth = document.querySelector('.main').getBoundingClientRect().width;
 
         const s = screenWidth > 1000 ? 1000 : screenWidth;
 

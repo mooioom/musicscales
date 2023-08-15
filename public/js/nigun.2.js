@@ -864,6 +864,8 @@ class Nigun {
         let alignedNotes = null;
     
         window._scaleDebug = [];
+
+        const capitalizeFirstLetter = str => str.replace(/^\w/, c => c.toUpperCase());
     
         for (let x = 0; x <= totalLength; x++) {
     
@@ -979,6 +981,7 @@ class Nigun {
                 uniformFullname: `${uniformName}${note.note.octave()}${quarterSymbol}`,
                 scaleDegree,
                 uniformName,
+                uniformNameCapitalized: capitalizeFirstLetter(uniformName),
             };
     
             stepsIndex += 1;

@@ -1,5 +1,72 @@
-<style></style>
-<script></script>
-<div>
-    sitemap
+<style>
+    .sitemap{
+        height: 100%;
+        overflow: auto;
+        /* padding: 20px; */
+        box-sizing: border-box;
+    }
+
+    .sitemap .sitemap-header{
+        padding: 10px;
+        text-align: end;
+    }
+
+    .sitemap .sitemap-scale{
+        margin-bottom: 10px;    
+    }
+
+    .sitemap .sitemap-scale-title{
+        font-size: 35px;
+        background-color: #efefef;
+        padding: 10px;
+    }
+
+    .sitemap .site-map-note{
+        text-transform: capitalize;
+        display: inline-block;
+        padding: 10px;
+        box-sizing: border-box;
+        background: #eee;
+        border-radius: 20px;
+        width: 40px;
+        text-align: center;
+        margin-inline-end: 10px;
+    }
+
+    .sitemap .sitemap-scale-notes{
+        padding: 10px;
+    }
+
+    .sitemap .sitemap-scale-small-title{
+        margin-bottom: 10px;
+        font-size: 25px;
+    }
+
+    .sitemap .sitemap-key{
+        margin-bottom: 20px;
+    }
+
+</style>
+<script>
+    this.getScales = ()=>{
+
+    }
+</script>
+<div class="sitemap">
+    <div class="sitemap-header">
+        <div onclick="app.setRoute('')">Music Scales App</div>
+    </div>
+    <div for="scale in Object.keys(app.getScales())">
+        <div class="sitemap-scale">
+            <div class="sitemap-scale-title">
+                {{app.getScales()[scale].title}} Scale
+            </div>
+            <div class="sitemap-scale-notes">
+                <!-- <div class="sitemap-key" for="k in app.ALL_KEYS">
+                    <div class="sitemap-scale-small-title">{{k}} {{app.getScales()[scale].title}} Scale</div>
+                    <div class="site-map-note" for="note in app.getScale(3, k, scale, true).map(a=>{return `${a.name.toUpperCase()}${a.accidental}`})">{{note}}</div>
+                </div> -->
+            </div>
+        </div>
+    </div>
 </div>

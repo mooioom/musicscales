@@ -45,6 +45,11 @@
         background-color: rgb(8, 8, 8);
     }
 
+    .app .page{
+        width: 100%;
+        height: 100%;
+    }
+
     :not(:root):fullscreen::backdrop {
         background: #fff;
     }
@@ -238,8 +243,12 @@
     const VIEW_TO_URL = {
         [VIEWS.NECK]: 'instrument',
         [VIEWS.SCORE]: 'notes',
-        [VIEWS.PLAY]: 'play',
+        [VIEWS.PLAY]: 'keyboard',
     }
+
+    this.PAGES = [
+        'sitemap'
+    ];
 
     this.DEFAULTS = {};
 
@@ -289,10 +298,19 @@
         },
     };
 
+    this.route = '';
+
+    this.setRoute = (route) => {
+        this.route = route;
+        this.setHistory(route);
+        this.render();
+        this.render();
+    }
+
     const path = location.pathname.slice(1);
 
     if(path){
-
+        if(this.PAGES.includes(path)) this.route = path;
     }
 
     this.padIsPlaying = false;
@@ -399,9 +417,9 @@
         return steps;
     }
 
-    this.getScale = (octave = this.settings.octave, key = this.settings.key) => {
-        const scale = app.getScales()[this.settings.scale]
-        return nigun.getScale({
+    this.getScale = (octave = this.settings.octave, key = this.settings.key, scaleName = this.settings.scale, singleOctave) => {
+        const scale = app.getScales()[scaleName];
+        const d = nigun.getScale({
             root: key + octave,
             // rootFrequency: 320.24370022528126, // e half flat
             steps: scale.steps,
@@ -410,7 +428,8 @@
             // accidental: this.settings.accidental,
             // dropNotes: scale.DROP,
             align: !scale.noSequencialNotation,
-        })
+        });
+        return singleOctave ? d.slice(0, scale.steps.length) : d;
     }
 
     this.getPattern = () => {
@@ -427,7 +446,6 @@
             cache.set(x, o[x]);
         }
         this.render();
-        this.setURL();
     }
 
     this.setKey = (key) => {
@@ -435,28 +453,24 @@
         cache.set('key', this.settings.key);
         cache.set('octave', this.settings.octave);
         this.render();
-        this.setURL();
     }
 
     this.setConcertPitch = (pitch = DEFAULTS.pitch) => {
         this.settings.concertPitch = pitch;
         cache.set('pitch', this.settings.concertPitch);
         this.render();
-        this.setURL();
     }
 
     this.setScale = (scale = DEFAULTS.scale) => {
         this.settings.scale = scale;
         cache.set('scale', scale);
         this.render();
-        this.setURL();
     }
 
     this.setMode = (mode) => {
         this.settings.mode = mode;
         cache.set('mode', mode || 1);
         this.render();
-        this.setURL();
     }
 
     this.setPattern = (pattern) => {
@@ -489,12 +503,18 @@
         cache.set('theme', theme);
     }
 
+    this.setHistory = (url)=>{
+        window.history.replaceState({page: 2}, null, url);
+    }
+
     this.setURL = ()=>{
-        window.history.replaceState({page: 2}, null, `/${this.settings.key}-${this.settings.scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[this.settings.mainView]}`);
+        this.setHistory(`/${this.settings.key}-${this.settings.scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[this.settings.mainView]}`);
     }
 
     this.onrender = ()=>{
-        // console.log(1);
+        if(this.route === '') {
+            this.setURL();
+        }
     }
 
     this.colorOrgan = () => {
@@ -513,10 +533,11 @@
     // this.colorOrgan();
 
     this.init();
+
 </script>
 
 <div class="app">
-    <table class="grid">
+    <table if="this.route === ''" class="grid">
         <tr>
             <td class="zero-height">
                 <div class="app-header">
@@ -547,6 +568,9 @@
             </td>
         </tr>
     </table>
+    <div class="page" if="this.route === 'sitemap'">
+        <sitemap></sitemap>
+    </div>
     <sidebar></sidebar>
     <popup></popup>
     <keyboard-player></keyboard-player>

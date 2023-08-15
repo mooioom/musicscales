@@ -28,14 +28,32 @@ const evalInContext = function (s) {
 }
 
 const allNodes = function (node, cb, excludeSelf = false) {
+
     if (!excludeSelf) {
         let r = cb(node);
         if (r === false) return;
     }
+
+    if (node._if || (node.getAttribute && node.getAttribute('if'))) {
+
+        let v = false;
+        const _if = node._if ? node._if.getAttribute('if') : node.getAttribute('if');
+
+        let evalText = _if;
+        if(node.hasOwnProperty('dataIndex')) evalText = evalText.replace('$index', node.dataIndex);
+        v = evalInContext.call(node.originalContext || this.context, evalText);
+
+        // console.log(_if, v);
+
+        if(!v) return;
+
+    }
+
     let children = Array.from(node.childNodes);
+
     children.forEach(child => {
-        allNodes(child, cb);
-    })
+        allNodes.bind(this)(child, cb);
+    });
 }
 
 const parseAttributes = function ($el, context) {
@@ -173,7 +191,7 @@ export class Component {
 
         this.container._context = this.context;
 
-        allNodes(this.container, (node) => {
+        allNodes.bind(this)(this.container, (node) => {
 
             if (node._component && node != this.container) {
                 return false;
@@ -283,7 +301,7 @@ export class Component {
 
     }
 
-    render() {
+    render( $el = this.container ) {
 
         if (this.settings.debugRender) debugger;
 
@@ -291,14 +309,14 @@ export class Component {
             this.$style.innerHTML = stringParser(this.originalStyle, this.context);
         }
 
-        allNodes(this.container, (node) => {
+        allNodes.bind(this)($el, (node) => {
 
             window._debug.nodes.push(node);
 
             if (!node.originalTextContent) node.originalTextContent = node.textContent;
             if (!node.originalContext) node.originalContext = this.context;
 
-            if (node._component && node != this.container) {
+            if (node._component && node != $el) {
 
                 let component = node._component;
 
@@ -355,6 +373,7 @@ export class Component {
                         commentNode.originalContext = node.originalContext;
                         commentNode.doProcess = true;
                         node.replaceWith(commentNode);
+                        return;
                     }
 
                 }
@@ -395,7 +414,7 @@ export class Component {
                         _prototype.dataName = _for;
                         _prototype.dataIndex = i;
 
-                        allNodes(_prototype, (child) => {
+                        allNodes.bind(this)(_prototype, (child) => {
 
                             child.dataIndex = i;
                             child.originalContext = node.originalContext || this.context;
@@ -405,6 +424,8 @@ export class Component {
                             const replacer = {
                                 $index: i,
                             };
+
+                            if( child.attributes && child.attributes.getNamedItem('for') ) this.render(child);
 
                             if (child.nodeType == NODE_TYPES.TEXT) {
 

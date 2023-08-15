@@ -29,6 +29,7 @@
         "playground": "playground",
         "edit-mode": "edit-mode",
         "stepper": "stepper",
-        "sidebar": "sidebar"
+        "sidebar": "sidebar",
+        "sitemap": "sitemap"
     }
 }

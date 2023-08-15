@@ -18,6 +18,18 @@
     .mixer .setting{
         margin-top: 15px;
     }
+    .settings-button{
+        display: inline-block;
+        margin-inline-end: 10px;
+        padding: 10px;
+        background-color: #efefef;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .settings-button:hover{
+        background-color: #333;
+        color: #fff;
+    }
 </style>
 <script>
 
@@ -86,8 +98,7 @@
                 }" on="app.settings.theme === 'DARK'"></switch>
             </div>
         </div>
-        <div class="setting pointer" onclick="functions.fullscreen()">
-            <div>Fullscreen</div>
-        </div>
+        <div class="setting settings-button" onclick="functions.fullscreen()">Fullscreen</div>
+        <div class="setting settings-button" onclick="popup.hide(); app.setRoute('sitemap');">Sitemap</div>
     </div>
 </div>

@@ -6,8 +6,8 @@ export const OSCILLATOR_TYPES = {
 };
 
 export const ALL_SCALES = [{
-    "title": "Acoustic",
-    "steps": [
+    title: "Acoustic",
+    steps: [
         1,
         1,
         1,
@@ -18,8 +18,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Aeolian",
-    "steps": [
+    title: "Aeolian",
+    steps: [
         1,
         0.5,
         1,
@@ -30,8 +30,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Algerian",
-    "steps": [
+    title: "Algerian",
+    steps: [
         1,
         0.5,
         1.5,
@@ -45,8 +45,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Altered",
-    "steps": [
+    title: "Altered",
+    steps: [
         0.5,
         1,
         0.5,
@@ -57,8 +57,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Augmented",
-    "steps": [
+    title: "Augmented",
+    steps: [
         1.5,
         0.5,
         1.5,
@@ -68,8 +68,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Bebop",
-    "steps": [
+    title: "Bebop",
+    steps: [
         1,
         1,
         0.5,
@@ -81,8 +81,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Blues",
-    "steps": [
+    title: "Blues",
+    steps: [
         1.5,
         1,
         0.5,
@@ -92,25 +92,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Chromatic",
-    "steps": [
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5
-    ]
-},
-{
-    "title": "Dorian",
-    "steps": [
+    title: "Dorian",
+    steps: [
         1,
         0.5,
         1,
@@ -121,8 +104,41 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Double harmonic",
-    "steps": [
+    title: "Double Harmonic",
+    steps: [
+        0.5,
+        1.5,
+        0.5,
+        1,
+        0.5,
+        1.5,
+        0.5
+    ],
+    modes: [
+        "",
+        "Lydian #2 #6",
+        "Ultraphrygian",
+        "Hungarian Minor",
+        "Oriental",
+        "Ionian #2 #5",
+        "Locrian bb3 bb7"
+    ],
+},
+{
+    title: "Enigmatic",
+    steps: [
+        0.5,
+        1.5,
+        1,
+        1,
+        1,
+        0.5,
+        0.5
+    ]
+},
+{
+    title: "Flamenco",
+    steps: [
         0.5,
         1.5,
         0.5,
@@ -133,32 +149,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Enigmatic",
-    "steps": [
-        0.5,
-        1.5,
-        1,
-        1,
-        1,
-        0.5,
-        0.5
-    ]
-},
-{
-    "title": "Flamenco",
-    "steps": [
-        0.5,
-        1.5,
-        0.5,
-        1,
-        0.5,
-        1.5,
-        0.5
-    ]
-},
-{
-    "title": "Gypsy",
-    "steps": [
+    title: "Gypsy",
+    steps: [
         1,
         0.5,
         1.5,
@@ -169,8 +161,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Half diminished",
-    "steps": [
+    title: "Half diminished",
+    steps: [
         1,
         0.5,
         1,
@@ -181,8 +173,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Harmonic major",
-    "steps": [
+    title: "Harmonic major",
+    steps: [
         1,
         1,
         0.5,
@@ -193,8 +185,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Harmonic minor",
-    "steps": [
+    title: "Harmonic minor",
+    steps: [
         1,
         0.5,
         1,
@@ -205,8 +197,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Hirajoshi",
-    "steps": [
+    title: "Hirajoshi",
+    steps: [
         2,
         1,
         0.5,
@@ -215,8 +207,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Hungarian gypsy",
-    "steps": [
+    title: "Hungarian gypsy",
+    steps: [
         1,
         0.5,
         1.5,
@@ -227,8 +219,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Hungarian major",
-    "steps": [
+    title: "Hungarian major",
+    steps: [
         1.5,
         0.5,
         1,
@@ -239,8 +231,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "In",
-    "steps": [
+    title: "In",
+    steps: [
         0.5,
         2,
         1,
@@ -249,8 +241,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Insen",
-    "steps": [
+    title: "Insen",
+    steps: [
         0.5,
         2,
         1,
@@ -259,8 +251,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Ionian",
-    "steps": [
+    title: "Ionian",
+    steps: [
         1,
         1,
         0.5,
@@ -271,8 +263,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Istrian",
-    "steps": [
+    title: "Istrian",
+    steps: [
         0.5,
         1,
         0.5,
@@ -282,8 +274,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Iwato",
-    "steps": [
+    title: "Iwato",
+    steps: [
         0.5,
         2,
         0.5,
@@ -292,8 +284,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Locrian",
-    "steps": [
+    title: "Locrian",
+    steps: [
         0.5,
         1,
         1,
@@ -304,8 +296,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Lydian augmented",
-    "steps": [
+    title: "Lydian augmented",
+    steps: [
         1,
         1,
         1,
@@ -316,8 +308,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Lydian diminished",
-    "steps": [
+    title: "Lydian diminished",
+    steps: [
         1,
         0.5,
         1.5,
@@ -328,8 +320,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Lydian",
-    "steps": [
+    title: "Lydian",
+    steps: [
         1,
         1,
         1,
@@ -340,8 +332,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Bebop",
-    "steps": [
+    title: "Bebop",
+    steps: [
         1,
         1,
         0.5,
@@ -353,8 +345,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Major Locrian",
-    "steps": [
+    title: "Major Locrian",
+    steps: [
         1,
         1,
         0.5,
@@ -365,8 +357,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Adonai Malakh",
-    "steps": [
+    title: "Adonai Malakh",
+    steps: [
         1,
         1,
         0.5,
@@ -377,8 +369,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Mixolydian",
-    "steps": [
+    title: "Mixolydian",
+    steps: [
         1,
         1,
         0.5,
@@ -389,8 +381,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Neapolitan major",
-    "steps": [
+    title: "Neapolitan major",
+    steps: [
         0.5,
         1,
         1,
@@ -401,8 +393,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Neapolitan minor",
-    "steps": [
+    title: "Neapolitan minor",
+    steps: [
         0.5,
         1,
         1,
@@ -413,8 +405,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Octatonic",
-    "steps": [
+    title: "Octatonic",
+    steps: [
         1,
         0.5,
         1,
@@ -426,8 +418,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Persian",
-    "steps": [
+    title: "Persian",
+    steps: [
         0.5,
         1.5,
         0.5,
@@ -438,8 +430,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Phrygian dominant",
-    "steps": [
+    title: "Phrygian dominant",
+    steps: [
         0.5,
         1.5,
         0.5,
@@ -450,8 +442,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Phrygian",
-    "steps": [
+    title: "Phrygian",
+    steps: [
         0.5,
         1,
         1,
@@ -462,8 +454,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Prometheus",
-    "steps": [
+    title: "Prometheus",
+    steps: [
         1,
         1,
         1,
@@ -473,8 +465,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Scale of harmonics",
-    "steps": [
+    title: "Scale of harmonics",
+    steps: [
         1.5,
         0.5,
         0.5,
@@ -484,8 +476,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Tritone",
-    "steps": [
+    title: "Tritone",
+    steps: [
         0.5,
         1.5,
         1,
@@ -495,8 +487,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Ukrainian Dorian",
-    "steps": [
+    title: "Ukrainian Dorian",
+    steps: [
         1,
         0.5,
         1.5,
@@ -507,8 +499,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Vietnamese",
-    "steps": [
+    title: "Vietnamese",
+    steps: [
         1.25,
         0.25,
         0.5,
@@ -517,8 +509,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Whole tone",
-    "steps": [
+    title: "Whole tone",
+    steps: [
         1,
         1,
         1,
@@ -528,8 +520,8 @@ export const ALL_SCALES = [{
     ]
 },
 {
-    "title": "Yo",
-    "steps": [
+    title: "Yo",
+    steps: [
         1.5,
         1,
         1,
@@ -543,18 +535,36 @@ export const SCALES = {
     'MAJOR': {
         title: 'Major',
         steps: [1, 1, 0.5, 1, 1, 1, 0.5],
+        modes: [
+            'Ionian',
+            'Dorian',
+            'Phrygian',
+            'Lydian',
+            'Mixolydian',
+            'Aeolian',
+            'Locrian',
+        ]
     },
     'MINOR': {
         title: 'Minor',
         steps: [1, 0.5, 1, 1, 0.5, 1, 1],
     },
     'HARMONIC_MINOR': {
-        title: 'Minor (Harmonic)',
+        title: 'Harmonic Minor',
         steps: [1, 0.5, 1, 1, 0.5, 1.5, 0.5]
     },
     'MELODIC_MINOR': {
-        title: 'Minor (Melodic)',
-        steps: [1, 0.5, 1, 1, 1, 1, 0.5]
+        title: 'Melodic Minor',
+        steps: [1, 0.5, 1, 1, 1, 1, 0.5],
+        modes: [
+            '',
+            'Dorian b2',
+            'Lydian Augmented',
+            'Lydian Dominant',
+            'Mixolydian b6',
+            'Half Diminished',
+            'Super Locrian',
+        ],
     },
     'MAJOR_PENTATONIC': {
         title: 'Pentatonic (Major)',
@@ -580,7 +590,7 @@ export const SCALES = {
         noSequencialNotation: true,
     },
     'ACOUSTIC_SCALE': {
-        title: 'Acoustic Scale',
+        title: 'Acoustic',
         steps: [1, 1, 1, 0.5, 1, 0.5, 1],
     },
     'MAQAM_BAYATI': {
@@ -684,6 +694,31 @@ ALL_SCALES.forEach(s=>{
         title: s.title,
         steps: s.steps,
         noSequencialNotation: s.steps.length !== 7,
+        modes: s.modes,
+    }
+});
+
+export const shiftLeft = (arr = [], n) => {
+    let a = [...arr];
+    for (let i = 0; i < n; i++) {
+        const first = a.shift();
+        a.push(first);
+    }
+    return a;
+}
+
+export const formatString = str => str.replace(/[^a-z0-9\s]/gi, '').replace(/\s/g, '_').toUpperCase();
+
+Object.keys(SCALES).forEach((s)=>{
+    const scale = SCALES[s];
+    if(scale.modes){
+        scale.modes.forEach((m, idx)=>{
+            if(!m) return;
+            SCALES[ formatString(m) ] = {
+                title: m,
+                steps: shiftLeft(scale.steps, idx),
+            }
+        });
     }
 })
 
