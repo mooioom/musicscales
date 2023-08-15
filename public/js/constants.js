@@ -45,6 +45,10 @@ export const SCALES = {
         steps: [1.5, 1, 0.5, 0.5, 1.5, 1],
         noSequencialNotation: true,
     },
+    'ACOUSTIC_SCALE': {
+        title: 'Acoustic Scale',
+        steps: [1, 1, 1, 0.5, 1, 0.5, 1],
+    },
     'MAQAM_BAYATI': {
         title: 'Bayati',
         steps: [0.75, 0.75, 1, 1, 0.5, 1, 1],
