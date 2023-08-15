@@ -1,7 +1,7 @@
 
-[{
+export const ALL_SCALES = [{
     "title": "Acoustic",
-    "intervals": [
+    "steps": [
         1,
         1,
         1,
@@ -13,7 +13,7 @@
 },
 {
     "title": "Aeolian",
-    "intervals": [
+    "steps": [
         1,
         0.5,
         1,
@@ -25,13 +25,13 @@
 },
 {
     "title": "Algerian",
-    "intervals": [
+    "steps": [
         1,
         0.5,
-        3,
+        1.5,
         0.5,
         0.5,
-        3,
+        1.5,
         0.5,
         1,
         0.5,
@@ -40,7 +40,7 @@
 },
 {
     "title": "Altered",
-    "intervals": [
+    "steps": [
         0.5,
         1,
         0.5,
@@ -52,18 +52,18 @@
 },
 {
     "title": "Augmented",
-    "intervals": [
-        3,
+    "steps": [
+        1.5,
         0.5,
-        3,
+        1.5,
         0.5,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Bebop",
-    "intervals": [
+    "steps": [
         1,
         1,
         0.5,
@@ -76,18 +76,18 @@
 },
 {
     "title": "Blues",
-    "intervals": [
-        3,
+    "steps": [
+        1.5,
         1,
         0.5,
         0.5,
-        3,
+        1.5,
         1
     ]
 },
 {
     "title": "Chromatic",
-    "intervals": [
+    "steps": [
         0.5,
         0.5,
         0.5,
@@ -104,7 +104,7 @@
 },
 {
     "title": "Dorian",
-    "intervals": [
+    "steps": [
         1,
         0.5,
         1,
@@ -116,21 +116,21 @@
 },
 {
     "title": "Double harmonic",
-    "intervals": [
+    "steps": [
         0.5,
-        3,
+        1.5,
         0.5,
         1,
         0.5,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Enigmatic",
-    "intervals": [
+    "steps": [
         0.5,
-        3,
+        1.5,
         1,
         1,
         1,
@@ -140,22 +140,22 @@
 },
 {
     "title": "Flamenco",
-    "intervals": [
+    "steps": [
         0.5,
-        3,
+        1.5,
         0.5,
         1,
         0.5,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Gypsy",
-    "intervals": [
+    "steps": [
         1,
         0.5,
-        3,
+        1.5,
         0.5,
         0.5,
         1,
@@ -164,7 +164,7 @@
 },
 {
     "title": "Half diminished",
-    "intervals": [
+    "steps": [
         1,
         0.5,
         1,
@@ -176,31 +176,31 @@
 },
 {
     "title": "Harmonic major",
-    "intervals": [
+    "steps": [
         1,
         1,
         0.5,
         1,
         0.5,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Harmonic minor",
-    "intervals": [
+    "steps": [
         1,
         0.5,
         1,
         1,
         0.5,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Hirajoshi",
-    "intervals": [
+    "steps": [
         2,
         1,
         0.5,
@@ -210,20 +210,20 @@
 },
 {
     "title": "Hungarian gypsy",
-    "intervals": [
+    "steps": [
         1,
         0.5,
-        3,
+        1.5,
         0.5,
         0.5,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Hungarian major",
-    "intervals": [
-        3,
+    "steps": [
+        1.5,
         0.5,
         1,
         0.5,
@@ -234,7 +234,7 @@
 },
 {
     "title": "In",
-    "intervals": [
+    "steps": [
         0.5,
         2,
         1,
@@ -244,17 +244,17 @@
 },
 {
     "title": "Insen",
-    "intervals": [
+    "steps": [
         0.5,
         2,
         1,
-        3,
+        1.5,
         1
     ]
 },
 {
     "title": "Ionian",
-    "intervals": [
+    "steps": [
         1,
         1,
         0.5,
@@ -266,7 +266,7 @@
 },
 {
     "title": "Istrian",
-    "intervals": [
+    "steps": [
         0.5,
         1,
         0.5,
@@ -277,7 +277,7 @@
 },
 {
     "title": "Iwato",
-    "intervals": [
+    "steps": [
         0.5,
         2,
         0.5,
@@ -287,7 +287,7 @@
 },
 {
     "title": "Locrian",
-    "intervals": [
+    "steps": [
         0.5,
         1,
         1,
@@ -299,7 +299,7 @@
 },
 {
     "title": "Lydian augmented",
-    "intervals": [
+    "steps": [
         1,
         1,
         1,
@@ -311,10 +311,10 @@
 },
 {
     "title": "Lydian diminished",
-    "intervals": [
+    "steps": [
         1,
         0.5,
-        3,
+        1.5,
         0.5,
         0.5,
         1,
@@ -323,7 +323,7 @@
 },
 {
     "title": "Lydian",
-    "intervals": [
+    "steps": [
         1,
         1,
         1,
@@ -335,7 +335,7 @@
 },
 {
     "title": "Bebop",
-    "intervals": [
+    "steps": [
         1,
         1,
         0.5,
@@ -348,7 +348,7 @@
 },
 {
     "title": "Major Locrian",
-    "intervals": [
+    "steps": [
         1,
         1,
         0.5,
@@ -360,17 +360,17 @@
 },
 {
     "title": "Pentatonic",
-    "intervals": [
+    "steps": [
         1,
         1,
-        3,
+        1.5,
         1,
         3
     ]
 },
 {
     "title": "Melodic minor",
-    "intervals": [
+    "steps": [
         1,
         0.5,
         1,
@@ -382,7 +382,7 @@
 },
 {
     "title": "Melodic minor",
-    "intervals": [
+    "steps": [
         1,
         0.5,
         1,
@@ -394,17 +394,17 @@
 },
 {
     "title": "Minor pentatonic",
-    "intervals": [
-        3,
+    "steps": [
+        1.5,
         1,
         1,
-        3,
+        1.5,
         1
     ]
 },
 {
     "title": "Mixolydian",
-    "intervals": [
+    "steps": [
         1,
         1,
         0.5,
@@ -416,7 +416,7 @@
 },
 {
     "title": "Neapolitan major",
-    "intervals": [
+    "steps": [
         0.5,
         1,
         1,
@@ -428,19 +428,19 @@
 },
 {
     "title": "Neapolitan minor",
-    "intervals": [
+    "steps": [
         0.5,
         1,
         1,
         1,
         0.5,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Octatonic",
-    "intervals": [
+    "steps": [
         1,
         0.5,
         1,
@@ -453,21 +453,21 @@
 },
 {
     "title": "Persian",
-    "intervals": [
+    "steps": [
         0.5,
-        3,
+        1.5,
         0.5,
         0.5,
         1,
-        3,
+        1.5,
         0.5
     ]
 },
 {
     "title": "Phrygian dominant",
-    "intervals": [
+    "steps": [
         0.5,
-        3,
+        1.5,
         0.5,
         1,
         0.5,
@@ -477,7 +477,7 @@
 },
 {
     "title": "Phrygian",
-    "intervals": [
+    "steps": [
         0.5,
         1,
         1,
@@ -489,18 +489,18 @@
 },
 {
     "title": "Prometheus",
-    "intervals": [
+    "steps": [
         1,
         1,
         1,
-        3,
+        1.5,
         0.5,
         1
     ]
 },
 {
     "title": "Quarter tone",
-    "intervals": [
+    "steps": [
         0.25,
         0.25,
         0.25,
@@ -529,8 +529,8 @@
 },
 {
     "title": "Scale of harmonics",
-    "intervals": [
-        3,
+    "steps": [
+        1.5,
         0.5,
         0.5,
         1,
@@ -540,18 +540,18 @@
 },
 {
     "title": "Tritone",
-    "intervals": [
+    "steps": [
         0.5,
-        3,
+        1.5,
         1,
         0.5,
-        3,
+        1.5,
         1
     ]
 },
 {
     "title": "Tritone",
-    "intervals": [
+    "steps": [
         0.5,
         0.5,
         4,
@@ -562,10 +562,10 @@
 },
 {
     "title": "Ukrainian Dorian",
-    "intervals": [
+    "steps": [
         1,
         0.5,
-        3,
+        1.5,
         0.5,
         1,
         0.5,
@@ -574,7 +574,7 @@
 },
 {
     "title": "Scale of harmonics",
-    "intervals": [
+    "steps": [
         5,
         0.25,
         0.5,
@@ -584,7 +584,7 @@
 },
 {
     "title": "Whole tone",
-    "intervals": [
+    "steps": [
         1,
         1,
         1,
@@ -595,11 +595,11 @@
 },
 {
     "title": "Yo",
-    "intervals": [
-        3,
+    "steps": [
+        1.5,
         1,
         1,
-        3,
+        1.5,
         1
     ]
 }
