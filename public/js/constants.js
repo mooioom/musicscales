@@ -1,8 +1,8 @@
 export const OSCILLATOR_TYPES = {
     SINE: 'sine',
     TRIANGLE: 'triangle',
-    square: 'square',
-    sawtooth: 'sawtooth',
+    SQUARE: 'square',
+    SAWTOOTH: 'sawtooth',
 };
 
 export const SCALES = {
