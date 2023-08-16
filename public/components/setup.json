@@ -30,6 +30,7 @@
         "edit-mode": "edit-mode",
         "stepper": "stepper",
         "sidebar": "sidebar",
-        "sitemap": "sitemap"
+        "sitemap": "sitemap",
+        "search": "search"
     }
 }

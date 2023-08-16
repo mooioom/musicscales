@@ -1,0 +1,108 @@
+<style>
+    .search{
+        text-align: center;
+    }
+    .search .search-title{
+        margin-bottom: 5px;
+    }
+    .search .search-input{
+
+    }
+    .search .search-input input{
+        width: 100%;
+        padding: 10px;
+        border-radius: 35px;
+        border: none;
+        box-sizing: border-box;
+        background: #444;
+        font-size: 20px;
+        color: #fff;
+        text-align: center;
+    }
+    .search .search-input input:active{
+        border: none;
+    }
+    .search .search-input input:focus-visible{
+        border: none;
+        outline: none;
+    }
+    .search .search-results{
+        max-height: 300px;
+        overflow: auto;
+        position: relative;
+        z-index: 10;
+        background-color: #fff;
+        top:-3px;
+        border-radius: 10px;
+    }
+    .search .search-results > div{
+        cursor: pointer;
+        color: #333;
+        padding: 5px;
+        text-align: start;
+        font-size: 18px;
+    }
+    .search .search-results > div:hover{
+        background-color: #efefef;
+    }
+</style>
+<script>
+
+    this.results = [];
+    this.scales = [];
+
+    Object.keys(app.getScales()).forEach((s)=>{
+        const scale = app.getScales()[s];
+        app.ALL_KEYS.forEach((k)=>{
+            this.scales.push({
+                name: s,
+                scale,
+                key: k,
+                title: `${k} ${scale.title}`,
+            })
+        })
+    });
+
+    const documentListener = ()=>{
+        this.$results.classList.add('hidden');
+    }
+
+    this.onchange = (ev)=>{
+        document.removeEventListener('click', documentListener);
+        const v = ev.target.value
+        this.results = [];
+        this.$results.innerHTML = '';
+        this.$results.classList.remove('hidden');
+        if(!v) return this.render();
+        this.scales.forEach((s)=>{
+            if(s.title.toLowerCase().includes(v.toLowerCase())) this.results.push(s);
+        });
+        this.results.forEach((r)=>{
+            const $result = DOM('.search-result', {
+                innerHTML: r.title,
+                onclick: ()=>{ this.setResult(r) }
+            })
+            this.$results.appendChild($result);
+        })
+        document.addEventListener('click', documentListener);
+    }
+
+    this.setResult = (result)=>{
+        app.set({
+            key: result.key,
+            scale: result.name,
+        });
+        app.change();
+        this.$results.classList.add('hidden');
+        document.removeEventListener('click', documentListener);
+        this.$input.value = '';
+    }
+
+</script>
+<div class="search">
+    <div class="search-title">Search Music Scales / Maqams</div>
+    <div class="search-input">
+        <input ref="$input" type="text" placeholder="ex. C Major, D Bayati" onkeyup="this.onchange($event)" onclick="this.$results.classList.remove('hidden');" />
+    </div>
+    <div ref="$results" class="search-results"></div>
+</div>
