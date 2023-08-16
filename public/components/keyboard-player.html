@@ -25,7 +25,7 @@
             if (instrument.type === 'SYNTH' && sourceByKeys[keyId]) return;
             sourceByKeys[keyId] = instrument.startFrequency(note.fq);
             functions.forEachNotesElements(note.uniformFullname, ($el) => {
-                $el.classList.add('playing');
+                $el.classList.add('user-playing');
             })
         }
 
@@ -36,7 +36,7 @@
             e.preventDefault();
             const note = notes[keyId];
             functions.forEachNotesElements(note.uniformFullname, ($el) => {
-                $el.classList.remove('playing');
+                $el.classList.remove('user-playing');
             })
             if (instrument.type === 'SAMPLER') return; // to allow natural fade
             if (sourceByKeys[keyId]) {
