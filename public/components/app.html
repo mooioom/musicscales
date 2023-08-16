@@ -143,6 +143,10 @@
         justify-content: space-between;
     }
 
+    .app-header .button.view-button{
+
+    }
+
     .theme-dark .app-header {
         background: none;
     }
@@ -590,7 +594,7 @@
                         <button icon="assets/metronome.svg" onclick="functions.toggleMetronome" class="{{app.settings.metronome ? 'on' : ''}}"></button>
                         <button icon="assets/pad.svg" onclick="functions.togglePad" class="{{app.padIsPlaying ? 'on' : ''}}"></button>
                         <button icon="assets/mixer.svg" onclick="()=>{popup.show('mixer')}"></button>
-                        <button icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button>
+                        <button class="view-button" icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button>
                     </div>
                 </div>
                 <scale></scale>

@@ -1,7 +1,7 @@
 import * as CONSTANTS from './constants.js';
 import './teoria.js';
 
-const getFrequency = (rootFrequency, TET = 12, stepsFromBase)=>{
+const getFrequency = (rootFrequency, TET = 12, stepsFromBase) => {
     return rootFrequency * Math.pow(Math.pow(2, 1 / TET), stepsFromBase);
 }
 
@@ -9,6 +9,12 @@ const INSTRUMENT_TYPES = {
     SAMPLER: 'SAMPLER',
     SYNTH: 'SYNTH',
 }
+
+const REVERBS = {
+    BIG_HALL_M25: 'BIG_HALL_E001_M2S.wav',
+    WIDE_HALL: 'WIDE_HALL-1.wav',
+    MEDIUM_DAMPING: 'MEDIUM_DAMPING_ROOM_E001_M2S.wav',
+};
 
 class Instrument {
     constructor(base, settings = {}) {
@@ -24,7 +30,6 @@ class Instrument {
         this.gainNode.connect(base.masterGain);
 
         this.type = settings.type || INSTRUMENT_TYPES.SYNTH;
-
     }
 
 }
@@ -42,6 +47,30 @@ class Synth extends Instrument {
 
         this.playingNotes = [];
 
+        this.loadReverb( REVERBS.MEDIUM_DAMPING );
+    }
+
+    loadReverb( reverb = REVERBS.BIG_HALL_M25 ){
+        fetch(`./media/reverb/${reverb}`)
+            .then(response => response.arrayBuffer())
+            .then(buffer => this.context.decodeAudioData(buffer))
+            .then(impulseResponse => {
+
+                // Adjust the decay time of the impulse response
+                const decayTime = 1; // in seconds
+                const sampleRate = impulseResponse.sampleRate;
+                const length = sampleRate * decayTime;
+                const decayArray = new Float32Array(length);
+                for (let i = 0; i < length; i++) {
+                    decayArray[i] = impulseResponse.getChannelData(0)[i] * (1 - i / length);
+                }
+                impulseResponse = this.context.createBuffer(1, length, sampleRate);
+                impulseResponse.copyToChannel(decayArray, 0);
+
+                this.convolverNode = this.context.createConvolver();
+                this.convolverNode.buffer = impulseResponse;
+                this.convolverNode.connect(this.gainNode);
+            });
     }
 
     startFrequency(fq) {
@@ -50,7 +79,8 @@ class Synth extends Instrument {
         const oscillator = context.createOscillator();
         const gain = context.createGain();
         oscillator.connect(gain);
-        gain.connect(this.gainNode);
+        // gain.connect(this.gainNode);
+        gain.connect(this.convolverNode);
         oscillator.frequency.value = fq;
         oscillator.type = this.oscillatorType;
         oscillator.start();
@@ -79,10 +109,10 @@ class Synth extends Instrument {
 
             oscillator.connect(gain);
 
-            if(gainNode){
+            if (gainNode) {
                 gain.connect(gainNode);
                 gainNode.connect(this.gainNode);
-            }else{
+            } else {
                 gain.connect(this.gainNode);
             }
 
@@ -123,7 +153,7 @@ class Synth extends Instrument {
     stop(fromTime = this.context.currentTime) {
 
         this.playingNotes.forEach((item) => {
-            if(item.startTime <= fromTime && item.endTime >= fromTime) return item.oscillator.stop(item.endTime);
+            if (item.startTime <= fromTime && item.endTime >= fromTime) return item.oscillator.stop(item.endTime);
             item.oscillator.stop(fromTime);
         });
 
@@ -182,10 +212,10 @@ class Sampler extends Instrument {
                             getSource: (gainNode) => {
                                 const source = this.base.context.createBufferSource();
                                 source.buffer = audioBuffer;
-                                if(gainNode){
+                                if (gainNode) {
                                     source.connect(gainNode);
                                     gainNode.connect(this.gainNode);
-                                }else source.connect(this.gainNode);
+                                } else source.connect(this.gainNode);
                                 return source;
                             }
                         };
@@ -286,7 +316,7 @@ class Sampler extends Instrument {
     stop(fromTime = this.context.currentTime) {
 
         this.playingNotes.forEach((item) => {
-            if(item.startTime <= fromTime && item.endTime >= fromTime) return item.source.stop(item.endTime);
+            if (item.startTime <= fromTime && item.endTime >= fromTime) return item.source.stop(item.endTime);
             item.source.stop(fromTime);
         });
 
@@ -329,9 +359,9 @@ class Track {
      */
     schedule(startTime, contextStartTime, stopTime) {
         const timeline = [];
-        this.sequences.forEach(sequence=>{
-            sequence.timeline.forEach(item=>{
-                if(startTime <= (item.startTime + sequence.startTime)) timeline.push({
+        this.sequences.forEach(sequence => {
+            sequence.timeline.forEach(item => {
+                if (startTime <= (item.startTime + sequence.startTime)) timeline.push({
                     startTime: sequence.startTime + item.startTime,
                     length: item.length,
                     fq: item.fq,
@@ -340,10 +370,10 @@ class Track {
             })
         })
         this.events = this.instrument.schedule(
-            timeline, 
-            contextStartTime, 
-            this.base.utils.toRealTime(startTime), 
-            stopTime, 
+            timeline,
+            contextStartTime,
+            this.base.utils.toRealTime(startTime),
+            stopTime,
             this.gainNode
         );
     }
@@ -353,7 +383,7 @@ class Track {
         const now = this.context.currentTime;
         const item = this.events[0];
 
-        if(!item) return;
+        if (!item) return;
 
         if (now > item.startTime && !item.started) {
             item.started = true;
@@ -366,18 +396,18 @@ class Track {
 
     }
 
-    getLengthTime(){
+    getLengthTime() {
         let longestTime = 0;
-        this.sequences.forEach((s)=>{
-            s.timeline.forEach(item=>{
+        this.sequences.forEach((s) => {
+            s.timeline.forEach(item => {
                 const finalTime = s.startTime + item.startTime + item.length;
-                if(finalTime >= longestTime) longestTime = finalTime;
+                if (finalTime >= longestTime) longestTime = finalTime;
             })
         })
         return this.base.utils.toRealTime(longestTime)
     }
 
-    getLengthMeasures(){
+    getLengthMeasures() {
         return this.base.utils.getMeasuresCount(this.getLengthTime());
     }
 
@@ -390,7 +420,7 @@ class Sequence {
         this.base = settings.base;
         this.timeline = settings.timeline ? settings.timeline : [];
     }
-    shiftTime( appendTime = 0 ){
+    shiftTime(appendTime = 0) {
         this.startTime += appendTime;
     }
 }
@@ -420,11 +450,11 @@ class Utils {
         });
     }
 
-    getMeasureTime( num = 1 ){
+    getMeasureTime(num = 1) {
         return this.getSignature()[0] * (60 / this.base.settings.bpm) * num;
     }
 
-    getMeasuresCount( time = (this.base.time.end - this.base.time.start) ){
+    getMeasuresCount(time = (this.base.time.end - this.base.time.start)) {
         return time / this.getMeasureTime();
     }
 
@@ -432,27 +462,27 @@ class Utils {
         return normalTime * (60 / this.base.settings.bpm);
     }
 
-    toNormalTime(realTime = 0){
+    toNormalTime(realTime = 0) {
         return (realTime * this.base.settings.bpm) / 60
     }
 
-    getNoteLength(note = 0.25){ // ex. 0.25 - quarter note
+    getNoteLength(note = 0.25) { // ex. 0.25 - quarter note
         return (1 / note * note) * (this.base.settings.bpm / 60)
     }
 
-    getSequenceLengthTime(sequence){
-        if(!sequence.timeline.length) return 0;
+    getSequenceLengthTime(sequence) {
+        if (!sequence.timeline.length) return 0;
         const last = sequence.timeline[sequence.timeline.length - 1];
         return this.toRealTime(last.startTime + last.length);
     }
 
-    getSequenceLengthMeasures(sequence){
+    getSequenceLengthMeasures(sequence) {
         return this.getSequenceLengthTime(sequence) / this.getMeasureTime()
     }
 
-    getTimelineLength(timeline = []){
+    getTimelineLength(timeline = []) {
         const last = timeline[timeline.length - 1];
-        if(!last) return 0;
+        if (!last) return 0;
         return last.startTime + last.length;
     }
 
@@ -481,10 +511,10 @@ class Nigun {
             bpm: 120,
             gain: 0.3,
             signature: '4/4',
-            onmetronomebeat: ()=>{},
-            onrender: ()=>{},
-            ontimeset: ()=>{},
-            onstop: ()=>{},
+            onmetronomebeat: () => {},
+            onrender: () => {},
+            ontimeset: () => {},
+            onstop: () => {},
             instruments: [{
                     name: 'synth1',
                     type: INSTRUMENT_TYPES.SYNTH,
@@ -552,7 +582,7 @@ class Nigun {
         await this.createInstruments(this.settings.instruments);
         this.createMetronome();
 
-        if(this.settings.oninit) this.settings.oninit();
+        if (this.settings.oninit) this.settings.oninit();
 
     }
 
@@ -584,12 +614,12 @@ class Nigun {
         return instrument;
     }
 
-    createTrack(data={}) {
+    createTrack(data = {}) {
         data.base = this;
         return new Track(data);
     }
 
-    createSequence(data){
+    createSequence(data) {
         data.base = this;
         return new Sequence(data);
     }
@@ -598,9 +628,9 @@ class Nigun {
         this.createTrack({
             name: 'metronome',
             instrument: this.instruments.metronome,
-            oneventstart: (ev)=>{
+            oneventstart: (ev) => {
                 // console.log(1, ev);
-                if(this.settings.onmetronomebeat) this.settings.onmetronomebeat();
+                if (this.settings.onmetronomebeat) this.settings.onmetronomebeat();
             }
         });
     }
@@ -626,15 +656,15 @@ class Nigun {
 
     }
 
-    toggleMetronome(set){
+    toggleMetronome(set) {
         this.toggleTrack('metronome', set);
     }
 
-    toggleTrack(name, set){
-        if(!this.tracks[name]) return;
-        if(typeof set !== 'undefined'){
+    toggleTrack(name, set) {
+        if (!this.tracks[name]) return;
+        if (typeof set !== 'undefined') {
             this.tracks[name].gainNode.gain.value = set ? 1 : 0;
-            return;    
+            return;
         }
         const gain = this.tracks[name].gainNode.gain.value;
         this.tracks[name].gainNode.gain.value = gain ? 0 : 1;
@@ -660,7 +690,7 @@ class Nigun {
     }
 
     render() {
-        if(this.settings.onrender) this.settings.onrender();
+        if (this.settings.onrender) this.settings.onrender();
     }
 
     play() {
@@ -734,7 +764,7 @@ class Nigun {
         this.settings.onstop();
     }
 
-    stopAudio(){
+    stopAudio() {
         this.getTracks().forEach(t => t.instrument.stop());
         clearInterval(this.eventsInterval);
     }
@@ -745,35 +775,35 @@ class Nigun {
     }
 
     setTempo(newBpm) {
-        if(!newBpm || newBpm >= 1000) return;
+        if (!newBpm || newBpm >= 1000) return;
         this.time.current = this.time.current * (this.settings.bpm / newBpm);
         this.time.start = this.time.start * (this.settings.bpm / newBpm);
         this.time.end = this.time.end * (this.settings.bpm / newBpm);
         this.settings.bpm = newBpm;
         this.render();
-        if(this.IS_PLAYING) this.play();
+        if (this.IS_PLAYING) this.play();
     }
 
-    setCurrentTime(time){
+    setCurrentTime(time) {
         this.time.current = time;
         this.render();
-        if(this.IS_PLAYING) this.play();
+        if (this.IS_PLAYING) this.play();
     }
 
-    setLengthByTrack(track){
+    setLengthByTrack(track) {
         this.time.start = 0;
         this.time.end = track.getLengthTime();
         this.settings.ontimeset();
     }
 
-    reschedule(){
-        if(this.IS_PLAYING) this.play();
+    reschedule() {
+        if (this.IS_PLAYING) this.play();
     }
 
-    getScale(settings = {}){
+    getScale(settings = {}) {
 
         let scale = [];
-    
+
         let {
             TET = 24,
                 root, // ex. c4
@@ -788,21 +818,21 @@ class Nigun {
                 align = true,
                 dropNotes = null, // [4,7] - major pentatonic, [2,6] - minor pentatonic
         } = settings;
-    
+
         if (root) rootFrequency = teoria.note(root).fq(concertPitch);
-    
+
         if (!accidental) {
-            accidental = root ? 
-                root.indexOf('#') !== -1 ? CONSTANTS.ACCIDENTALS.SHARP : CONSTANTS.ACCIDENTALS.FLAT : 
+            accidental = root ?
+                root.indexOf('#') !== -1 ? CONSTANTS.ACCIDENTALS.SHARP : CONSTANTS.ACCIDENTALS.FLAT :
                 CONSTANTS.ACCIDENTALS.FLAT;
         }
-    
+
         rootFrequency += detune + (440 - concertPitch);
-    
+
         steps = steps.map((step) => {
             return step *= stepsMultiplier
         });
-    
+
         if (shift) {
             function rotateLeft(arr) {
                 let first = arr.shift();
@@ -811,24 +841,24 @@ class Nigun {
             }
             for (let x = 0; x < shift; x++) steps = rotateLeft(steps);
         }
-    
+
         const originalSteps = [...steps];
-    
+
         for (let x = 0; x < octaves - 1; x++) {
             steps = steps.concat(originalSteps);
         }
-    
+
         let stepsTotal = [0];
-    
+
         steps.reduce((a, c) => {
             stepsTotal.push(a + c);
             return a + c
         }, 0);
-    
+
         let totalLength = steps.length;
-    
+
         let stepsIndex = 0;
-    
+
         const accidentalTransformInto = {
             [CONSTANTS.ACCIDENTALS.FLAT]: {
                 'c#': 'db',
@@ -845,7 +875,7 @@ class Nigun {
                 'bb': 'a#',
             },
         };
-    
+
         const uniformNames = {
             'c#': 'db',
             'd#': 'eb',
@@ -857,118 +887,118 @@ class Nigun {
             'b#': 'c',
             'e#': 'f',
         };
-    
+
         let notes = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
         notes = [...notes, ...notes, ...notes];
-    
+
         let alignedNotes = null;
-    
+
         window._scaleDebug = [];
 
         const capitalizeFirstLetter = str => str.replace(/^\w/, c => c.toUpperCase());
-    
+
         for (let x = 0; x <= totalLength; x++) {
-    
+
             const scaleDegree = (x % originalSteps.length) + 1;
-    
+
             let fq = getFrequency(rootFrequency, TET, stepsTotal[x]);
-    
+
             // console.log(this.calculate24TETSteps(rootFrequency, fq));
-    
+
             const note = teoria.note.fromFrequency(fq, concertPitch);
             const cents = note.cents;
-    
+
             let octave = note.note.octave();
             let shortname = note.note.toString(true);
-    
+
             if (accidentalTransformInto[accidental][shortname]) {
                 shortname = accidentalTransformInto[accidental][shortname];
             }
-    
+
             let _accidental = shortname.slice(1);
-    
+
             let name = `${shortname[0]}`;
-    
+
             let quarterSymbol = '';
-    
+
             if (cents <= -40) quarterSymbol = '𝄳';
             if (cents >= 40) quarterSymbol = '𝄲';
-    
+
             _accidental += quarterSymbol;
-    
+
             let uniformName = shortname;
-    
+
             if (uniformNames[shortname]) uniformName = uniformNames[shortname];
-    
+
             window._scaleDebug.push(note);
-    
+
             if (align) {
-    
+
                 const shiftArray = (arr, n) => {
                     return arr.slice(n).concat(arr.slice(0, n));
                 }
-    
+
                 if (!alignedNotes && !x) {
                     alignedNotes = shiftArray(notes, notes.indexOf(shortname[0]));
                 }
-    
+
                 if (alignedNotes && alignedNotes[scaleDegree - 1] !== shortname[0]) {
-    
+
                     const targetNote = alignedNotes[scaleDegree - 1];
                     const current = shortname[0];
-    
+
                     if (targetNote === 'c' && current === 'b') octave++;
-    
+
                     if (targetNote === 'b' && current === 'c') octave--;
                     if (targetNote === 'b' && current === 'd') octave--;
                     if (targetNote === 'a' && current === 'c') octave--;
-    
+
                     name = targetNote;
-    
+
                     const target = teoria.note.fromString(targetNote + (octave));
-    
+
                     const qtones = this.utils.calculate24TETSteps(target.fq(), fq);
-    
+
                     const r = qtones / 2;
-    
+
                     let half = 0;
                     let accidentals = 0;
-    
+
                     if (r % 1 === 0.5) {
                         half = 1;
                         accidentals = r - 0.5;
                     } else if (r % 1 === 0) {
                         accidentals = r;
                     }
-    
+
                     const accidental = accidentals >= 0 ? '#' : 'b';
                     const halfAccidental = accidentals >= 0 ? '𝄲' : '𝄳';
-    
+
                     let accidentalString = '';
                     for (let acc = 0; acc < Math.abs(accidentals); acc++) accidentalString += accidental;
-    
+
                     if (half) accidentalString += halfAccidental;
-    
+
                     shortname = targetNote + accidentalString;
-    
+
                     _accidental = accidentalString;
-    
+
                 }
-    
+
             }
-    
+
             _accidental = _accidental.replaceAll('##', CONSTANTS.ACCIDENTALS_CHARACTERS.DOUBLE_SHARP);
             _accidental = _accidental.replaceAll('bb', CONSTANTS.ACCIDENTALS_CHARACTERS.DOUBLE_FLAT);
             _accidental = _accidental.replaceAll('#', CONSTANTS.ACCIDENTALS_CHARACTERS.SHARP);
             _accidental = _accidental.replaceAll('b', CONSTANTS.ACCIDENTALS_CHARACTERS.FLAT);
             _accidental = _accidental.replaceAll('♯𝄳', CONSTANTS.ACCIDENTALS_CHARACTERS.HALF_SHARP);
-    
+
             if (_accidental == '♯𝄲') {
                 shortname = `${uniformName}${quarterSymbol}`;
                 _accidental = quarterSymbol;
                 name = uniformName;
             }
-    
+
             scale[x] = {
                 fq,
                 note,
@@ -983,21 +1013,21 @@ class Nigun {
                 uniformName,
                 uniformNameCapitalized: capitalizeFirstLetter(uniformName),
             };
-    
+
             stepsIndex += 1;
-    
+
             if (x == totalLength) stepsIndex = 0;
-    
+
         }
-    
+
         if (dropNotes) {
             scale = scale.filter(n => {
                 return dropNotes.indexOf(n.scaleDegree) === -1;
             })
         }
-    
+
         return scale;
-    
+
     }
 
     sequencer(settings = {}) {
