@@ -11,14 +11,26 @@
         text-align: end;
     }
 
-    .sitemap .sitemap-scale{
-        margin-bottom: 10px;    
-    }
+    .sitemap .sitemap-scale{}
 
     .sitemap .sitemap-scale-title{
-        font-size: 35px;
-        background-color: #efefef;
+        font-size: 20px;
+        background-color: #f5f5f5;
         padding: 10px;
+    }
+
+    .sitemap .sitemap-scale-keys{
+        display: flex;
+        padding: 10px;
+        background: #607d8b;
+        color: #fff;
+    }
+
+    .sitemap .sitemap-scale-keys a{
+        display: inline-block;
+        padding: 5px;
+        text-decoration: none;
+        color: #fff;
     }
 
     .sitemap .site-map-note{
@@ -58,15 +70,14 @@
     </div>
     <div for="scale in Object.keys(app.getScales())">
         <div class="sitemap-scale">
-            <div class="sitemap-scale-title">
-                {{app.getScales()[scale].title}} Scale
-            </div>
-            <div class="sitemap-scale-notes">
-                <!-- <div class="sitemap-key" for="k in app.ALL_KEYS">
+            <div class="sitemap-scale-title">{{app.getScales()[scale].title}} Scale</div>
+            <div class="sitemap-scale-keys"><a title="{{`${k} ${app.getScales()[scale].title} Scale`}}" for="k in app.ALL_KEYS" href="{{app.getURL(k, scale, '')}}">{{k}}</a></div>
+            <!-- <div class="sitemap-scale-notes">
+                <div class="sitemap-key" for="k in app.ALL_KEYS">
                     <div class="sitemap-scale-small-title">{{k}} {{app.getScales()[scale].title}} Scale</div>
                     <div class="site-map-note" for="note in app.getScale(3, k, scale, true).map(a=>{return `${a.name.toUpperCase()}${a.accidental}`})">{{note}}</div>
-                </div> -->
-            </div>
+                </div>
+            </div> -->
         </div>
     </div>
 </div>

@@ -308,7 +308,7 @@
 
     this.setRoute = (route) => {
         this.route = route;
-        this.setHistory(route);
+        this.setURL(route);
         this.render();
         this.render();
     }
@@ -522,12 +522,12 @@
         cache.set('theme', theme);
     }
 
-    this.setHistory = (url)=>{
-        window.history.replaceState({page: 2}, null, url);
+    this.getURL = (key = this.settings.key, scale = this.settings.scale, view = this.settings.view)=>{
+        return `/${key}-${scale.toLowerCase().replaceAll('_','-')}/${(view && VIEW_TO_URL[view]) ? VIEW_TO_URL[view] : ''}`;
     }
 
-    this.setURL = ()=>{
-        this.setHistory(`/${this.settings.key}-${this.settings.scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[this.settings.view]}`);
+    this.setURL = (url = this.getURL())=>{
+        window.history.replaceState({page: 2}, null, url);
     }
 
     this.onrender = ()=>{
