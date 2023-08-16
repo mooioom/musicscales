@@ -15,11 +15,12 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        outline: 1px solid #ffffff10;
+        outline: 1px solid #00000010;
         cursor: pointer;
         color: #969696;
         position: relative;
         background: rgb(48 48 48);
+        box-shadow: 10px 10px 20px #000   ;
     }
 
     .theme-dark .play-view .cell{
@@ -31,18 +32,38 @@
         color: #fff;
     }
 
+    .play-view .cell.root::after{
+        content: '';
+        width: 8px;
+        height: 8px;
+        position: relative;
+        left: -13px;
+        top: 18px;
+        background-color: #e90a55;
+        border-radius: 30px;
+    }
+
     .theme-dark .play-view .cell.root{
         color: #fff;
     }
 
     .play-view .cell.playing {
-        background: #4be90a !important;
+        background: #4be90a;
         opacity: 1;
         color: #fff;
-        /* background: radial-gradient(circle, rgba(255,255,255,0) 22%, rgba(255, 255, 255, 0.263) 22%, rgba(255, 255, 255, 0.29) 40%, rgba(255,255,255,0) 40%); */
     }
 
     .theme-dark .play-view .cell.playing {
+        background-color: #e90a55;
+    }
+
+    .play-view .cell.user-playing {
+        background: #e90a55 !important;
+        opacity: 1;
+        color: #fff;
+    }
+
+    .theme-dark .play-view .cell.user-playing {
         background-color: #e90a55;
     }
 
@@ -115,15 +136,15 @@
                     this.dragTarget = $td;
                     source = nigun.instruments[app.settings.keyboardInstrument].startFrequency(note.fq);
                     source.$el = $td;
-                    $td.classList.add('playing');
+                    $td.classList.add('user-playing');
                 }
 
                 const stop = () => {
                     this.isDragging = false;
                     if (source) {
                         source._stop();
-                        $td.classList.remove('playing');
-                        if (source.$el) source.$el.classList.remove('playing');
+                        $td.classList.remove('user-playing');
+                        if (source.$el) source.$el.classList.remove('user-playing');
                         source = null;
                     }
                 }
@@ -165,7 +186,7 @@
 
     const release = () => {
         if (source) {
-            if (source.$el) source.$el.classList.remove('playing');
+            if (source.$el) source.$el.classList.remove('user-playing');
             source._stop();
             source = null;
             this.isDragging = false;
@@ -181,10 +202,10 @@
             }
             if (!target || this.dragTarget === target || !target.isPlayElement) return;
             if (source) {
-                if (source.$el) source.$el.classList.remove('playing');
+                if (source.$el) source.$el.classList.remove('user-playing');
                 source._stop();
             }
-            target.classList.add('playing');
+            target.classList.add('user-playing');
             source = nigun.instruments[app.settings.keyboardInstrument].startFrequency(target.note.fq);
             source.$el = target;
             this.dragTarget = target;
