@@ -2,6 +2,7 @@
     .play-view {
         width: 100%;
         height: 100%;
+        background-color: #111;
     }
 
     .play-view .row {
@@ -20,7 +21,9 @@
         color: #969696;
         position: relative;
         background: rgb(48 48 48);
-        box-shadow: 10px 10px 20px #000   ;
+        box-shadow: 10px 10px 20px #000;
+        transform: scale(1);
+        transition: transform 0.1s ease-out;
     }
 
     .theme-dark .play-view .cell{
@@ -50,6 +53,11 @@
         background: #4be90a;
         opacity: 1;
         color: #fff;
+        position: relative;
+        transform: scale(1.1);
+        border-radius: 3px;
+        z-index: 20;
+        box-shadow: 0px 0px 10px #0000008c;
     }
 
     .theme-dark .play-view .cell.playing {
@@ -60,6 +68,11 @@
         background: #e90a55 !important;
         opacity: 1;
         color: #fff;
+        position: relative;
+        transform: scale(1.1);
+        border-radius: 3px;
+        z-index: 20;
+        box-shadow: 0px 0px 10px #0000008c;
     }
 
     .theme-dark .play-view .cell.user-playing {
