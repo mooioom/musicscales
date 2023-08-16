@@ -34,7 +34,7 @@ class Instrument {
 
         this.type = settings.type || INSTRUMENT_TYPES.SYNTH;
 
-        this.reverb = settings.reverb || REVERBS.EIGHTIES_GATED;
+        this.reverb = settings.reverb || false; //REVERBS.EIGHTIES_GATED
 
         if(this.reverb) this.loadReverb( this.reverb );
 
