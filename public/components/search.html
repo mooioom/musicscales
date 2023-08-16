@@ -98,11 +98,19 @@
         this.$input.value = '';
     }
 
+    this.showResults = ()=>{
+        setTimeout(()=>{
+            this.$results.classList.remove('hidden');
+            document.addEventListener('click', documentListener);
+        },5)
+        
+    }
+
 </script>
 <div class="search">
     <div class="search-title">Search Music Scales / Maqams</div>
     <div class="search-input">
-        <input ref="$input" type="text" placeholder="ex. C Major, D Bayati" onkeyup="this.onchange($event)" onclick="this.$results.classList.remove('hidden');" />
+        <input ref="$input" type="text" placeholder="ex. C Major, D Bayati" onkeyup="this.onchange($event)" onclick="this.showResults()" />
     </div>
     <div ref="$results" class="search-results"></div>
 </div>
