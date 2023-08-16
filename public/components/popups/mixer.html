@@ -33,24 +33,11 @@
 </style>
 <script>
 
-    this.changeMasterGain = (value)=>{
-        nigun.masterGain.gain.value = value;
-    }
-
-    this.changePadGain = (value)=>{
-        nigun['_'+app.settings.padInstrument].gainNode.gain.value = value;
-    }
-    this.changeMetronomeGain = (value)=>{
-        nigun.Metronome.gainNode.gain.value = value;
-    }
-
-    this.changeInstrumentGain = (value)=>{
-        nigun['_'+app.settings.instrument].gainNode.gain.value = value;
-    }
-
-    this.changeKeyboardGain = (value)=>{
-        nigun['_'+app.settings.keyboardInstrument].gainNode.gain.value = value;
-    }
+    this.changeMasterGain = (value)=>{ nigun.masterGain.gain.value = value;}
+    this.changePadGain = (value)=>{ nigun.instruments[app.settings.padInstrument].gainNode.gain.value = value;}
+    this.changeMetronomeGain = (value)=>{ nigun.Metronome.gainNode.gain.value = value;}
+    this.changeInstrumentGain = (value)=>{ nigun.instruments[app.settings.instrument].gainNode.gain.value = value;}
+    this.changeKeyboardGain = (value)=>{ nigun.instruments[app.settings.keyboardInstrument].gainNode.gain.value = value;}
 
     this.a = {on:'I', off:'O'};
 

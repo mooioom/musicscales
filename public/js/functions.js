@@ -47,7 +47,7 @@ window.functions = {
 
         const note = keyToNote[app.settings.key];
 
-        const octave = Object.keys(keyToNote).indexOf(app.settings.key) > 5 ? 2 : 3;
+        const octave = 2;// Object.keys(keyToNote).indexOf(app.settings.key) > 5 ? 2 : 3;
 
         if (app.padIsPlaying && padSource) {
             app.padIsPlaying = false;
