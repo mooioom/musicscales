@@ -14,6 +14,9 @@ const REVERBS = {
     BIG_HALL_M25: 'BIG_HALL_E001_M2S.wav',
     WIDE_HALL: 'WIDE_HALL-1.wav',
     MEDIUM_DAMPING: 'MEDIUM_DAMPING_ROOM_E001_M2S.wav',
+    SIXTIES_SPRING_REVERB: '60s-spring-reverb-39293.mp3',
+    LUSH_SPRING: 'lush-spring-96669.mp3',
+    EIGHTIES_GATED: '80s-gated-reverb-96326.mp3'
 };
 
 class Instrument {
@@ -30,6 +33,34 @@ class Instrument {
         this.gainNode.connect(base.masterGain);
 
         this.type = settings.type || INSTRUMENT_TYPES.SYNTH;
+
+        this.reverb = settings.reverb || REVERBS.EIGHTIES_GATED;
+
+        if(this.reverb) this.loadReverb( this.reverb );
+
+    }
+
+    loadReverb( reverb = REVERBS.BIG_HALL_M25, decay = 0.1 ){
+        fetch(`./media/reverb/${reverb}`)
+            .then(response => response.arrayBuffer())
+            .then(buffer => this.context.decodeAudioData(buffer))
+            .then(impulseResponse => {
+
+                if(decay){
+                    const decayTime = 1; // in seconds
+                    const sampleRate = impulseResponse.sampleRate;
+                    const length = sampleRate * decayTime;
+                    const decayArray = new Float32Array(length);
+                    for (let i = 0; i < length; i++) { decayArray[i] = impulseResponse.getChannelData(0)[i] * (1 - i / length); }
+                    impulseResponse = this.context.createBuffer(1, length, sampleRate);
+                    impulseResponse.copyToChannel(decayArray, 0);
+                }
+
+                this.convolverNode = this.context.createConvolver();
+                this.convolverNode.buffer = impulseResponse;
+                this.convolverNode.connect(this.gainNode);
+
+            });
     }
 
 }
@@ -47,30 +78,6 @@ class Synth extends Instrument {
 
         this.playingNotes = [];
 
-        this.loadReverb( REVERBS.MEDIUM_DAMPING );
-    }
-
-    loadReverb( reverb = REVERBS.BIG_HALL_M25 ){
-        fetch(`./media/reverb/${reverb}`)
-            .then(response => response.arrayBuffer())
-            .then(buffer => this.context.decodeAudioData(buffer))
-            .then(impulseResponse => {
-
-                // Adjust the decay time of the impulse response
-                const decayTime = 1; // in seconds
-                const sampleRate = impulseResponse.sampleRate;
-                const length = sampleRate * decayTime;
-                const decayArray = new Float32Array(length);
-                for (let i = 0; i < length; i++) {
-                    decayArray[i] = impulseResponse.getChannelData(0)[i] * (1 - i / length);
-                }
-                impulseResponse = this.context.createBuffer(1, length, sampleRate);
-                impulseResponse.copyToChannel(decayArray, 0);
-
-                this.convolverNode = this.context.createConvolver();
-                this.convolverNode.buffer = impulseResponse;
-                this.convolverNode.connect(this.gainNode);
-            });
     }
 
     startFrequency(fq) {
@@ -79,8 +86,10 @@ class Synth extends Instrument {
         const oscillator = context.createOscillator();
         const gain = context.createGain();
         oscillator.connect(gain);
-        // gain.connect(this.gainNode);
-        gain.connect(this.convolverNode);
+        gain.connect(
+            this.reverb && this.convolverNode ? this.convolverNode 
+            : this.gainNode
+        );
         oscillator.frequency.value = fq;
         oscillator.type = this.oscillatorType;
         oscillator.start();
