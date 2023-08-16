@@ -190,7 +190,7 @@
 
             }
 
-            if (x === 0 || x > 5) continue;
+            if (x === 0 || x >= 5) continue;
 
             this.view.appendChild($tr);
             rows.push($tr);
@@ -198,7 +198,7 @@
         }
 
         rows.forEach(r => {
-            r.style.height = `calc(100% / ${rows.length - 1})`;
+            r.style.height = `calc(100% / ${rows.length})`;
         })
 
     }

@@ -147,6 +147,8 @@
         background: none;
     }
 
+    .header-base{}
+
     .app-header>div>div {
         display: inline-block;
         margin-inline-end: 5px;
@@ -198,6 +200,25 @@
         top: -20px;
         pointer-events: none;
     }
+
+    @media screen and (min-width: 1000px) {
+        .header-base{
+            transform: scale(1.2);
+            transform-origin: top left;
+            position: relative;
+            z-index: 2;
+        }
+    }
+    @media screen and (min-width: 1300px) {
+        /* styles for screens wider than 1300px */
+        .header-base{
+            transform: scale(1.5);
+            transform-origin: top left;
+            position: relative;
+            z-index: 2;
+        }
+    }
+
 </style>
 
 <script>
