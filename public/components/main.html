@@ -35,8 +35,8 @@
 
     this.setView = ( view = app.VIEWS.NOTE )=>{
 
-        app.settings.mainView = view;
-        cache.set('view',app.settings.mainView);
+        app.settings.view = view;
+        cache.set('view',app.settings.view);
 
         this.view = _modular.createComponent({
             name,
@@ -49,7 +49,7 @@
 
     }
 
-    this.setView(app.settings.mainView);
+    this.setView(app.settings.view);
     
 </script>
 

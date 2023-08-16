@@ -246,6 +246,14 @@
         [VIEWS.PLAY]: 'keyboard',
     }
 
+    const URL_TO_VIEW = {
+        [VIEW_TO_URL[VIEWS.NECK]]: VIEWS.NECK,
+        [VIEW_TO_URL[VIEWS.SCORE]]: VIEWS.SCORE,
+        [VIEW_TO_URL[VIEWS.PLAY]]: VIEWS.PLAY, 
+    }
+
+    console.log(URL_TO_VIEW);
+
     this.PAGES = [
         'sitemap'
     ];
@@ -284,7 +292,7 @@
         theme: cache.get('theme') || DEFAULTS.theme,
         metronome: cache.get('metronome') === 'true' ? true : false,
         loop: true,
-        mainView: cache.get('view') || DEFAULTS.view,
+        view: cache.get('view') || DEFAULTS.view,
         subView: cache.get('subview') || DEFAULTS.subView,
         keyboardInstrument: 'synth1',
         instrument: 'piano',
@@ -307,12 +315,6 @@
         this.render();
     }
 
-    const path = location.pathname.slice(1);
-
-    if(path){
-        if(this.PAGES.includes(path)) this.route = path;
-    }
-
     this.padIsPlaying = false;
 
     window.nigun = new Nigun({
@@ -329,7 +331,26 @@
     nigun.settings.bpm = this.settings.bpm;
 
     this.init = () => {
+
         this.setTheme();
+
+        const path = location.href.split(location.origin)[1].slice(1);
+
+        if(path){
+            if(this.PAGES.includes(path)) this.route = path;
+            else{
+                const pathParts = path.split('/');
+                const pathScale = pathParts[0];
+                const pathKey = pathScale.split('-')[0];
+                const pathScaleName = pathScale.split('-').slice(1).join('_').toUpperCase();
+                const pathView = pathParts[1];
+                this.settings.key = pathKey;
+                this.settings.scale = pathScaleName;
+                if(pathView) this.settings.view = URL_TO_VIEW[pathView];
+                this.setURL();
+            }
+        }
+
     }
 
     this.play = async () => {
@@ -488,11 +509,11 @@
 
     this.toggleView = () => {
         const keys = Object.keys(VIEWS);
-        let id = keys.indexOf(this.settings.mainView);
+        let id = keys.indexOf(this.settings.view);
         id = (id + 1) % keys.length;
-        this.settings.mainView = keys[id];
-        cache.set('view', app.settings.mainView);
-        app._component.components.main.setView(this.settings.mainView);
+        this.settings.view = keys[id];
+        cache.set('view', app.settings.view);
+        app._component.components.main.setView(this.settings.view);
         // this.render();
     }
 
@@ -508,7 +529,7 @@
     }
 
     this.setURL = ()=>{
-        this.setHistory(`/${this.settings.key}-${this.settings.scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[this.settings.mainView]}`);
+        this.setHistory(`/${this.settings.key}-${this.settings.scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[this.settings.view]}`);
     }
 
     this.onrender = ()=>{
