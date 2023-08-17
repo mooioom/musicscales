@@ -27,7 +27,7 @@
     .app {
         height: 100%;
         user-select: none;
-        background-image: 
+        background-image:
             radial-gradient(rgb(245, 245, 245) 10%, transparent 10%),
             radial-gradient(rgb(245, 245, 245) 10%, transparent 10%);
         background-position: 0px 0px, 12px 12px;
@@ -36,8 +36,8 @@
         display: flex;
     }
 
-    .theme-dark .app{
-        background-image: 
+    .theme-dark .app {
+        background-image:
             radial-gradient(rgb(0, 0, 0) 10%, transparent 10%),
             radial-gradient(rgb(18, 18, 18) 10%, transparent 10%);
         background-position: 0px 0px, 12px 12px;
@@ -45,7 +45,7 @@
         background-color: rgb(8, 8, 8);
     }
 
-    .app .page{
+    .app .page {
         width: 100%;
         height: 100%;
     }
@@ -77,23 +77,23 @@
         user-select: none;
     }
 
-    .overflow-hidden{
+    .overflow-hidden {
         overflow: hidden !important;
         overflow-y: hidden !important;
         overflow-x: hidden !important;
     }
 
-    .text-center{
+    .text-center {
         text-align: center;
     }
 
-    .icon{
+    .icon {
         filter: brightness(0);
         width: 100%;
         height: 100%;
     }
 
-    .theme-dark .icon{
+    .theme-dark .icon {
         filter: brightness(1) hue-rotate(80deg);
     }
 
@@ -117,7 +117,8 @@
         display: flex;
         justify-content: space-between;
     }
-    .flex-middle{
+
+    .flex-middle {
         display: flex;
         align-items: center;
     }
@@ -171,7 +172,7 @@
         background: none;
     }
 
-    .header-base{}
+    .header-base {}
 
     .app-header>div>div {
         display: inline-block;
@@ -226,29 +227,30 @@
     }
 
     @media screen and (max-width: 350px) {
-        .app-header .button{
+        .app-header .button {
             width: 18px;
         }
     }
 
     @media screen and (min-width: 1000px) {
-        .header-base{
+        .header-base {
             transform: scale(1.2);
             transform-origin: top left;
             position: relative;
             z-index: 2;
         }
     }
+
     @media screen and (min-width: 1300px) {
+
         /* styles for screens wider than 1300px */
-        .header-base{
+        .header-base {
             transform: scale(1.5);
             transform-origin: top left;
             position: relative;
             z-index: 2;
         }
     }
-
 </style>
 
 <script>
@@ -261,8 +263,12 @@
 
     this.plan = PLANS.FREE;
 
-    const getWidth = () => { return document.body.getBoundingClientRect().width; };
-    const setMobile = () => { this.isMobile = (getWidth() <= 5000); }
+    const getWidth = () => {
+        return document.body.getBoundingClientRect().width;
+    };
+    const setMobile = () => {
+        this.isMobile = (getWidth() <= 5000);
+    }
 
     this.width = getWidth();
 
@@ -277,7 +283,7 @@
     this.ALL_KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B'];
     this.KEYS = ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B'];
     this.keyIndex = cache.get('keyId') || 2; // A
-    
+
     this.PATTERNS = Object.keys(CONSTANTS.SEQUENCER_PATTERNS);
 
     const THEMES = {
@@ -300,12 +306,17 @@
     const URL_TO_VIEW = {
         [VIEW_TO_URL[VIEWS.NECK]]: VIEWS.NECK,
         [VIEW_TO_URL[VIEWS.SCORE]]: VIEWS.SCORE,
-        [VIEW_TO_URL[VIEWS.PLAY]]: VIEWS.PLAY, 
+        [VIEW_TO_URL[VIEWS.PLAY]]: VIEWS.PLAY,
     }
 
     this.PAGES = [
         'sitemap'
     ];
+
+    const INSTRUMENT_TYPES = {
+        SAMPLER: 'SAMPLER',
+        SYNTH: 'SYNTH',
+    }
 
     this.DEFAULTS = {};
 
@@ -324,6 +335,29 @@
         view: VIEWS.PLAY,
         subView: '',
         metronome: false,
+        gain: 0.3,
+        instruments: {
+            pad: {
+                type: INSTRUMENT_TYPES.SAMPLER,
+                sample: 'media/Korg-M3R-Ensemble-C4.wav',
+                gain: 0.75
+            },
+            metronome: {
+                sample: 'media/click.mp3',
+                type: INSTRUMENT_TYPES.SAMPLER,
+                gain: 0.75
+            },
+            player: {
+                type: INSTRUMENT_TYPES.SAMPLER,
+                sample: 'media/Yamaha-TG77-Dulcimer-C4.wav',
+                gain: 0.75
+            },
+            keyboard: {
+                type: INSTRUMENT_TYPES.SYNTH,
+                oscillator: CONSTANTS.OSCILLATOR_TYPES.TRIANGLE,
+                gain: 0.75
+            },
+        },
     };
 
     this.DEFAULTS = DEFAULTS;
@@ -339,21 +373,44 @@
         accidental: cache.get('accidental') || DEFAULTS.accidental,
         concertPitch: cache.get('pitch') ? Number(cache.get('pitch')) : DEFAULTS.pitch,
         theme: cache.get('theme') || DEFAULTS.theme,
-        metronome: cache.get('metronome') === 'true' ? true : false,
         loop: true,
+        metronome: cache.get('metronome') === 'true' ? true : false,
         view: cache.get('view') || DEFAULTS.view,
         subView: cache.get('subview') || DEFAULTS.subView,
-        keyboardInstrument: 'synth1',
-        instrument: 'piano',
-        padInstrument: 'pad',
-        gains: {
-            master: cache.get('master-gain') ? Number(cache.get('master-gain')) : 1,
-            instrument: cache.get('instrument-gain') ? Number(cache.get('instrument-gain')) : 1,
-            pad: cache.get('pad-gain') ? Number(cache.get('pad-gain')) : 1,
-            metronome: cache.get('metronome-gain') ? Number(cache.get('metronome-gain')) : 1,
-            keyboard: cache.get('keyboard-gain') ? Number(cache.get('keyboard-gain')) : 1,
-        },
+        gain: cache.get('gain') ? Number(cache.get('gain')) : DEFAULTS.gain,
     };
+
+    this.settings.instruments = DEFAULTS.instruments;
+
+    try {
+        if(cache.get('instruments')) this.settings.instruments = JSON.parse(cache.get('instruments'));
+    } catch (e) {}
+
+    let instruments = [];
+
+    Object.keys(this.settings.instruments).forEach((name)=>{
+        const instrument = this.settings.instruments[name];
+        instruments.push({
+            name,
+            type: instrument.type,
+            gain: instrument.gain,
+            oscillator: instrument.oscillator,
+            notesMap: {
+                C4: instrument.sample,
+            }
+        })
+    })
+
+    this.padIsPlaying = false;
+
+    window.nigun = new Nigun({
+        bpm: this.settings.bpm,
+        gain: this.settings.gain,
+        signature: '4/4',
+        instruments,
+        oninit: () => { nigun.toggleMetronome(this.settings.metronome); },
+        onstop: () => { functions.unlightAllNotes(); }
+    });
 
     this.route = '';
 
@@ -364,30 +421,15 @@
         this.render();
     }
 
-    this.padIsPlaying = false;
-
-    window.nigun = new Nigun({
-        bpm: 120,
-        signature: '4/4',
-        oninit: ()=>{
-            nigun.toggleMetronome(this.settings.metronome);
-        },
-        onstop: ()=>{
-            functions.unlightAllNotes();
-        }
-    });
-
-    nigun.settings.bpm = this.settings.bpm;
-
     this.init = () => {
 
         this.setTheme();
 
         const path = location.href.split(location.origin)[1].slice(1);
 
-        if(path){
-            if(this.PAGES.includes(path)) this.route = path;
-            else{
+        if (path) {
+            if (this.PAGES.includes(path)) this.route = path;
+            else {
                 const pathParts = path.split('/');
                 const pathScale = pathParts[0];
                 const pathKey = pathScale.split('-')[0];
@@ -395,7 +437,7 @@
                 const pathView = pathParts[1];
                 this.settings.key = pathKey;
                 this.settings.scale = pathScaleName;
-                if(pathView) this.settings.view = URL_TO_VIEW[pathView];
+                if (pathView) this.settings.view = URL_TO_VIEW[pathView];
                 this.setURL();
             }
         }
@@ -409,11 +451,13 @@
             pattern: this.getPattern(),
         })
 
-        const sequence1 = nigun.createSequence({timeline});
+        const sequence1 = nigun.createSequence({
+            timeline
+        });
 
         const track = nigun.createTrack({
             name: 'melody',
-            instrument: nigun.instruments.piano,
+            instrument: nigun.instruments.player,
             sequences: [
                 sequence1,
             ],
@@ -429,49 +473,55 @@
 
     }
 
-    this.change = ()=>{
-        if(nigun.IS_PLAYING) this.play();
+    this.change = () => {
+        if (nigun.IS_PLAYING) this.play();
     }
 
-    this.getCustomData = (type = 'scales')=>{
+    this.getCustomData = (type = 'scales') => {
         let data = [];
         const d = localStorage.getItem(`custom_${type}`);
-        if(!d) localStorage.setItem(`custom_${type}`, '{}');
-        try{
+        if (!d) localStorage.setItem(`custom_${type}`, '{}');
+        try {
             data = JSON.parse(localStorage.getItem(`custom_${type}`) || {});
-        }catch(e){}
+        } catch (e) {}
         return data;
     }
 
-    this.setCustomData = (d = {}, type='scales')=>{
+    this.setCustomData = (d = {}, type = 'scales') => {
         localStorage.setItem(`custom_${type}`, JSON.stringify(d));
     }
 
-    this.getCustomScales = ()=>{
+    this.getCustomScales = () => {
         return this.getCustomData();
     }
 
-    this.setCustomScales = (newCustomScales = {})=>{
+    this.setCustomScales = (newCustomScales = {}) => {
         this.setCustomData(newCustomScales)
     }
 
-    this.getScales = ()=>{
-        return {...this.getCustomScales(), ...CONSTANTS.SCALES};
+    this.getScales = () => {
+        return {
+            ...this.getCustomScales(),
+            ...CONSTANTS.SCALES
+        };
     }
 
-    this.getCustomPrograms = ()=>{
+    this.getCustomPrograms = () => {
         return this.getCustomData('programs');
     }
 
-    this.setCustomPrograms = (d = {})=>{
+    this.setCustomPrograms = (d = {}) => {
         this.setCustomData(d, 'programs')
     }
 
-    this.getPrograms = ()=>{
-        return {...this.getCustomPrograms(), ...CONSTANTS.PROGRAMS};
+    this.getPrograms = () => {
+        return {
+            ...this.getCustomPrograms(),
+            ...CONSTANTS.PROGRAMS
+        };
     }
 
-    this.getProgram = ()=>{
+    this.getProgram = () => {
         return this.getPrograms()[this.settings.program];
     }
 
@@ -487,7 +537,8 @@
         return steps;
     }
 
-    this.getScale = (octave = this.settings.octave, key = this.settings.key, scaleName = this.settings.scale, singleOctave) => {
+    this.getScale = (octave = this.settings.octave, key = this.settings.key, scaleName = this.settings.scale,
+        singleOctave) => {
         const scale = app.getScales()[scaleName];
         const d = nigun.getScale({
             root: key + octave,
@@ -510,8 +561,8 @@
         nigun.stop();
     }
 
-    this.set = (o)=>{
-        for(let x in o){
+    this.set = (o) => {
+        for (let x in o) {
             this.settings[x] = o[x];
             cache.set(x, o[x]);
         }
@@ -574,16 +625,18 @@
         cache.set('theme', theme);
     }
 
-    this.getURL = (key = this.settings.key, scale = this.settings.scale, view = this.settings.view)=>{
+    this.getURL = (key = this.settings.key, scale = this.settings.scale, view = this.settings.view) => {
         return `/${key}-${scale.toLowerCase().replaceAll('_','-')}/${(view && VIEW_TO_URL[view]) ? VIEW_TO_URL[view] : ''}`;
     }
 
-    this.setURL = (url = this.getURL())=>{
-        window.history.replaceState({page: 2}, null, url);
+    this.setURL = (url = this.getURL()) => {
+        window.history.replaceState({
+            page: 2
+        }, null, url);
     }
 
-    this.onrender = ()=>{
-        if(this.route === '') {
+    this.onrender = () => {
+        if (this.route === '') {
             this.setURL();
         }
     }
@@ -604,7 +657,6 @@
     this.colorOrgan();
 
     this.init();
-
 </script>
 
 <div class="app">
@@ -617,8 +669,10 @@
                         <tempo></tempo>
                     </div>
                     <div class="buttons">
-                        <button icon="assets/metronome.svg" onclick="functions.toggleMetronome" class="{{app.settings.metronome ? 'on' : ''}}"></button>
-                        <button icon="assets/pad.svg" onclick="functions.togglePad" class="{{app.padIsPlaying ? 'on' : ''}}"></button>
+                        <button icon="assets/metronome.svg" onclick="functions.toggleMetronome"
+                            class="{{app.settings.metronome ? 'on' : ''}}"></button>
+                        <button icon="assets/pad.svg" onclick="functions.togglePad"
+                            class="{{app.padIsPlaying ? 'on' : ''}}"></button>
                         <button icon="assets/mixer.svg" onclick="()=>{popup.show('mixer')}"></button>
                         <button class="view-button" icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button>
                         <button icon="assets/hamsa.svg" onclick="()=>{popup.show('settings')}"></button>

@@ -289,7 +289,7 @@
     let isDragging = null;
 
     const startNote = (note)=>{
-        source = nigun.instruments.synth1.startFrequency(note.fq);
+        source = nigun.instruments.keyboard.startFrequency(note.fq);
         source.$el = note.$el;
         note.$el.classList.add('playing');
     }

@@ -142,7 +142,7 @@
                 const start = () => {
                     this.isDragging = true;
                     this.dragTarget = $td;
-                    source = nigun.instruments[app.settings.keyboardInstrument].startFrequency(note.fq);
+                    source = nigun.instruments.keyboard.startFrequency(note.fq);
                     source.$el = $td;
                     $td.classList.add('user-playing');
                 }
@@ -214,7 +214,7 @@
                 source._stop();
             }
             target.classList.add('user-playing');
-            source = nigun.instruments[app.settings.keyboardInstrument].startFrequency(target.note.fq);
+            source = nigun.instruments.keyboard.startFrequency(target.note.fq);
             source.$el = target;
             this.dragTarget = target;
         }

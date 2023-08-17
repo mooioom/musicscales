@@ -306,7 +306,7 @@
             a.classList.remove('playing');
             if(a.getAttribute('note') === note.uniformFullname) a.classList.add('playing');
         });
-        source = nigun.instruments.synth1.startFrequency(note.fq);
+        source = nigun.instruments.keyboard.startFrequency(note.fq);
     }
 
     const clearNotes = ()=>{

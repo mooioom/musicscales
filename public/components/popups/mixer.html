@@ -15,13 +15,17 @@
 </style>
 <script>
 
-    this.changeMasterGain = (value)=>{ nigun.masterGain.gain.value = value;}
-    this.changePadGain = (value)=>{ nigun.instruments[app.settings.padInstrument].gainNode.gain.value = value;}
-    this.changeMetronomeGain = (value)=>{ nigun.Metronome.gainNode.gain.value = value;}
-    this.changeInstrumentGain = (value)=>{ nigun.instruments[app.settings.instrument].gainNode.gain.value = value;}
-    this.changeKeyboardGain = (value)=>{ nigun.instruments[app.settings.keyboardInstrument].gainNode.gain.value = value;}
+    this.setGain = (instrument, value)=>{
+        app.settings.instruments[instrument].gain = value;
+        nigun.instruments[instrument].gainNode.gain.value = value;
+        cache.set('instruments', app.settings.instruments);
+    }
 
-    this.a = {on:'I', off:'O'};
+    this.setMasterGain = (value)=>{ 
+        nigun.masterGain.gain.value = value;
+        app.settings.gain = value;
+        cache.set('gain', value);
+    }
 
 </script>
 <div class="mixer">
@@ -29,31 +33,31 @@
     <div class="part">
         <div class="title">MASTER</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changeMasterGain" value="{{nigun.masterGain.gain.value}}" size="20"></slider>
+            <slider onchange="this.setMasterGain" value="{{app.settings.gain}}" size="20"></slider>
         </div>
     </div>
     <div class="part">
         <div class="title">PLAYER</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changeInstrumentGain" value="{{nigun.instruments[app.settings.instrument].gainNode.gain.value}}" size="20"></slider>
+            <slider onchange="(v)=>{ this.setGain('player', v) }" value="{{nigun.instruments.player.gainNode.gain.value}}" size="20"></slider>
         </div>
     </div>
     <div class="part">
         <div class="title">KEYBOARD</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changeKeyboardGain" value="{{nigun.instruments[app.settings.keyboardInstrument].gainNode.gain.value}}" size="20"></slider>
+            <slider onchange="(v)=>{ this.setGain('keyboard', v) }" value="{{nigun.instruments.keyboard.gainNode.gain.value}}" size="20"></slider>
         </div>
     </div>
     <div class="part">
         <div class="title">PAD</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changePadGain" value="{{nigun.instruments[app.settings.padInstrument].gainNode.gain.value}}" size="20"></slider>
+            <slider onchange="(v)=>{ this.setGain('pad', v) }" value="{{nigun.instruments.pad.gainNode.gain.value}}" size="20"></slider>
         </div>
     </div>
     <div class="part">
         <div class="title">METRONOME</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changeMetronomeGain" value="{{nigun.Metronome.gainNode.gain.value}}" size="20"></slider>
+            <slider onchange="(v)=>{ this.setGain('metronome', v) }" value="{{nigun.instruments.metronome.gainNode.gain.value}}" size="20"></slider>
         </div>
     </div>
     <div class="sounds"></div>

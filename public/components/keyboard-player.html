@@ -17,7 +17,7 @@
 
         document.onkeydown = (e) => {
             if(document.activeElement.tagName === 'INPUT') return;
-            const instrument = nigun.instruments[app.settings.keyboardInstrument];
+            const instrument = nigun.instruments.keyboard;
             const keyId = this.keyboardKeys.indexOf(e.key);
             if (keyId === -1) return;
             e.preventDefault();
@@ -30,7 +30,7 @@
         }
 
         document.onkeyup = (e) => {
-            const instrument = nigun.instruments[app.settings.keyboardInstrument];
+            const instrument = nigun.instruments.keyboard;
             const keyId = this.keyboardKeys.indexOf(e.key);
             if (keyId === -1) return;
             e.preventDefault();

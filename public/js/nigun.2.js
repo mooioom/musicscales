@@ -536,30 +536,6 @@ class Nigun {
                         C4: 'media/click.mp3',
                     },
                 },
-                {
-                    name: 'piano',
-                    type: INSTRUMENT_TYPES.SAMPLER,
-                    notesMap: {
-                        C4: 'media/Yamaha-TG77-Dulcimer-C4.wav',
-                    },
-                },
-                {
-                    name: 'windchime',
-                    type: INSTRUMENT_TYPES.SAMPLER,
-                    notesMap: {
-                        C4: 'media/windchime_c4.mp3'
-                    },
-                },
-                {
-                    name: 'pad',
-                    type: INSTRUMENT_TYPES.SAMPLER,
-                    loopStart: 0.61,
-                    loopEnd: 1.6,
-                    crossFadeDuration: 0.4,
-                    notesMap: {
-                        C4: 'media/Korg-M3R-Ensemble-C4.wav'
-                    },
-                },
             ],
         };
 

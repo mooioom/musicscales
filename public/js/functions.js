@@ -54,7 +54,7 @@ window.functions = {
             padSource.stop();
         } else {
             app.padIsPlaying = true;
-            padSource = nigun.instruments[app.settings.padInstrument].startPad(teoria.note.fromString(note + octave).fq());
+            padSource = nigun.instruments.pad.startPad(teoria.note.fromString(note + octave).fq());
         }
 
         app.render();
@@ -149,6 +149,7 @@ class Cache {
     }
 
     set(name, value) {
+        if(value !== null && typeof value == 'object') value = JSON.stringify(value);
         localStorage.setItem(name, value);
     }
 }
