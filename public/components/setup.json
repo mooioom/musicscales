@@ -31,6 +31,7 @@
         "stepper": "stepper",
         "sidebar": "sidebar",
         "sitemap": "sitemap",
-        "search": "search"
+        "search": "search",
+        "mixer-instrument": "mixer-instrument"
     }
 }

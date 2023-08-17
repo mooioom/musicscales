@@ -1,0 +1,66 @@
+<style>
+    .mixer-instrument{
+        margin-bottom: 5px;
+        background: #f0f0f0;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .mixer-instrument .title{
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .mixer-instrument .button{
+        padding: 0;
+        background: none;
+    }
+    .theme-dark .mixer-instrument{
+        background: #1b1b1b;
+    }
+    .mixer-instrument .instrument-settings{
+        display: none;
+    }
+    .mixer-instrument .instrument-settings.visible{
+        display: block;
+    }
+</style>
+<script>
+
+    this.showSettings = false;
+
+    this.setGain = (value)=>{
+
+        if(this.props.ismaster){
+            nigun.masterGain.gain.value = value;
+            app.settings.gain = value;
+            cache.set('gain', value);
+            return;
+        }
+
+        app.settings.instruments[this.props.instrument].gain = value;
+        nigun.instruments[this.props.instrument].gainNode.gain.value = value;
+        cache.set('instruments', app.settings.instruments);
+
+    }
+
+    this.toggleSettings = ()=>{
+        this.showSettings = !this.showSettings;
+        this.render();
+    }
+
+    this.getGainValue = ()=>{
+        if(this.props.ismaster) return nigun.masterGain.gain.value;
+        return nigun.instruments[this.props.instrument].gainNode.gain.value;
+    }
+
+</script>
+<div class="mixer-instrument">
+    <div class="title">
+        <div>{{this.props.instrument.toUpperCase()}}</div>
+        <div if="!this.props.ismaster"><button icon="assets/gears.svg" onclick="()=>{ this.toggleSettings() }"></button></div>
+    </div>
+    <div class="slider-wrapper">
+        <slider onchange="(v)=>{ this.setGain(v) }" value="{{this.getGainValue()}}" size="20"></slider>
+    </div>
+    <div class="instrument-settings {{this.showSettings ? 'visible' : ''}}"></div>
+</div>
