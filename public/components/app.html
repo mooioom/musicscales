@@ -143,9 +143,29 @@
         justify-content: space-between;
     }
 
-    .app-header .button.view-button{
-
+    /* .app-header .button.view-button{
+        position: fixed;
+        bottom: 15px;
+        left: 5px;
+        width: 40px;
+        height: 40px;
+        border-radius: 40px;
+        border: 2px solid var(--select-color);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
     }
+
+    .app-header .button.view-button:hover{
+        background-color: var(--select-color);
+    }
+
+    .app-header .button.view-button img{
+        width: 30px;
+        height: 30px;
+    } */
 
     .theme-dark .app-header {
         background: none;
@@ -203,6 +223,12 @@
         position: relative;
         top: -20px;
         pointer-events: none;
+    }
+
+    @media screen and (max-width: 350px) {
+        .app-header .button{
+            width: 18px;
+        }
     }
 
     @media screen and (min-width: 1000px) {
@@ -295,7 +321,7 @@
         detune: 0,
         accidental: CONSTANTS.ACCIDENTALS.FLAT,
         theme: THEMES.DEFAULT,
-        view: VIEWS.SCORE,
+        view: VIEWS.PLAY,
         subView: '',
         metronome: false,
     };
@@ -595,6 +621,7 @@
                         <button icon="assets/pad.svg" onclick="functions.togglePad" class="{{app.padIsPlaying ? 'on' : ''}}"></button>
                         <button icon="assets/mixer.svg" onclick="()=>{popup.show('mixer')}"></button>
                         <button class="view-button" icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button>
+                        <button icon="assets/hamsa.svg" onclick="()=>{popup.show('settings')}"></button>
                     </div>
                 </div>
                 <scale></scale>

@@ -59,7 +59,7 @@
         text-align: center;
         font-weight: bold;
         width: 12px;
-        border-radius: 10px;
+        border-radius: 5px;
         height: 25px;
         display: inline-flex;
         justify-content: center;
@@ -126,6 +126,13 @@
     .scale .scale-button:active img{
         filter: invert();
     }
+
+    .scale .scale-search{
+        width: 17px;
+        position: relative;
+        top:-5px;
+        margin-inline-start: 5px;
+    }
     
     @media (hover: hover) {
 
@@ -159,6 +166,7 @@
         }
 
     }
+
     @media screen and (max-width: 290px) {
         .notes .note{
             width: 1px;
@@ -170,6 +178,16 @@
 
     @media only screen and (min-width: 550px) {
         /* CSS rules for screens wider than 550px */
+
+        .scale .scale-search{
+            width: 20px;
+            margin-inline-start: 7px;
+            top:-10px;
+        }
+
+        .scale .notes .accidental{
+            font-size: 20px;
+        }
         
         .scale .scale-button{
             vertical-align: text-bottom;
@@ -178,8 +196,8 @@
 
         .notes .note{
             font-size: 30px;
-            margin-left: 10px;
-            margin-right: 10px;
+            margin-left: 5px;
+            margin-right: 5px;
             padding: 10px;
         }
 
@@ -201,8 +219,8 @@
         /* CSS rules for screens wider than 768px */
         .notes .note{
             font-size: 40px;
-            margin-left: 15px;
-            margin-right: 15px;
+            margin-left: 7px;
+            margin-right: 7px;
             padding: 15px;
         }
         .scale-header{
@@ -373,6 +391,10 @@
 
     }
 
+    this.openSearch = ($ev)=>{
+        $ev.stopPropagation();
+    }
+
 </script>
 
 <div class="scale" ref="scale">
@@ -380,7 +402,9 @@
         <div class="scale-header-content">
             <span class="scale-button" ref="prev">
                 <img src="assets/left-arrow.svg" />
-            </span> <span class="scale-title pointer" onclick="popup.show('scale')">{{this.getTitle()}} <span class="mode {{app.settings.mode === 1 ? 'hidden' : ''}}">{{app.settings.mode}}</span></span>
+            </span> <span class="scale-title pointer" onclick="popup.show('scale')">
+                {{this.getTitle()}}<span class="mode {{app.settings.mode === 1 ? 'hidden' : ''}}">{{app.settings.mode}}</span><!--<img class="scale-search icon" src="assets/search.svg" onclick="this.openSearch($event);" />-->
+            </span>
             <span class="scale-button" ref="next">
                 <img src="assets/left-arrow.svg" />
             </span>
