@@ -28,6 +28,18 @@
         top: -6px;
         left: calc(50% - 5px);
         cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .slider .slider-value{
+        position: relative;
+        top: 30px;
+        left: -7px;
+        background: #404040;
+        padding: 5px;
+        border-radius: 4px;
+        color: #fff;
     }
 
     .theme-dark .slider .slider-knob{
@@ -47,15 +59,18 @@
 
     this.setValue = (v) => {
         this.value = v;
+        this.$value.innerHTML = Number(v).toFixed(2);
         this.knob.style.left = `calc(${v * 100}% - ${this.knobSize / 2}px)`;
         this.onchange(v);
     }
 
     this.onmousedown = (ev) => {
         this.isDragging = true;
+        this.$value.classList.remove('hidden');
     }
     this.onmouseup = () => {
         this.isDragging = false;
+        this.$value.classList.add('hidden');
     }
 
     this.documentmousemove = (ev) => {
@@ -93,6 +108,7 @@
                 top:-{{this.knobSize/2}}px;
                 left:calc({{this.props.value* 100}}% - {{this.knobSize/ 2}}px)
             ">
+            <div ref="$value" class="slider-value hidden"></div>
         </div>
     </div>
 </div>

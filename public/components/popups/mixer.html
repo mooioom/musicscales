@@ -60,13 +60,13 @@
     <div class="part">
         <div class="title">MAIN INSTRUMENT GAIN</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changeInstrumentGain" value="{{nigun['_'+app.settings.instrument].gainNode.gain.value}}" size="20"></slider>
+            <slider onchange="this.changeInstrumentGain" value="{{nigun.instruments[app.settings.instrument].gainNode.gain.value}}" size="20"></slider>
         </div>
     </div>
     <div class="part">
         <div class="title">PAD GAIN</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changePadGain" value="{{nigun['_'+app.settings.padInstrument].gainNode.gain.value}}" size="20"></slider>
+            <slider onchange="this.changePadGain" value="{{nigun.instruments[app.settings.padInstrument].gainNode.gain.value}}" size="20"></slider>
         </div>
     </div>
     <div class="part">
@@ -78,7 +78,7 @@
     <div if="!functions.isMobile()" class="part">
         <div class="title">KEYBOARD GAIN</div>
         <div class="slider-wrapper">
-            <slider onchange="this.changeKeyboardGain" value="{{nigun['_'+app.settings.keyboardInstrument].gainNode.gain.value}}" size="20"></slider>
+            <slider onchange="this.changeKeyboardGain" value="{{nigun.instruments[app.settings.keyboardInstrument].gainNode.gain.value}}" size="20"></slider>
         </div>
     </div>
     <div class="sounds"></div>
