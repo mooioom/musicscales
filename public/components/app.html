@@ -9,6 +9,7 @@
         /* font-family: 'Roboto', sans-serif; */
         font-family: 'fira', sans-serif;
         -webkit-tap-highlight-color: transparent;
+        overscroll-behavior-x: none;
     }
 
     .theme-dark {
@@ -255,22 +256,6 @@
 
 <script>
     window.app = this;
-
-    // this.clearCacheDate = window.build.date;
-
-    // const lastVisit = cache.get('last-visit');
-    // if(lastVisit){
-    //     const date = new Date(lastVisit);
-    //     const isValid = date.toISOString() === lastVisit;
-    //     if(isValid && date <= new Date(this.clearCacheDate)) {
-    //         console.log('--- clear cache ---')
-    //         localStorage.clear();
-    //     }
-    //     cache.set('last-visit', new Date().toISOString());
-    // }else{
-    //     localStorage.clear();
-    //     cache.set('last-visit', new Date().toISOString());
-    // }
 
     const PLANS = {
         PRO: "PRO",
