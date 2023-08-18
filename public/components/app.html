@@ -627,7 +627,7 @@
     }
 
     this.getURL = (key = this.settings.key, scale = this.settings.scale, view = this.settings.view) => {
-        return `/${key}-${scale.toLowerCase().replaceAll('_','-')}/${(view && VIEW_TO_URL[view]) ? VIEW_TO_URL[view] : ''}`;
+        return `/${key}-${scale.toLowerCase().replaceAll('_','-')}`;
     }
 
     this.setURL = (url = this.getURL()) => {

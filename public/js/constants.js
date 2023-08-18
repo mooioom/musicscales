@@ -270,7 +270,18 @@ export const ALL_SCALES = [{
         0.5,
         1,
         0.5,
-        5
+        2.5
+    ]
+},
+{
+    title: "Istrian 2nd",
+    steps: [
+        0.5,
+        1,
+        0.5,
+        1,
+        1,
+        2
     ]
 },
 {
