@@ -47,7 +47,7 @@
       build = await build.json();
       window.build = build;
       const lastVisit = cache.get('last-visit');
-      if( lastVisit && new Date(build.date) > new Date(lastVisit) ) {
+      if(!lastVisit || (lastVisit && new Date(build.date) > new Date(lastVisit))) {
         localStorage.clear();
         console.log('--- clear cache ---');
       }
