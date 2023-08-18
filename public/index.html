@@ -42,15 +42,25 @@
     import Nigun from './js/nigun.2.js';
     import * as CONSTANTS from './js/constants.js';
 
-    // let build = await fetch('./build.json');
-    // build = await build.json();
-    // window.build = build;
+    try{
+      let build = await fetch('./build.json');
+      build = await build.json();
+      window.build = build;
+      const lastVisit = cache.get('last-visit');
+      if( lastVisit && new Date(build.date) > new Date(lastVisit) ) {
+        localStorage.clear();
+        console.log('--- clear cache ---');
+      }
+    }catch(e){
+      localStorage.clear();
+      console.log('--- cannot load build data ---');
+    }
+
+    cache.set('last-visit', new Date().toISOString());
 
     window.CONSTANTS = CONSTANTS;
     window.Nigun = Nigun;
     window.__app = new Modular;
-    // window.Factory = Factory;
-    // window.GuitarTuner = GuitarTuner;
 
     window.$ = (q)=>{
       return document.querySelector(q);
