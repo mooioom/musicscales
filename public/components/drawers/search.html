@@ -1,0 +1,19 @@
+<style>
+    .search-drawer{
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
+    }
+    .search-drawer .search{
+        width: 80%;
+    }
+</style>
+<script>
+    this.onselect = ()=>{
+        drawer.hide();
+    }
+</script>
+<div class="search-drawer">
+    <search onselect="this.onselect"></search>
+</div>

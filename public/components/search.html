@@ -6,7 +6,8 @@
         margin-bottom: 5px;
     }
     .search .search-input{
-
+        border: 1px solid #333;
+        border-radius: 35px;
     }
     .search .search-input input{
         width: 100%;
@@ -96,6 +97,7 @@
         this.$results.innerHTML = '';
         document.removeEventListener('click', documentListener);
         this.$input.value = '';
+        if(this.props.onselect) this.props.onselect();
     }
 
 </script>

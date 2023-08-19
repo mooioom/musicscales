@@ -393,6 +393,7 @@
 
     this.openSearch = ($ev)=>{
         $ev.stopPropagation();
+        drawer.show('search');
     }
 
 </script>
@@ -403,7 +404,7 @@
             <span class="scale-button" ref="prev">
                 <img src="assets/left-arrow.svg" />
             </span> <span class="scale-title pointer" onclick="popup.show('scale')">
-                {{this.getTitle()}}<span class="mode {{app.settings.mode === 1 ? 'hidden' : ''}}">{{app.settings.mode}}</span><!--<img class="scale-search icon" src="assets/search.svg" onclick="this.openSearch($event);" />-->
+                {{this.getTitle()}}<span class="mode {{app.settings.mode === 1 ? 'hidden' : ''}}">{{app.settings.mode}}</span><img class="scale-search icon" src="assets/search.svg" onclick="this.openSearch($event);" />
             </span>
             <span class="scale-button" ref="next">
                 <img src="assets/left-arrow.svg" />
