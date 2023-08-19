@@ -53,25 +53,38 @@
     this.value = this.props.value || 1;
     this.knobSize = this.props.size || 10;
     this.onchange = this.props.onchange ? this.props.onchange : (v) => {};
+    this.formatter = this.props.formatter;
     this.width = this.props.width || '100%';
+    this.min = this.props.min || 0;
+    this.max = this.props.max || 1;
 
     this.isDragging = false;
 
+    this.getFormattedValue = (v = this.value)=>{
+        return this.formatter ? this.formatter(v) : Number(v);
+    }
+
     this.setValue = (v) => {
-        this.value = v;
-        this.$value.innerHTML = Number(v).toFixed(2);
-        this.knob.style.left = `calc(${v * 100}% - ${this.knobSize / 2}px)`;
-        this.onchange(v);
+        this.value = v * (this.max - this.min);
+        this.$value.innerHTML = this.getFormattedValue();
+        this.knob.style.left = `calc(${this.getKnobPosition()}% - ${this.knobSize / 2}px)`;
+        this.onchange(this.value);
+    }
+
+    this.getKnobPosition = ()=>{
+        return this.value / (this.max - this.min) * 100;
     }
 
     this.onmousedown = (ev) => {
         this.isDragging = true;
-        this.$value.innerHTML = Number(this.value).toFixed(2);
+        this.$value.innerHTML = this.getFormattedValue();
         this.$value.classList.remove('hidden');
     }
+
     this.onmouseup = () => {
         this.isDragging = false;
         this.$value.classList.add('hidden');
+        if(this.props.onrelease) this.props.onrelease();
     }
 
     this.documentmousemove = (ev) => {
@@ -98,6 +111,7 @@
     document.addEventListener('touchmove', this.documentmousemove);
     document.addEventListener('mouseup', this.onmouseup);
     document.addEventListener('touchend', this.onmouseup);
+
 </script>
 
 <div class="slider" style="width:{{this.width}}">
@@ -107,7 +121,7 @@
                 width:{{this.knobSize}}px;
                 height:{{this.knobSize}}px;
                 top:-{{this.knobSize/2}}px;
-                left:calc({{this.props.value* 100}}% - {{this.knobSize/ 2}}px)
+                left:calc({{this.getKnobPosition()}}% - {{this.knobSize/ 2}}px)
             ">
             <div ref="$value" class="slider-value hidden"></div>
         </div>

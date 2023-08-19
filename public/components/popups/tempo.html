@@ -8,13 +8,7 @@
         return steps;
     }
     this.setTempo = (step)=>{
-        app.settings.bpm = step.value;
-        nigun.setTempo(app.settings.bpm);
-        cache.set('bpm', app.settings.bpm);
-        // popup.hide();
-        setTimeout(()=>{
-            app.render();    
-        },10)
+        app.setTempo(step.value);
     }
 </script>
 <div class="tempo-popup" ref="popup">

@@ -135,6 +135,21 @@ window.functions = {
             }
         }
         return result;
+    },
+
+    debounce: function(fn, ms = 200){
+
+        if(this.debouceTimeout){
+            this.debouceFinal = fn;
+            return;
+        }
+
+        this.debouceTimeout = setTimeout(()=>{
+            this.debouceFinal ? this.debouceFinal() : fn();
+            delete this.debouceTimeout;
+            delete this.debouceFinal;
+        }, ms)
+
     }
 
 };

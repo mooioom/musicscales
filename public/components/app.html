@@ -577,6 +577,13 @@
         this.render();
     }
 
+    this.setTempo = (bpm)=>{
+        app.settings.bpm = bpm;
+        nigun.setTempo(app.settings.bpm);
+        cache.set('bpm', app.settings.bpm);
+        this.tempoComponent.render();
+    }
+
     this.setConcertPitch = (pitch = DEFAULTS.pitch) => {
         this.settings.concertPitch = pitch;
         cache.set('pitch', this.settings.concertPitch);
@@ -700,6 +707,7 @@
     </div>
     <sidebar></sidebar>
     <popup></popup>
+    <drawer></drawer>
     <keyboard-player></keyboard-player>
     <!-- <welcome-page></welcome-page> -->
 </div>

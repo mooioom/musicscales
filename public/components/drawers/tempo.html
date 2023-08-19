@@ -1,0 +1,43 @@
+<style>
+    .bpm-drawer{
+        text-align: center;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+</style>
+<script>
+
+    this.min = 20;
+    this.max = 520;
+
+    this.getValue = ()=>{
+        return app.settings.bpm;
+    }
+
+    this.setValue = (v)=>{
+        functions.debounce(()=>{
+            app.setTempo(Math.floor(v));
+        })
+    }
+
+    this.formatter = (v)=>{
+        return Math.floor(v);
+    }
+
+    this.onrelease = ()=>{
+        drawer.hide();
+    }
+
+</script>
+<div class="bpm-drawer">
+    <slider 
+        onchange="(v)=>{ this.setValue(v) }" 
+        formatter="this.formatter" 
+        value="{{this.getValue()}}" 
+        size="20" 
+        min="this.min" 
+        max="this.max"
+        onrelease="this.onrelease"
+        >
+</slider>
+</div>

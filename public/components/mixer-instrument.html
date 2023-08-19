@@ -53,6 +53,10 @@
         return nigun.instruments[this.props.instrument].gainNode.gain.value;
     }
 
+    this.formatter = (v)=>{
+        return Number(v).toFixed(2);
+    }
+
 </script>
 <div class="mixer-instrument">
     <div class="title">
@@ -60,7 +64,7 @@
         <div if="!this.props.ismaster"><button icon="assets/gears.svg" onclick="()=>{ this.toggleSettings() }"></button></div>
     </div>
     <div class="slider-wrapper">
-        <slider onchange="(v)=>{ this.setGain(v) }" value="{{this.getGainValue()}}" size="20"></slider>
+        <slider onchange="(v)=>{ this.setGain(v) }" formatter="this.formatter" value="{{this.getGainValue()}}" size="20"></slider>
     </div>
     <div class="instrument-settings {{this.showSettings ? 'visible' : ''}}"></div>
 </div>

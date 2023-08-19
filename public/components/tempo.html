@@ -1,5 +1,7 @@
 <script>
 
+    app.tempoComponent = this;
+
     this.tempo.onmousewheel = (e)=>{
 
         event.deltaY < 0 ? nigun.settings.bpm++ : nigun.settings.bpm--;
@@ -22,6 +24,6 @@
     }
 </style>
 
-<div class="tempo pointer" ref="tempo" onclick="popup.show('tempo')"> <!--onclick="popup.show('tempo')"-->
+<div class="tempo pointer" ref="tempo" onclick="drawer.show('tempo')"> <!--onclick="popup.show('tempo')"-->
     <value-box title="BPM" value="nigun.settings.bpm"></value-box>
 </div>
