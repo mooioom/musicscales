@@ -139,7 +139,7 @@
     .app-header {
         padding: 10px;
         box-sizing: border-box;
-        background: #fff;
+        /* background: #fff; */
         color: #565656;
         display: flex;
         justify-content: space-between;
@@ -650,7 +650,7 @@
     }
 
     this.colorOrgan = () => {
-        let i = 150;
+        let i = 250;
         if (window.colorInterval) clearInterval(window.colorInterval);
         window.colorInterval = setInterval(function () {
             const box = $('.scale-header');
