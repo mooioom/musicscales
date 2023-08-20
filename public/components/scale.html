@@ -367,7 +367,7 @@
     }
 
     this.getTitle = (parenthesis=false)=>{
-        return app.getScales()[app.settings.scale].title;
+        return app.getScaleName();//app.getScales()[app.settings.scale].title;
     }
 
     this.onrender = ()=>{

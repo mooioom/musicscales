@@ -292,22 +292,25 @@
         DARK: 'DARK',
     }
 
-    const VIEWS = {
+    this.VIEWS = {
         NECK: 'NECK',
         SCORE: 'SCORE',
         PLAY: 'PLAY',
+        DETAILS: 'DETAILS',
     };
 
     const VIEW_TO_URL = {
-        [VIEWS.NECK]: 'instrument',
-        [VIEWS.SCORE]: 'notes',
-        [VIEWS.PLAY]: 'keyboard',
+        [this.VIEWS.NECK]: 'instrument',
+        [this.VIEWS.SCORE]: 'notes',
+        [this.VIEWS.PLAY]: 'play',
+        [this.VIEWS.DETAILS]: 'details',
     }
 
     const URL_TO_VIEW = {
-        [VIEW_TO_URL[VIEWS.NECK]]: VIEWS.NECK,
-        [VIEW_TO_URL[VIEWS.SCORE]]: VIEWS.SCORE,
-        [VIEW_TO_URL[VIEWS.PLAY]]: VIEWS.PLAY,
+        [VIEW_TO_URL[this.VIEWS.NECK]]: this.VIEWS.NECK,
+        [VIEW_TO_URL[this.VIEWS.SCORE]]: this.VIEWS.SCORE,
+        [VIEW_TO_URL[this.VIEWS.PLAY]]: this.VIEWS.PLAY,
+        [VIEW_TO_URL[this.VIEWS.DETAILS]]: this.VIEWS.DETAILS,
     }
 
     this.PAGES = [
@@ -333,30 +336,30 @@
         detune: 0,
         accidental: CONSTANTS.ACCIDENTALS.FLAT,
         theme: THEMES.DEFAULT,
-        view: VIEWS.PLAY,
+        view: this.VIEWS.PLAY,
         subView: '',
         metronome: false,
-        gain: 0.3,
+        gain: 0.72,
         instruments: {
             pad: {
                 type: INSTRUMENT_TYPES.SAMPLER,
                 sample: 'media/Korg-M3R-Ensemble-C4.wav',
-                gain: 0.75
+                gain: 0.72
             },
             metronome: {
                 sample: 'media/click.mp3',
                 type: INSTRUMENT_TYPES.SAMPLER,
-                gain: 0.75
+                gain: 0.72
             },
             player: {
                 type: INSTRUMENT_TYPES.SAMPLER,
                 sample: 'media/Yamaha-TG77-Dulcimer-C4.wav',
-                gain: 0.75
+                gain: 0.72
             },
             keyboard: {
                 type: INSTRUMENT_TYPES.SYNTH,
                 oscillator: CONSTANTS.OSCILLATOR_TYPES.TRIANGLE,
-                gain: 0.75
+                gain: 0.72
             },
         },
     };
@@ -554,6 +557,10 @@
         return singleOctave ? d.slice(0, scale.steps.length) : d;
     }
 
+    this.getScaleName = ()=>{
+        return `${this.settings.key} ${this.getScales()[this.settings.scale].title}`;
+    }
+
     this.getPattern = () => {
         return CONSTANTS.SEQUENCER_PATTERNS[this.settings.pattern];
     }
@@ -626,6 +633,13 @@
         // this.render();
     }
 
+    this.setView = (view = this.VIEWS.PLAY)=>{
+        this.settings.view = view;
+        cache.set('view', app.settings.view);
+        app._component.components.main.setView(this.settings.view);
+        this.render();
+    }
+
     this.setTheme = (theme = this.settings.theme) => {
         document.body.className = '';
         document.body.classList.add(`theme-${theme.toLowerCase()}`);
@@ -682,7 +696,7 @@
                         <button icon="assets/pad.svg" onclick="functions.togglePad"
                             class="{{app.padIsPlaying ? 'on' : ''}}"></button>
                         <button icon="assets/mixer.svg" onclick="()=>{popup.show('mixer')}"></button>
-                        <button class="view-button" icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button>
+                        <!-- <button class="view-button" icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button> -->
                         <button icon="assets/hamsa.svg" onclick="()=>{popup.show('settings')}"></button>
                     </div>
                 </div>
@@ -705,6 +719,7 @@
     <div class="page" if="this.route === 'sitemap'">
         <sitemap></sitemap>
     </div>
+    <menu></menu>
     <sidebar></sidebar>
     <popup></popup>
     <drawer></drawer>
