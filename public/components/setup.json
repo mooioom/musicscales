@@ -33,6 +33,7 @@
         "sitemap": "sitemap",
         "search": "search",
         "mixer-instrument": "mixer-instrument",
-        "drawer": "drawer"
+        "drawer": "drawer",
+        "scale-details": "scale-details"
     }
 }

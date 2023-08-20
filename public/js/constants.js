@@ -578,12 +578,12 @@ export const SCALES = {
         ],
     },
     'MAJOR_PENTATONIC': {
-        title: 'Pentatonic (Major)',
+        title: 'Pentatonic Major',
         steps: [1, 1, 1.5, 1, 1.5],
         noSequencialNotation: true,
     },
     'MINOR_PENTATONIC': {
-        title: 'Pentatonic (Minor)',
+        title: 'Pentatonic Minor',
         steps: [1.5, 1, 1, 1.5, 1],
         noSequencialNotation: true,
     },

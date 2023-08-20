@@ -25,6 +25,10 @@
         filter: hue-rotate(245deg);
     }
 
+    .theme-dark .menu .menu-item.selected img{
+        filter: hue-rotate(456deg);
+    }
+
     .menu .menu-item.selected{
         position: relative;
     }
@@ -60,6 +64,13 @@
         .menu .menu-item:hover{
             background-color: #0f0f0f;
         }
+        .theme-dark .menu{
+            background: #0b0b0b;
+            border-top: 1px solid #2c2c2c;
+        }
+        .theme-dark .menu .menu-item{
+            filter: none;
+        }
         .grid{
             height: calc(100% - 50px);
         }
@@ -70,5 +81,5 @@
     <div title="{{app.getScaleName()}} Online Scale Keyboard" onclick="app.setView(app.VIEWS.PLAY);" class="menu-item {{app.settings.view === app.VIEWS.PLAY ? 'selected' : ''}}"><img class="icon" src="./assets/keyboard.svg" /></div>
     <div title="{{app.getScaleName()}} Neck Viewer" onclick="app.setView(app.VIEWS.NECK);" class="menu-item {{app.settings.view === app.VIEWS.NECK ? 'selected' : ''}}"><img class="icon" src="./assets/guitar2.svg" /></div>
     <div title="{{app.getScaleName()}} Score Notation" onclick="app.setView(app.VIEWS.SCORE);" class="menu-item {{app.settings.view === app.VIEWS.SCORE ? 'selected' : ''}}"><img class="icon" src="./assets/note.svg" /></div>
-    <div title="{{app.getScaleName()}} Details" onclick="()=>{}" class="menu-item"><img class="icon" src="./assets/info.svg" /></div>
+    <div title="{{app.getScaleName()}} Details" onclick="app.setView(app.VIEWS.DETAILS);" class="menu-item {{app.settings.view === app.VIEWS.DETAILS ? 'selected' : ''}}"><img class="icon" src="./assets/info.svg" /></div>
 </div>

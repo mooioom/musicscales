@@ -314,7 +314,8 @@
     }
 
     this.PAGES = [
-        'sitemap'
+        'sitemap',
+        'details',
     ];
 
     const INSTRUMENT_TYPES = {
@@ -442,6 +443,7 @@
                 this.settings.key = pathKey;
                 this.settings.scale = pathScaleName;
                 if (pathView) this.settings.view = URL_TO_VIEW[pathView];
+                if(this.settings.view === this.VIEWS.DETAILS) this.route = 'details';
                 this.setURL();
             }
         }
@@ -628,15 +630,20 @@
         id = (id + 1) % keys.length;
         this.settings.view = keys[id];
         cache.set('view', app.settings.view);
-        app._component.components.main.setView(this.settings.view);
         this.setURL();
-        // this.render();
+        this.render();
     }
 
     this.setView = (view = this.VIEWS.PLAY)=>{
         this.settings.view = view;
         cache.set('view', app.settings.view);
-        app._component.components.main.setView(this.settings.view);
+        if(this.settings.view === this.VIEWS.DETAILS){
+            this.route = 'details';
+        }else{
+            this.route = '';
+        }
+        this.setURL();
+        this.render();
         this.render();
     }
 
@@ -648,6 +655,10 @@
     }
 
     this.getURL = (key = this.settings.key, scale = this.settings.scale, view = this.settings.view) => {
+        return `/${key}-${scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[view]}`;
+    }
+
+    this.getShortURL = (key = this.settings.key, scale = this.settings.scale) => {
         return `/${key}-${scale.toLowerCase().replaceAll('_','-')}`;
     }
 
@@ -679,6 +690,7 @@
     this.colorOrgan();
 
     this.init();
+    
 </script>
 
 <div class="app">
@@ -718,6 +730,9 @@
     </table>
     <div class="page" if="this.route === 'sitemap'">
         <sitemap></sitemap>
+    </div>
+    <div class="page" if="this.route === 'details'">
+        <scale-details></scale-details>
     </div>
     <menu></menu>
     <sidebar></sidebar>

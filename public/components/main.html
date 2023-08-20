@@ -50,6 +50,17 @@
     }
 
     this.setView(app.settings.view);
+
+    this.onrender = ()=>{
+
+        this.view = _modular.createComponent({
+            name,
+            path: `views/${app.settings.view.toLowerCase()}`,
+            container: this.main,
+            context: {},
+        });
+
+    }
     
 </script>
 

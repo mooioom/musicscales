@@ -86,7 +86,7 @@
     <div for="scale in Object.keys(app.getScales())">
         <div class="sitemap-scale">
             <div class="sitemap-scale-title">{{app.getScales()[scale].title}} Scale</div>
-            <div class="sitemap-scale-keys"><a title="{{`${k} ${app.getScales()[scale].title} Scale`}}" for="k in app.ALL_KEYS" href="{{app.getURL(k, scale, '')}}">{{k}}</a></div>
+            <div class="sitemap-scale-keys"><a title="{{`${k} ${app.getScales()[scale].title} Scale`}}" for="k in app.ALL_KEYS" href="{{app.getShortURL(k, scale, '')}}">{{k}}</a></div>
             <!-- <div class="sitemap-scale-notes">
                 <div class="sitemap-key" for="k in app.ALL_KEYS">
                     <div class="sitemap-scale-small-title">{{k}} {{app.getScales()[scale].title}} Scale</div>
