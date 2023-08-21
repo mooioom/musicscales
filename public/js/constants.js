@@ -763,7 +763,7 @@ export const MODE_SHIFTS = {
     LOCRIAN: 6,
 }
 
-export const CHORDS = {
+export const _CHORDS = {
     1: [1, 3, 5],
     2: [2, 4, 6],
     3: [3, 5, 7],
@@ -774,7 +774,7 @@ export const CHORDS = {
 };
 
 const chord = (n = 1, l = 'w') => {
-    const c = CHORDS[n];
+    const c = _CHORDS[n];
     return c.map(a => `${a}${l}`);
 }
 
@@ -906,3 +906,1061 @@ export const PROGRAMS = {
     //     ],
     // },
 };
+
+export const CHORDS = [
+    {
+        "family": "Major",
+        "name": "maj",
+        "intervals": [
+            "1",
+            "3",
+            "5"
+        ],
+        "aka": [
+            "major"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "2",
+        "intervals": [
+            "1",
+            "2",
+            "5"
+        ],
+        "aka": [
+            "sus2"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "4",
+        "intervals": [
+            "1",
+            "4",
+            "5"
+        ],
+        "aka": [
+            "sus4",
+            " m(sus4)"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "(b5)",
+        "intervals": [
+            "1",
+            "3",
+            "b5"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "6",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "6"
+        ],
+        "aka": [
+            "add6",
+            " maj6",
+            " add13"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "maj7",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7"
+        ],
+        "aka": [
+            "j7",
+            " M7",
+            " Δ"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "maj7(b5)",
+        "intervals": [
+            "1",
+            "3",
+            "b5",
+            "7"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "maj7(#5)",
+        "intervals": [
+            "1",
+            "3",
+            "#5",
+            "7"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "add9",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "9"
+        ],
+        "aka": [
+            "add2"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "add11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "11"
+        ],
+        "aka": [
+            "add4"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "6/9",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "6",
+            "9"
+        ],
+        "aka": [
+            "maj6/9"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "maj7(b9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "b9"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "maj7(#9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "#9"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "maj7/#11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "#11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "maj7/13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "maj9",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "9"
+        ],
+        "aka": [
+            "maj7/9"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "6/9/#11",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "6",
+            "9",
+            "#11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "maj7(#9)11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "#9",
+            "11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Major",
+        "name": "maj9/13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "9",
+            "13"
+        ],
+        "aka": [
+            "maj7/9/13"
+        ]
+    },
+    {
+        "family": "Major",
+        "name": "maj11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "7",
+            "9",
+            "11"
+        ],
+        "aka": [
+            "maj7/9/11",
+            " maj9/11"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m",
+        "intervals": [
+            "1",
+            "b3",
+            "5"
+        ],
+        "aka": [
+            "min",
+            "minor"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m6",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "6"
+        ],
+        "aka": [
+            "min6"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m7",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "b7"
+        ],
+        "aka": [
+            "-7",
+            " mi7",
+            " min7"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m(maj7)",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "7"
+        ],
+        "aka": [
+            "m(j7)"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m(add9)",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "9"
+        ],
+        "aka": [
+            "m(add2)"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m(add11)",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "11"
+        ],
+        "aka": [
+            "m(add4)"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m6/9",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "6",
+            "9"
+        ],
+        "aka": [
+            "min6/9"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m7/11",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "b7",
+            "11"
+        ],
+        "aka": [
+            "min7/11"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m7/11(b5)",
+        "intervals": [
+            "1",
+            "b3",
+            "b5",
+            "b7",
+            "11"
+        ],
+        "aka": [
+            "min7/11(b5)"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m7/b13",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "b7",
+            "b13"
+        ],
+        "aka": [
+            "min7/b13"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m7/13",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "b7",
+            "13"
+        ],
+        "aka": [
+            "min7/13"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m(maj9)",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "7",
+            "9"
+        ],
+        "aka": [
+            "m(j9)"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m9",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "b7",
+            "9"
+        ],
+        "aka": [
+            "min9"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m6/9/11",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "6",
+            "9",
+            "11"
+        ],
+        "aka": [
+            "min6/9/11"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m11",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "b7",
+            "9",
+            "11"
+        ],
+        "aka": [
+            "min11",
+            " m7/9/11",
+            " m9/11"
+        ]
+    },
+    {
+        "family": "Minor",
+        "name": "m13",
+        "intervals": [
+            "1",
+            "b3",
+            "5",
+            "b7",
+            "9",
+            "11",
+            "13"
+        ],
+        "aka": [
+            "min13"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7"
+        ],
+        "aka": [
+            "dom7"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7/4",
+        "intervals": [
+            "1",
+            "4",
+            "5",
+            "b7"
+        ],
+        "aka": [
+            "7sus4"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(b5)",
+        "intervals": [
+            "1",
+            "3",
+            "b5",
+            "b7"
+        ],
+        "aka": [
+            "Ø"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(#5)",
+        "intervals": [
+            "1",
+            "3",
+            "#5",
+            "b7"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(b9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "b9"
+        ],
+        "aka": [
+            "dom(b9)"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(b9)4",
+        "intervals": [
+            "1",
+            "4",
+            "5",
+            "b7",
+            "b9"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(#9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "#9"
+        ],
+        "aka": [
+            "dom(#9)"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7/11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7/#11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "#11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7/b13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "b13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7/13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "9"
+        ],
+        "aka": [
+            "dom9",
+            " 7/9"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9/4",
+        "intervals": [
+            "1",
+            "4",
+            "5",
+            "b7",
+            "9"
+        ],
+        "aka": [
+            "9sus4",
+            " 11/4",
+            " 11sus4"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9(b5)",
+        "intervals": [
+            "1",
+            "3",
+            "b5",
+            "b7",
+            "9"
+        ],
+        "aka": [
+            "7/9(b5)",
+            " 9(#11)"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9(#5)",
+        "intervals": [
+            "1",
+            "3",
+            "#5",
+            "b7",
+            "9"
+        ],
+        "aka": [
+            "7/9(#5)"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(b9)#11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "b9",
+            "#11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(b9)b13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "b9",
+            "b13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(b9)13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "b9",
+            "13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(#9)#11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "#9",
+            "#11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(#9)b13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "#9",
+            "b13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9/#11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "9",
+            "#11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9/b13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "9",
+            "b13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9/13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "9",
+            "13"
+        ],
+        "aka": [
+            "9/6",
+            " 7/9/13"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "13/4",
+        "intervals": [
+            "1",
+            "4",
+            "5",
+            "b7",
+            "9",
+            "13"
+        ],
+        "aka": [
+            "13sus4",
+            " 9/13sus4"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "9",
+            "11"
+        ],
+        "aka": [
+            "dom11"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "11(b9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "b9",
+            "11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "11(#9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "#9",
+            "11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "7(#9)#11",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "#9",
+            "#11"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "9/#11/13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "9",
+            "#11",
+            "13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "13",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "9",
+            "11",
+            "13"
+        ],
+        "aka": [
+            "dom13"
+        ]
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "13(b9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "b9",
+            "11",
+            "13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Dominant-Seventh",
+        "name": "13(#9)",
+        "intervals": [
+            "1",
+            "3",
+            "5",
+            "b7",
+            "#9",
+            "11",
+            "13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Diminished",
+        "name": "°",
+        "intervals": [
+            "1",
+            "b3",
+            "b5"
+        ],
+        "aka": [
+            "dim",
+            " m(b5)"
+        ]
+    },
+    {
+        "family": "Diminished",
+        "name": "°7",
+        "intervals": [
+            "1",
+            "b3",
+            "b5",
+            "bb7"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Diminished",
+        "name": "°7/b13",
+        "intervals": [
+            "1",
+            "b3",
+            "b5",
+            "bb7",
+            "b13"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Half-Diminished",
+        "name": "m7(b5)",
+        "intervals": [
+            "1",
+            "b3",
+            "b5",
+            "b7"
+        ],
+        "aka": [
+            "mØ",
+            " dim7",
+            " min7(b5)"
+        ]
+    },
+    {
+        "family": "Augmented",
+        "name": "+",
+        "intervals": [
+            "1",
+            "3",
+            "#5"
+        ],
+        "aka": [
+            "(#5)",
+            " aug"
+        ]
+    },
+    {
+        "family": "Powerchords",
+        "name": "1-b3-x",
+        "intervals": [
+            "1",
+            "b3"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Powerchords",
+        "name": "1-3-x",
+        "intervals": [
+            "1",
+            "3"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Powerchords",
+        "name": "1-4-x",
+        "intervals": [
+            "1",
+            "4"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Powerchords",
+        "name": "1-x-b5",
+        "intervals": [
+            "1",
+            "b5"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Powerchords",
+        "name": "5",
+        "intervals": [
+            "1",
+            "5"
+        ],
+        "aka": [
+            "1-x-5"
+        ]
+    },
+    {
+        "family": "Powerchords",
+        "name": "1-x-6",
+        "intervals": [
+            "1",
+            "6"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Powerchords",
+        "name": "1-x-b7",
+        "intervals": [
+            "1",
+            "b7"
+        ],
+        "aka": []
+    },
+    {
+        "family": "Powerchords",
+        "name": "1-x-7",
+        "intervals": [
+            "1",
+            "7"
+        ],
+        "aka": []
+    }
+]

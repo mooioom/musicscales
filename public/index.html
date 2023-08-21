@@ -58,6 +58,15 @@
       console.log('--- cannot load build data ---');
     }
 
+    fetch('./js/all_chords.json')
+      .then(response => response.json())
+      .then(data => {
+        window.all_chords = data;
+      })
+    .catch(error => {
+      console.error(error);
+    });
+
     cache.set('last-visit', new Date().toISOString());
 
     window.CONSTANTS = CONSTANTS;

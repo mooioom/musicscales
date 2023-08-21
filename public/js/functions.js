@@ -47,7 +47,7 @@ window.functions = {
 
         const note = keyToNote[app.settings.key];
 
-        const octave = 2;// Object.keys(keyToNote).indexOf(app.settings.key) > 5 ? 2 : 3;
+        const octave = 2; // Object.keys(keyToNote).indexOf(app.settings.key) > 5 ? 2 : 3;
 
         if (app.padIsPlaying && padSource) {
             app.padIsPlaying = false;
@@ -137,20 +137,148 @@ window.functions = {
         return result;
     },
 
-    debounce: function(fn, ms = 200){
+    debounce: function (fn, ms = 200) {
 
-        if(this.debouceTimeout){
+        if (this.debouceTimeout) {
             this.debouceFinal = fn;
             return;
         }
 
-        this.debouceTimeout = setTimeout(()=>{
+        this.debouceTimeout = setTimeout(() => {
             this.debouceFinal ? this.debouceFinal() : fn();
             delete this.debouceTimeout;
             delete this.debouceFinal;
         }, ms)
 
-    }
+    },
+
+    createChords: () => {
+
+        const scalesNotes = [];
+
+        const capitalize = (str)=>{
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        app.ALL_KEYS.forEach((key)=>{
+            Object.keys(CONSTANTS.SCALES).forEach((scaleName)=>{
+                const scale = app.getScale(app.settings.octave, key, scaleName, true);  
+                scalesNotes.push({
+                    name: `${key}_${scaleName}`,
+                    notes: scale.map(n=>{
+                        return capitalize(n.note.note.toString(true))
+                    })
+                });
+            })
+        })
+
+        console.log(scalesNotes);
+
+        const chords = [];
+
+        let l = 0;
+
+        app.ALL_KEYS.forEach((key) => {
+
+            // console.log(key);
+
+            const scale = app.getScale(app.settings.octave, key, 'MAJOR');
+
+            CONSTANTS.CHORDS.forEach((chordData) => {
+
+                if (chordData.name === 'maj') chordData.name = '';
+
+                const chordName = `${key}${chordData.name}`;
+                const aka = chordData.aka.map((n) => `${key}${n}`)
+                const notes = [];
+
+                const intervals = chordData.intervals;
+
+                intervals.forEach((interval) => {
+
+                    const num = Number(interval.match(/\d+/g)[0]);
+                    let flats = interval.match(/b+/g);
+                    let sharps = interval.match(/#+/g);
+
+                    if (flats) flats = flats.join();
+                    if (sharps) sharps = sharps.join();
+
+                    const note = scale[num - 1];
+
+                    const noteName = note.name.toUpperCase();
+                    const accidentals = note.accidental.replaceAll('♭', 'b').replaceAll('♯', '#').replaceAll('𝄪', '##');
+
+                    let allAccidentals = (accidentals || '') + (flats || '') + (sharps || '');
+
+                    const numFlats = (allAccidentals.match(/b/g) || []).length;
+                    const numSharps = (allAccidentals.match(/#/g) || []).length;
+
+                    const finalTransposition = numSharps - numFlats;
+
+                    let accidental = '';
+
+                    if (finalTransposition >= 0) {
+                        for (let x = 0; x < finalTransposition; x++) {
+                            accidental += '#';
+                        }
+                    } else {
+                        for (let x = 0; x < Math.abs(finalTransposition); x++) {
+                            accidental += 'b';
+                        }
+                    }
+
+                    let fullNoteName = noteName + (accidental || '');
+
+                    if(fullNoteName === 'G##') fullNoteName = 'A';
+                    if(fullNoteName === 'D##') fullNoteName = 'E';
+                    if(fullNoteName === 'F##') fullNoteName = 'G';
+                    if(fullNoteName === 'C##') fullNoteName = 'D';
+                    if(fullNoteName === 'A##') fullNoteName = 'B';
+                    if(fullNoteName === 'E##') fullNoteName = 'F#';
+                    if(fullNoteName === 'B##') fullNoteName = 'C#';
+
+                    if(fullNoteName === 'E#') fullNoteName = 'F';
+                    if(fullNoteName === 'B#') fullNoteName = 'C';
+
+                    notes.push(fullNoteName);
+
+                    // let teoriaNote = null;
+
+                    // try {
+                    //     teoriaNote = teoria.note(fullNoteName);
+                    // } catch (e) {
+                    //     console.log(fullNoteName);
+                    // }
+
+                    // notes.push({
+                    //     name: fullNoteName,
+                    //     note: teoriaNote
+                    // });
+
+                })
+
+                const chord = {
+                    name: chordName,
+                    notes,
+                    aka,
+                    family: chordData.family,
+                }
+
+                scalesNotes.forEach((sn)=>{
+                    l++;
+                });
+
+                chords.push(chord);
+
+            });
+
+        })
+
+        console.log(l);
+
+        return chords;
+
+    },
 
 };
 
@@ -164,7 +292,7 @@ class Cache {
     }
 
     set(name, value) {
-        if(value !== null && typeof value == 'object') value = JSON.stringify(value);
+        if (value !== null && typeof value == 'object') value = JSON.stringify(value);
         localStorage.setItem(name, value);
     }
 }
