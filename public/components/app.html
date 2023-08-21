@@ -88,6 +88,10 @@
         text-align: center;
     }
 
+    .flex{
+        display: flex;
+    }
+
     .icon {
         filter: brightness(0);
         width: 100%;
@@ -388,12 +392,12 @@
     this.settings.instruments = DEFAULTS.instruments;
 
     try {
-        if(cache.get('instruments')) this.settings.instruments = JSON.parse(cache.get('instruments'));
+        if (cache.get('instruments')) this.settings.instruments = JSON.parse(cache.get('instruments'));
     } catch (e) {}
 
     let instruments = [];
 
-    Object.keys(this.settings.instruments).forEach((name)=>{
+    Object.keys(this.settings.instruments).forEach((name) => {
         const instrument = this.settings.instruments[name];
         instruments.push({
             name,
@@ -413,8 +417,12 @@
         gain: this.settings.gain,
         signature: '4/4',
         instruments,
-        oninit: () => { nigun.toggleMetronome(this.settings.metronome); },
-        onstop: () => { functions.unlightAllNotes(); }
+        oninit: () => {
+            nigun.toggleMetronome(this.settings.metronome);
+        },
+        onstop: () => {
+            functions.unlightAllNotes();
+        }
     });
 
     this.route = '';
@@ -422,7 +430,6 @@
     this.setRoute = (route) => {
         this.route = route;
         this.setURL(route);
-        this.render();
         this.render();
     }
 
@@ -443,7 +450,7 @@
                 this.settings.key = pathKey;
                 this.settings.scale = pathScaleName;
                 if (pathView) this.settings.view = URL_TO_VIEW[pathView];
-                if(this.settings.view === this.VIEWS.DETAILS) this.route = 'details';
+                if (this.settings.view === this.VIEWS.DETAILS) this.route = 'details';
                 this.setURL();
             }
         }
@@ -559,7 +566,7 @@
         return singleOctave ? d.slice(0, scale.steps.length) : d;
     }
 
-    this.getScaleName = ()=>{
+    this.getScaleName = () => {
         return `${this.settings.key} ${this.getScales()[this.settings.scale].title}`;
     }
 
@@ -586,7 +593,7 @@
         this.render();
     }
 
-    this.setTempo = (bpm)=>{
+    this.setTempo = (bpm) => {
         app.settings.bpm = bpm;
         nigun.setTempo(app.settings.bpm);
         cache.set('bpm', app.settings.bpm);
@@ -634,16 +641,15 @@
         this.render();
     }
 
-    this.setView = (view = this.VIEWS.PLAY)=>{
+    this.setView = (view = this.VIEWS.PLAY) => {
         this.settings.view = view;
         cache.set('view', app.settings.view);
-        if(this.settings.view === this.VIEWS.DETAILS){
+        if (this.settings.view === this.VIEWS.DETAILS) {
             this.route = 'details';
-        }else{
+        } else {
             this.route = '';
         }
         this.setURL();
-        this.render();
         this.render();
     }
 
@@ -690,44 +696,45 @@
     this.colorOrgan();
 
     this.init();
-    
 </script>
 
 <div class="app">
-    <table if="this.route === ''" class="grid">
-        <tr>
-            <td class="zero-height">
-                <div class="app-header">
-                    <div class="header-base">
-                        <key></key>
-                        <tempo></tempo>
+    <div class="page flex" if="this.route === ''">
+        <table class="grid">
+            <tr>
+                <td class="zero-height">
+                    <div class="app-header">
+                        <div class="header-base">
+                            <key></key>
+                            <tempo></tempo>
+                        </div>
+                        <div class="buttons">
+                            <button icon="assets/metronome.svg" onclick="functions.toggleMetronome"
+                                class="{{app.settings.metronome ? 'on' : ''}}"></button>
+                            <button icon="assets/pad.svg" onclick="functions.togglePad"
+                                class="{{app.padIsPlaying ? 'on' : ''}}"></button>
+                            <button icon="assets/mixer.svg" onclick="()=>{popup.show('mixer')}"></button>
+                            <!-- <button class="view-button" icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button> -->
+                            <button icon="assets/hamsa.svg" onclick="()=>{popup.show('settings')}"></button>
+                        </div>
                     </div>
-                    <div class="buttons">
-                        <button icon="assets/metronome.svg" onclick="functions.toggleMetronome"
-                            class="{{app.settings.metronome ? 'on' : ''}}"></button>
-                        <button icon="assets/pad.svg" onclick="functions.togglePad"
-                            class="{{app.padIsPlaying ? 'on' : ''}}"></button>
-                        <button icon="assets/mixer.svg" onclick="()=>{popup.show('mixer')}"></button>
-                        <!-- <button class="view-button" icon="assets/eye.svg" onclick="()=>{this.toggleView()}"></button> -->
-                        <button icon="assets/hamsa.svg" onclick="()=>{popup.show('settings')}"></button>
-                    </div>
-                </div>
-                <scale></scale>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <main></main>
-            </td>
-        </tr>
-        <tr>
-            <td class="zero-height app-footer">
-                <play _name="play"></play>
-                <!-- <program></program> -->
-                <pattern></pattern>
-            </td>
-        </tr>
-    </table>
+                    <scale></scale>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <main></main>
+                </td>
+            </tr>
+            <tr>
+                <td class="zero-height app-footer">
+                    <play _name="play"></play>
+                    <!-- <program></program> -->
+                    <pattern></pattern>
+                </td>
+            </tr>
+        </table>
+    </div>
     <div class="page" if="this.route === 'sitemap'">
         <sitemap></sitemap>
     </div>

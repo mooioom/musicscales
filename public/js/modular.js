@@ -45,6 +45,11 @@ const allNodes = function (node, cb, excludeSelf = false) {
 
         // console.log(_if, v);
 
+        if(v && node._if){
+            node.replaceWith(node._if);
+            node = node._if;
+        }
+
         if(!v) return;
 
     }
