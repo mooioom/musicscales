@@ -280,6 +280,26 @@ window.functions = {
 
     },
 
+    getNoteAlternative: (note)=>{
+        const alternatives = {
+            'C': 'B#',
+            'C#': 'Db',
+            'Db': 'C#',
+            'D#': 'Eb',
+            'Eb': 'D#',
+            'E': 'Fb',
+            'F': 'E#',
+            'F#': 'Gb',
+            'Gb': 'F#',
+            'G#': 'Ab',
+            'Ab': 'G#',
+            'A#': 'Bb',
+            'Bb': 'A#',
+            'B#': 'C',
+        };
+        return alternatives[note] ? alternatives[note] : null;
+    },
+
 };
 
 class Cache {

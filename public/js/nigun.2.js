@@ -881,6 +881,7 @@ class Nigun {
         window._scaleDebug = [];
 
         const capitalizeFirstLetter = str => str.replace(/^\w/, c => c.toUpperCase());
+        const normalizeAccidentals = note => note.replaceAll('♭', 'b').replaceAll('♯', '#').replaceAll('𝄪', '##');
 
         for (let x = 0; x <= totalLength; x++) {
 
@@ -992,6 +993,7 @@ class Nigun {
                 quarterSymbol,
                 accidental: _accidental,
                 shortname,
+                fullname: `${capitalizeFirstLetter(name)}${normalizeAccidentals(_accidental)}`,
                 octave,
                 uniformFullname: `${uniformName}${note.note.octave()}${quarterSymbol}`,
                 scaleDegree,
