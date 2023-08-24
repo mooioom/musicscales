@@ -966,8 +966,8 @@ export const CHORDS = [
         ],
         "aka": [
             "add6",
-            " maj6",
-            " add13"
+            "maj6",
+            "add13"
         ]
     },
     {
@@ -981,8 +981,8 @@ export const CHORDS = [
         ],
         "aka": [
             "j7",
-            " M7",
-            " Δ"
+            "M7",
+            "Δ"
         ]
     },
     {

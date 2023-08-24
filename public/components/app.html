@@ -570,6 +570,73 @@
         return `${this.settings.key} ${this.getScales()[this.settings.scale].title}`;
     }
 
+    this.getScaleNotes = ()=>{
+        return this.getScale(undefined, undefined, undefined, true).map(a => (a.fullname));
+    }
+
+    this.getScaleChords = ( scaleName = this.settings.scale ) => {
+
+        const scaleData = this.getScales()[scaleName];
+        const fullScale = this.getScale(undefined, undefined, scaleName);
+        const scale = fullScale.slice(0, scaleData.steps.length);
+        const scaleNotes = scale.map(a => (a.fullname));
+
+        scaleNotes.forEach((note)=>{
+            const alternative = functions.getNoteAlternative(note);
+            if (alternative) scaleNotes.push(alternative)
+        })
+
+        const chords = all_chords.filter((chord) => {
+            let inScale = true;
+            chord.notes.forEach((note)=>{
+                if(scaleNotes.indexOf(note) === -1) inScale = false;
+            });
+            return inScale;
+        });
+
+        let sorted = [];
+
+        const sortOrder = [
+            '1-3-5', // all triads [C, Dm, Em, F, G, Am, Bdim]
+            '1-3-5-7',
+            '1-4-5', // sus4
+            '1-2-5', // sus2s
+        ];
+        
+        let sortGroups = [];
+
+        sortOrder.forEach((s, si)=>{
+            const intervals = s.split('-').map(a=>(Number(a) - 1));
+            const sortData = [];
+            sortGroups.push(sortData);
+            scaleData.steps.forEach((a, i)=>{
+                let stepNotes = intervals.map(b=>(fullScale[b+i].fullname));
+                let flag = false;
+                chords.forEach((chord)=>{
+                    if(JSON.stringify(chord.notes) === JSON.stringify(stepNotes)){
+                        sortData.push(chord)
+                    }
+                })
+            })
+        })
+
+        sortGroups.forEach((s)=>{
+            sorted = sorted.concat(s);
+        });
+
+        const sortedNames = sorted.map((a)=>(a.name));
+
+        chords.sort((a,b)=>{
+            return ((a.name.length < b.name.length)) ? -1 : 1;
+        })
+
+        chords.forEach((chord)=>{
+            if( sortedNames.indexOf(chord.name) === -1) sorted.push(chord);
+        })
+
+        return sorted;
+    }
+
     this.getPattern = () => {
         return CONSTANTS.SEQUENCER_PATTERNS[this.settings.pattern];
     }

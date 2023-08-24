@@ -300,6 +300,44 @@ window.functions = {
         return alternatives[note] ? alternatives[note] : null;
     },
 
+    startChord: (chord, meforak)=>{
+
+        const allNotes = 'CDEFGAB'.split('');
+        const notes = [];
+
+        let octave = 3;
+        let indexOfLast;
+
+        chord.notes.forEach((note, id)=>{
+            const index = allNotes.indexOf(note);
+            if(!id) indexOfLast = index;
+            else{
+                if(index < indexOfLast) {
+                    octave++;
+                    indexOfLast = index;
+                }
+            }
+            notes.push(`${note}${octave}`);
+        });
+
+        const fqs = notes.map((note)=>(teoria.note(note).fq()));
+
+        if(meforak){
+            fqs.forEach((fq, i)=>{
+                console.log(fq);
+                if(!i) return nigun.instruments.player.startFrequency(fq);
+                setTimeout(()=>{
+                    nigun.instruments.player.startFrequency(fq);
+                }, i * 25);
+            })
+        }else{
+            fqs.forEach(fq=>{
+                nigun.instruments.player.startFrequency(fq);
+            })
+        }
+
+    },
+
 };
 
 class Cache {

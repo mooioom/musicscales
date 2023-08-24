@@ -49,11 +49,15 @@
         padding: 10px;
         border:1px solid #ccc;
         width: 20%;
-        border-radius: 10px;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+    .scale-chords > div:hover{
+        border: 1px solid var(--select-color);
     }
     .scale-chords .chord-name{
         text-align: center;
-        font-size: 20px;
+        font-size: 28px;
         font-weight: bold;
         margin-bottom: 3px;
     }
@@ -63,39 +67,6 @@
 </style>
 <script>
 
-    this.getNotes = ()=>{
-        return app.getScale(undefined, undefined, undefined, true).map(a => (a.fullname));
-    }
-
-    this.getChords = () => {
-        const scale = app.getScale(undefined, undefined, undefined, true);
-        const scaleNotes = scale.map(a => (a.fullname));
-        scaleNotes.forEach((note)=>{
-            const alternative = functions.getNoteAlternative(note);
-            if (alternative) scaleNotes.push(alternative)
-        })
-        const chords = all_chords.filter((chord) => {
-            let inScale = true;
-            chord.notes.forEach((note)=>{
-                if(scaleNotes.indexOf(note) === -1) inScale = false;
-            });
-            return inScale;
-        });
-
-        chords.sort((a,b)=>{
-            return ((a.name.length < b.name.length)) ? -1 : 1;
-        })
-
-        // chords.sort((a,b)=>{
-        //     return ((a.name[0] === app.settings.key )) ? -1 : 1;
-        // })
-
-        return chords;
-    }
-
-    this.onrender = () => {
-        // this.getChords();
-    }
 
 </script>
 <div class="scale-details">
@@ -103,11 +74,14 @@
     <div class="part">
         <h2>{{app.getScaleName()}} Scale Notes</h2>
         <div class="scale-notes">
-            <div class="scale-note" for="note in this.getNotes()">{{note}}</div>
+            <div class="scale-note" for="note in app.getScaleNotes()">{{note}}</div>
         </div>
     </div>
     <div class="part">
         <h2>{{app.getScaleName()}} Scale Intervals</h2>
+        <div class="scale-notes">
+            <div class="scale-note" for="note in app.getScaleSteps()">{{note}}</div>
+        </div>
     </div>
     <div class="part">
         <h2>{{app.getScaleName()}} Scale Positions</h2>
@@ -116,9 +90,9 @@
         <h2>{{app.getScaleName()}} Similar Scales</h2>
     </div>
     <div class="part">
-        <h2>{{app.getScaleName()}} - Chords on scale ({{this.getChords().length}})</h2>
+        <h2>{{app.getScaleName()}} - Chords on scale ({{app.getScaleChords().length}})</h2>
         <div class="scale-chords">
-            <div for="chord in this.getChords()"><div class="chord-name">{{chord.name}}</div><div class="chord-notes">{{chord.notes.join(' - ')}}</div></div>
+            <div for="chord in app.getScaleChords()" onmousedown="functions.startChord(chord);"><div class="chord-name">{{chord.name}}</div><div class="chord-notes">{{chord.notes.join(' - ')}}</div></div>
         </div>
     </div>
 </div>
