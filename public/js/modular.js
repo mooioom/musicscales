@@ -308,6 +308,8 @@ export class Component {
 
     render( $el = this.container ) {
 
+        if (this.context.onbeforerender) this.context.onbeforerender();
+
         if (this.settings.debugRender) debugger;
 
         if (this.$style && this.originalStyle) {

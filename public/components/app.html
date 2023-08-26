@@ -746,9 +746,13 @@
         document.title = `${this.getScaleName()}: play and explore scales and maqamas - music-scales.com`;
     }
 
+    this.onbeforerender = ()=>{
+        this.setTitle();
+    }
+
     this.onrender = () => {
         if (this.route === '') this.setURL();
-        this.setTitle();
+        // this.setTitle();
     }
 
     this.colorOrgan = () => {
