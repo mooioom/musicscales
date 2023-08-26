@@ -741,10 +741,14 @@
         }, null, url);
     }
 
+    this.setTitle = ()=>{
+        if(this.route === 'sitemap') return document.title = 'Music-Scales.com: All Scales (sitemap)';
+        document.title = `${this.getScaleName()}: play and explore scales and maqamas - music-scales.com`;
+    }
+
     this.onrender = () => {
-        if (this.route === '') {
-            this.setURL();
-        }
+        if (this.route === '') this.setURL();
+        this.setTitle();
     }
 
     this.colorOrgan = () => {

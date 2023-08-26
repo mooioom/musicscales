@@ -44,16 +44,18 @@
         display: flex;
         flex-wrap: wrap;
         gap:10px;
+        justify-content: space-between;
     }
     .scale-chords > div{
         padding: 10px;
-        border:1px solid #ccc;
+        border:3px solid #ccc;
         width: 20%;
         border-radius: 50px;
         cursor: pointer;
+        box-sizing: content-box;
     }
     .scale-chords > div:hover{
-        border: 1px solid var(--select-color);
+        border: 3px solid var(--select-color);
     }
     .scale-chords .chord-name{
         text-align: center;
@@ -83,9 +85,9 @@
             <div class="scale-note" for="note in app.getScaleSteps()">{{note}}</div>
         </div>
     </div>
-    <div class="part">
+    <!-- <div class="part">
         <h2>{{app.getScaleName()}} Scale Positions</h2>
-    </div>
+    </div> -->
     <div class="part">
         <h2>{{app.getScaleName()}} Similar Scales</h2>
     </div>
