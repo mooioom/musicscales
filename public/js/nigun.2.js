@@ -994,6 +994,7 @@ class Nigun {
                 accidental: _accidental,
                 shortname,
                 fullname: `${capitalizeFirstLetter(name)}${normalizeAccidentals(_accidental)}`,
+                displayName: `${capitalizeFirstLetter(name)}${_accidental}`,
                 octave,
                 uniformFullname: `${uniformName}${note.note.octave()}${quarterSymbol}`,
                 scaleDegree,

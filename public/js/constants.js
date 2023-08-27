@@ -6,18 +6,6 @@ export const OSCILLATOR_TYPES = {
 };
 
 export const ALL_SCALES = [{
-    title: "Acoustic",
-    steps: [
-        1,
-        1,
-        1,
-        0.5,
-        1,
-        0.5,
-        1
-    ]
-},
-{
     title: "Aeolian",
     steps: [
         1,

@@ -566,6 +566,10 @@
         return singleOctave ? d.slice(0, scale.steps.length) : d;
     }
 
+    this.getScaleSingleOctave = (octave = this.settings.octave, key = this.settings.key, scaleName = this.settings.scale)=>{
+        return this.getScale(octave, key, scaleName, true);
+    }
+
     this.getScaleName = () => {
         return `${this.settings.key} ${this.getScales()[this.settings.scale].title}`;
     }
@@ -635,6 +639,53 @@
         })
 
         return sorted;
+    }
+
+    this.getSimilarScales = ( compareScale = this.settings.scale, maxDiff )=>{
+        const scale = this.getScaleSingleOctave(undefined, undefined, compareScale);
+        const scaleUniformed = scale.map(a=>(a.uniformFullname));
+        const TET24 = nigun.getScale({ root: this.settings.key + this.settings.octave, steps: CONSTANTS.TET24, align: false, });
+        const allUniformed = TET24.map(a=>(a.uniformFullname));
+        const similarScales = [];
+        Object.keys(CONSTANTS.SCALES).forEach(scaleName=>{
+            // if(compareScale === scaleName) return;
+            const scale2 = this.getScaleSingleOctave(undefined, undefined, scaleName);
+            if(scale.length !== scale2.length) return;
+            const scale2Uniformed = scale2.map(a=>(a.uniformFullname));
+            const similarity = [];
+            scaleUniformed.forEach((note, idx)=>{
+                const note2 = scale2Uniformed[idx];
+                const position1 = allUniformed.indexOf(note);
+                const position2 = allUniformed.indexOf(note2);
+                similarity.push(Math.abs(position1 - position2));
+                // console.log(position1, position2);
+            });
+            const diff = similarity.reduce((a,b)=>{ return a+b; }, 0)
+            similarScales.push({
+                name: scaleName,
+                title: CONSTANTS.SCALES[scaleName].title,
+                notes: scale2.map(a=>(a.displayName)),
+                scale: scale2,
+                similarity,
+                diff
+            })
+        })
+        similarScales.sort((a,b)=>{ return a.diff >= b.diff ? 1 : -1; });
+        if(maxDiff) return similarScales.filter(a=>(a.diff <= maxDiff));
+        return similarScales;
+    }
+
+    this.nextScale = ( next )=>{
+        const scales = Object.keys(this.getScales());
+        let idx = scales.indexOf(this.settings.scale);
+        idx = idx + (next ? 1 : -1);
+        if(idx >= scales.length) idx = 0;
+        else if(idx < 0) idx = scales.length - 1;
+        this.setScale(Object.keys(this.getScales())[idx]);
+        this.settings.mode = 1;
+        cache.set('mode', this.settings.mode);
+        this.render();
+        this.change();
     }
 
     this.getPattern = () => {
@@ -751,7 +802,7 @@
     }
 
     this.onrender = () => {
-        if (this.route === '') this.setURL();
+        this.setURL();
         // this.setTitle();
     }
 

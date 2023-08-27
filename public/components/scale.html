@@ -265,25 +265,9 @@
 
 <script>
 
-    this.set = (next)=>{
-        const scales = Object.keys(app.getScales());
+    app._scale = this;
 
-        let idx = scales.indexOf(app.settings.scale);
-
-        idx = idx + (next ? 1 : -1);
-
-        if(idx >= scales.length) idx = 0;
-        else if(idx < 0) idx = scales.length - 1;
-
-        app.setScale(Object.keys(app.getScales())[idx]);
-        app.settings.mode = 1;
-
-        cache.set('mode', app.settings.mode);
-
-        app.render();
-        app.change();
-
-    }
+    this.set = app.nextScale;
 
     this.scale.onmousewheel = (e)=>{
         this.set(event.deltaY < 0);

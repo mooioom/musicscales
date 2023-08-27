@@ -6,9 +6,16 @@
         overflow: auto;
     }
 
+    .scale-details .title{
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+
     .scale-details .part{
         margin-top: 10px;
         margin-bottom: 20px;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 20px;
     }
 
     .scale-details h1 {
@@ -25,14 +32,14 @@
     .scale-details h1 span {
         border-bottom: 15px solid #ccc;
     }
-    .scale-notes{
+    .scale-details .scale-notes{
         display: flex;
     }
-    .scale-notes > div{
+    .scale-details .scale-notes > div{
         font-size: 32px;
         padding: 10px;
         border: 1px solid #ccc;
-        border-radius: 50px;
+        border-radius: 10px;
         width: 30px;
         height: 30px;
         display: flex;
@@ -40,13 +47,13 @@
         justify-content: center;
         margin-inline-end: 10px;
     }
-    .scale-chords{
+    .scale-details .scale-chords{
         display: flex;
         flex-wrap: wrap;
         gap:10px;
         justify-content: space-between;
     }
-    .scale-chords > div{
+    .scale-details .scale-chords > div{
         padding: 10px;
         border:3px solid #ccc;
         width: 20%;
@@ -54,17 +61,28 @@
         cursor: pointer;
         box-sizing: content-box;
     }
-    .scale-chords > div:hover{
+    .scale-details .scale-chords > div:hover{
         border: 3px solid var(--select-color);
     }
-    .scale-chords .chord-name{
+    .scale-details .scale-chords .chord-name{
         text-align: center;
         font-size: 28px;
         font-weight: bold;
         margin-bottom: 3px;
     }
-    .scale-chords .chord-notes{
+    .scale-details .scale-chords .chord-notes{
         text-align: center;
+    }
+    .scale-details .similarity{
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+    .scale-details .similarity .similarity-header{
+
+    }
+    .scale-details .similarity td{
+        padding: 5px;
+        border: 1px solid #ccc;
     }
 </style>
 <script>
@@ -72,7 +90,14 @@
 
 </script>
 <div class="scale-details">
-    <h1><span>{{app.getScaleName()}} Scale</span></h1>
+    <div>
+        <div class="title">
+            Music-Scales.com - Explore and Practice Scales & Maqams
+        </div>
+        <span onclick="app.nextScale()">Prev Scale</span> | 
+        <span onclick="app.nextScale(true)">Next Scale</span>
+    </div>
+    <h1><span onclick="popup.show('scale')">{{app.getScaleName()}} Scale</span></h1>
     <div class="part">
         <h2>{{app.getScaleName()}} Scale Notes</h2>
         <div class="scale-notes">
@@ -90,6 +115,18 @@
     </div> -->
     <div class="part">
         <h2>{{app.getScaleName()}} Similar Scales</h2>
+        <table class="similarity">
+            <tr class="similarity-header">
+                <td>Scale</td>
+                <td>Diff. (Tones)</td>
+                <td>Notes</td>
+            </tr>
+            <tr for="scale in app.getSimilarScales(undefined, 2)">
+                <td onclick="console.log(scale.name)">{{scale.title}}</td>
+                <td>{{scale.diff ? scale.diff / 4 : '-'}}</td>
+                <td>{{scale.notes.join(' · ')}}</td>
+            </tr>
+        </table>
     </div>
     <div class="part">
         <h2>{{app.getScaleName()}} - Chords on scale ({{app.getScaleChords().length}})</h2>
