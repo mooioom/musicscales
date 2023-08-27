@@ -7,6 +7,12 @@
         text-align: center;
     }
 
+    .scale-details .scale-details-header{}
+
+    .scale-details .scale-details-header span{
+        cursor: pointer;
+    }
+
     .scale-details .title{
         margin-bottom: 20px;
         font-size: 18px;
@@ -93,7 +99,7 @@
 
 </script>
 <div class="scale-details">
-    <div>
+    <div class="scale-details-header">
         <div class="title">
             Music-Scales.com - Explore and Practice Scales & Maqams
         </div>
@@ -102,22 +108,22 @@
     </div>
     <h1><span onclick="popup.show('scale')">{{app.getScaleName()}} Scale</span></h1>
     <div class="part">
-        <h2>{{app.getScaleName()}} Scale Notes</h2>
+        <h2>Scale Notes</h2>
         <div class="scale-notes">
             <div class="scale-note" for="note in app.getScaleNotes()">{{note}}</div>
         </div>
     </div>
     <div class="part">
-        <h2>{{app.getScaleName()}} Scale Intervals</h2>
+        <h2>Scale Intervals</h2>
         <div class="scale-notes">
             <div class="scale-note" for="note in app.getScaleSteps()">{{note}}</div>
         </div>
     </div>
     <!-- <div class="part">
-        <h2>{{app.getScaleName()}} Scale Positions</h2>
+        <h2> Scale Positions</h2>
     </div> -->
     <div class="part">
-        <h2>{{app.getScaleName()}} Similar Scales</h2>
+        <h2>Similar Scales</h2>
         <table class="similarity">
             <tr class="similarity-header">
                 <td>Scale</td>
@@ -132,7 +138,7 @@
         </table>
     </div>
     <div class="part">
-        <h2>{{app.getScaleName()}} - Chords on scale ({{app.getScaleChords().length}})</h2>
+        <h2>Chords on scale ({{app.getScaleChords().length}})</h2>
         <div class="scale-chords">
             <div for="chord in app.getScaleChords()" onmousedown="functions.startChord(chord);"><div class="chord-name">{{chord.name}}</div><div class="chord-notes">{{chord.notes.join(' - ')}}</div></div>
         </div>
