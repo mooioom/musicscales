@@ -779,6 +779,7 @@
     }
 
     this.getURL = (key = this.settings.key, scale = this.settings.scale, view = this.settings.view) => {
+        if (this.PAGES.includes(this.route)) return `/${this.route}`;
         return `/${key}-${scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[view]}`;
     }
 
