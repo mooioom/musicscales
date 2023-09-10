@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground 2</title>
+    <script src="./js/dom.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            border-right: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+        }
+
+        .container>div {
+            width: 50%;
+            height: 50%;
+            flex-grow: 0;
+            box-sizing: border-box;
+            padding: 10px;
+            border-left: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+
+        #editor {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #efefef;
+            cursor: pointer;
+        }
+
+        .glyphs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-top: 5px;
+        }
+
+        .glyph {
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            background-color: #efefef;
+            border-radius: 5px;
+            border: 2px solid #333;
+        }
+
+        .glyph.selected {
+            border: 2px solid yellow;
+        }
+
+        button {
+            border: none;
+            background-color: #efefef;
+            border-radius: 3px;
+            font-size: 12px;
+            padding: 5px;
+        }
+
+        .editor {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor .content {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="polka">
+    <div class="container">
+        <div class="data">
+            <div class="title">Data</div>
+            <div class="menu">
+                <button onclick="ui.createGlyph()">create glyph</button>
+            </div>
+            <div class="content glyphs"></div>
+        </div>
+        <div class="editor">
+            <div class="title">Editor</div>
+            <div class="content">
+                <canvas id="editor"></canvas>
+            </div>
+        </div>
+        <div class="target">
+            <div class="title">Target</div>
+            <div class="content">
+
+            </div>
+        </div>
+        <div class="result">
+            <div class="title">Result</div>
+            <div class="content">
+
+            </div>
+        </div>
+    </div>
+    <script>
+        const $ = (s) => {
+            return document.querySelector(s);
+        }
+
+        class OCR {
+            constructor() {
+
+            }
+        }
+
+        class Glyph {
+            constructor(s = {}) {
+                this.title = s.title || 'New Glyph';
+                this.pixels = {};
+            }
+            togglePixel(x, y) {
+                if (this.pixels[`${x}_${y}`]) {
+                    return delete this.pixels[`${x}_${y}`];
+                } else {
+                    this.pixels[`${x}_${y}`] = [0, 0, 0, 1];
+                }
+            }
+        }
+
+        class UI {
+            constructor() {
+                this.ocr = new OCR;
+
+                this.glyphs = [];
+
+                this.currentGlyph = null;
+                this.currentEdited = null;
+
+                this.$glyphs = $('.glyphs');
+                this.$editor = $('#editor');
+                this.$editor.ctx = this.$editor.getContext('2d');
+
+                this.$editor.width = this.$editor.clientWidth;
+                this.$editor.height = this.$editor.clientHeight;
+
+                this.editorGrid = {
+                    width: 8,
+                    height: 8
+                }
+            }
+            createGlyph() {
+                const glyph = new Glyph;
+                this.glyphs.push(glyph);
+                this.currentGlyph = glyph;
+                this.currentEdited = glyph;
+                this.render();
+            }
+            selectGlyph(glyph) {
+                this.currentGlyph = glyph;
+                this.currentEdited = glyph;
+                this.render();
+            }
+            render() {
+                console.log(this);
+                this.renderGlyphs();
+                this.renderEditor();
+            }
+            renderGlyphs() {
+                this.$glyphs.innerHTML = '';
+                this.glyphs.forEach((glyph) => {
+                    const $glyph = DOM('.glyph', {
+                        onclick: () => {
+                            this.selectGlyph(glyph);
+                        },
+                        '/.header': {},
+                        '/.body': {
+                            '/canvas.preview': {
+
+                            }
+                        },
+                    });
+                    if (this.currentGlyph === glyph) $glyph.classList.add('selected');
+                    this.$glyphs.appendChild($glyph);
+                })
+            }
+
+            renderEditor() {
+                this.clearCanvas(this.$editor);
+                this.drawGrid(this.$editor, this.editorGrid.width, this.editorGrid.height);
+                this.drawGlyph(this.$editor, this.currentGlyph);
+                this.$editor.onclick = this.editorClick.bind(this);
+            }
+
+            clearCanvas(canvas) {
+                canvas.ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            drawRectangle(canvas, x, y, w, h, rgba=[0,0,0,1]) {
+                canvas.ctx.fillStyle = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
+                canvas.ctx.fillRect(x, y, w, h);
+            }
+
+            drawGlyph(canvas, glyph) {
+
+                if (!glyph) return;
+
+                const cellWidth = canvas.width / this.editorGrid.width;
+                const cellHeight = canvas.height / this.editorGrid.height;
+
+                Object.keys(glyph.pixels).forEach((xy) => {
+                    const p = {
+                        x: Number(xy.split('_')[0]) - 1,
+                        y: Number(xy.split('_')[1]) - 1,
+                        rgba: glyph.pixels[xy],
+                    }
+                    this.drawRectangle(this.$editor, cellWidth * p.x, cellHeight * p.y, cellWidth, cellHeight, p.rgba);
+                })
+            }
+
+            drawGrid(canvas, gridWidth, gridHeight) {
+                const ctx = canvas.ctx;
+                const cellWidth = canvas.width / gridWidth;
+                const cellHeight = canvas.height / gridHeight;
+
+                // Clear the canvas before drawing the grid
+                this.clearCanvas(canvas);
+
+                // Draw the grid lines
+                ctx.strokeStyle = '#ccc';
+                for (let x = 0; x <= canvas.width; x += cellWidth) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                    ctx.stroke();
+                }
+                for (let y = 0; y <= canvas.height; y += cellHeight) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+            }
+
+            editorClick(event) {
+                const canvas = this.$editor;
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                const cellWidth = canvas.width / this.editorGrid.width;
+                const cellHeight = canvas.height / this.editorGrid.height;
+
+                const gridWidth = canvas.width / (canvas.width / cellWidth);
+                const gridHeight = canvas.height / (canvas.height / cellHeight);
+                const gridX = Math.floor(x / cellWidth) + 1;
+                const gridY = Math.floor(y / cellHeight) + 1;
+
+                console.log(`Grid Position - X: ${gridX}, Y: ${gridY}`);
+
+                if (this.currentGlyph) {
+                    this.currentGlyph.togglePixel(gridX, gridY);
+                }
+
+                this.render();
+
+            }
+
+        }
+
+        window.ui = new UI;
+        ui.createGlyph();
+        ui.render();
+    </script>
+</body>
+
+</html>

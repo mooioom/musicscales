@@ -636,6 +636,10 @@ export const SCALES = {
         title: 'Sikah (Turkish)',
         steps: [0.75, 1, 0.75, 1, 0.75, 1.25, 0.5]
     },
+    'MAQAM_HUZAM': {
+        title: 'Huzam',
+        steps: [0.75, 1, 0.5, 1.5, 0.5, 1, 0.75]
+    },
     'MAQAM_HUSAYNI': {
         title: 'Husayni',
         steps: [0.75, 0.75, 1, 1, 0.75, 0.75, 1],

@@ -9,6 +9,20 @@ const NODE_TYPES = {
 
 const cache = {};
 const styles_caches = {};
+const scripts_caches = {};
+
+window.require = async ( url ) => {
+    let d;
+    if(scripts_caches[url]){
+        d = scripts_caches[url];
+    }else{
+        const s = await fetch(`${url}.js`);
+        d = await s.text();
+        scripts_caches[url] = d;
+    }
+    const fn = new Function(d);
+    return fn.call();
+}
 
 const getHTML = async (name) => {
     let path = `${COMPONENTS_FOLDER}/${name}.${FILE_EXTENSION}`;
@@ -179,8 +193,9 @@ export class Component {
         this.prepare();
 
         if (this.$script) {
-            let fn = new Function(this.$script.innerText);
-            fn.call(this.context);
+            const script = `return (async () => {${this.$script.innerText}})();`
+            const fn = new Function(script);
+            await fn.call(this.context);
         }
 
         this.render();
@@ -220,7 +235,7 @@ export class Component {
 
         const tagName = $el.tagName.toLowerCase();
 
-        if (tagName.startsWith(`${COMPONENTS_PREFIX}-`) || _modular.setup?.components[tagName]) {
+        if (tagName.startsWith(`${COMPONENTS_PREFIX}-`) || _modular.setup?.components.includes(tagName)) {
 
             let type, path;
 
@@ -232,7 +247,7 @@ export class Component {
             } else {
 
                 type = tagName;
-                path = _modular.setup?.components[tagName];
+                path = tagName;
 
             }
 

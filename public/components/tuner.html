@@ -1,0 +1,105 @@
+<style></style>
+<script>
+
+    const detectors = await require('./js/pitchDetectors');
+
+    console.log(detectors);
+
+    function getNoteAndOctave(frequency) {
+        const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const baseFrequency = 16.35; // C0 frequency in Hz
+        const baseOctave = 0; // C0 octave number
+
+        // Calculate the distance from C0 in semitones
+        const semitones = 12 * (Math.log2(frequency) - Math.log2(baseFrequency));
+
+        // Calculate the note index and octave
+        const noteIndex = Math.round(semitones) % 12;
+        const octave = baseOctave + Math.floor(semitones / 12);
+
+        // Calculate the cents off
+        const centsOff = Math.round((semitones - Math.round(semitones)) * 100);
+
+        // Get the note name
+        const note = noteNames[noteIndex];
+
+        return {
+            note,
+            octave,
+            centsOff
+        };
+    }
+
+    class PitchDetector {
+        constructor() {
+            this.audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            this.analyser = this.audioContext.createAnalyser();
+            this.processor = this.audioContext.createScriptProcessor(1024, 1, 1);
+            this.currentPitch = null;
+        }
+
+        start() {
+            navigator.mediaDevices.getUserMedia({
+                    audio: true
+                })
+                .then(stream => {
+                    const microphone = this.audioContext.createMediaStreamSource(stream);
+
+                    microphone.connect(this.analyser);
+                    this.analyser.connect(this.processor);
+                    this.processor.connect(this.audioContext.destination);
+
+                    this.processor.onaudioprocess = (event) => {
+                        const audioData = event.inputBuffer.getChannelData(0);
+                        const pitch = this.detectPitch(audioData);
+                        const gain = this.detectGain(audioData);
+                        this.currentPitch = pitch;
+                        this.currentGain = gain;
+                        console.log(pitch, gain, getNoteAndOctave(pitch));
+                    };
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                });
+        }
+
+        detectGain(audioData) {
+            let sumSquared = 0;
+            for (let i = 0; i < audioData.length; i++) {
+                sumSquared += audioData[i] * audioData[i];
+            }
+
+            // Calculate the root mean square (RMS) value
+            const rms = Math.sqrt(sumSquared / audioData.length);
+
+            // Convert RMS to decibels (dB)
+            const gain = 20 * Math.log10(rms);
+
+            return gain;
+        }
+
+        detectPitch(audioData) {
+            // return detectors.Yin(audioData);
+            // return detectors.Macleod(audioData);
+            return detectors.AMDFDetector(audioData);
+            // return detectors.DynamicWaveletDetector(audioData);
+        }
+
+        getCurrentPitch() {
+            return this.currentPitch;
+        }
+
+        stop() {
+            this.processor.disconnect();
+            this.analyser.disconnect();
+        }
+    }
+
+    this.startTuner = () => {
+        window.pd = new PitchDetector();
+        pd.start();
+    }
+</script>
+<div>
+    <button title="123" onclick="this.startTuner"></button>
+</div>

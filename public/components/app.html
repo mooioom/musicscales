@@ -317,9 +317,15 @@
         [VIEW_TO_URL[this.VIEWS.DETAILS]]: this.VIEWS.DETAILS,
     }
 
-    this.PAGES = [
+    this.ROUTES = [
         'sitemap',
         'details',
+        'tuner',
+    ];
+
+    this.MENU_ROUTES = [
+        '',
+        'details'
     ];
 
     const INSTRUMENT_TYPES = {
@@ -437,19 +443,19 @@
 
         this.setTheme();
 
-        const path = location.href.split(location.origin)[1].slice(1);
+        var route = location.href.split(location.origin)[1].slice(1);
 
-        if (path) {
-            if (this.PAGES.includes(path)) this.route = path;
+        if (route) {
+            if (this.ROUTES.includes(route)) this.route = route;
             else {
-                const pathParts = path.split('/');
-                const pathScale = pathParts[0];
-                const pathKey = pathScale.split('-')[0];
-                const pathScaleName = pathScale.split('-').slice(1).join('_').toUpperCase();
-                const pathView = pathParts[1];
-                this.settings.key = pathKey;
-                this.settings.scale = pathScaleName;
-                if (pathView) this.settings.view = URL_TO_VIEW[pathView];
+                const routeParts = route.split('/');
+                const routeScale = routeParts[0];
+                const routeKey = routeScale.split('-')[0];
+                const routeScaleName = routeScale.split('-').slice(1).join('_').toUpperCase();
+                const routeView = routeParts[1];
+                this.settings.key = routeKey;
+                this.settings.scale = routeScaleName;
+                if (routeView) this.settings.view = URL_TO_VIEW[routeView];
                 if (this.settings.view === this.VIEWS.DETAILS) this.route = 'details';
                 this.setURL();
             }
@@ -779,7 +785,7 @@
     }
 
     this.getURL = (key = this.settings.key, scale = this.settings.scale, view = this.settings.view) => {
-        if (this.PAGES.includes(this.route)) return `/${this.route}`;
+        if (this.ROUTES.includes(this.route)) return `/${this.route}`;
         return `/${key}-${scale.toLowerCase().replaceAll('_','-')}/${VIEW_TO_URL[view]}`;
     }
 
@@ -869,7 +875,10 @@
     <div class="page" if="this.route === 'details'">
         <scale-details></scale-details>
     </div>
-    <menu></menu>
+    <div class="page" if="this.route === 'tuner'">
+        <tuner></tuner>
+    </div>
+    <menu if="this.MENU_ROUTES.includes(this.route)"></menu>
     <sidebar></sidebar>
     <popup></popup>
     <drawer></drawer>
