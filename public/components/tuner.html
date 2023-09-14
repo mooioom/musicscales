@@ -1,9 +1,7 @@
 <style></style>
 <script>
 
-    const detectors = await require('./js/pitchDetectors');
-
-    console.log(detectors);
+    const PitchDetectors = await require('./js/pitchDetectors');
 
     function getNoteAndOctave(frequency) {
         const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -32,10 +30,14 @@
 
     class PitchDetector {
         constructor() {
-            this.audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            this.audioContext = new(window.AudioContext || window.webkitAudioContext)(
+                { sampleRate: 32000 }
+            );
+            this.pitchDetectors = new PitchDetectors(this.audioContext);
             this.analyser = this.audioContext.createAnalyser();
             this.processor = this.audioContext.createScriptProcessor(1024, 1, 1);
             this.currentPitch = null;
+            window.ctx = this.audioContext;
         }
 
         start() {
@@ -55,7 +57,7 @@
                         const gain = this.detectGain(audioData);
                         this.currentPitch = pitch;
                         this.currentGain = gain;
-                        console.log(pitch, gain, getNoteAndOctave(pitch));
+                        console.log(pitch, getNoteAndOctave(pitch));
                     };
                 })
                 .catch(error => {
@@ -79,10 +81,10 @@
         }
 
         detectPitch(audioData) {
-            // return detectors.Yin(audioData);
-            // return detectors.Macleod(audioData);
-            return detectors.AMDFDetector(audioData);
-            // return detectors.DynamicWaveletDetector(audioData);
+            // return this.pitchDetectors.Yin(audioData); // not good
+            // return this.pitchDetectors.Macleod(audioData); // better
+            return this.pitchDetectors.AMDFDetector(audioData); // better
+            // return this.pitchDetectors.DynamicWaveletDetector(audioData);
         }
 
         getCurrentPitch() {

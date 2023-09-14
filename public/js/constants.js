@@ -624,6 +624,10 @@ export const SCALES = {
         title: 'Rast',
         steps: [1, 0.75, 0.75, 1, 1, 0.75, 0.75]
     },
+    'MAQAM_SUZNAK': {
+        title: 'Suznak',
+        steps: [1, 0.75, 0.75, 1, 0.5, 1.5, 0.5]
+    },
     'MAQAM_SABA': {
         title: 'Saba',
         steps: [0.75, 0.75, 0.5, 1.5, 0.5, 1, 1]

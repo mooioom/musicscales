@@ -2,9 +2,9 @@ var amd = [];
 
 class PitchDetectors {
 
-    constructor( s = {} ) {
+    constructor( audioContext ) {
 
-        this.sampleRate = s.sampleRate || 48000;
+        this.sampleRate = audioContext.sampleRate || 44100;
 
     }
 
@@ -542,4 +542,4 @@ class PitchDetectors {
     }
 }
 
-return new PitchDetectors;
+return PitchDetectors;
