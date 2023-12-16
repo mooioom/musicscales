@@ -731,6 +731,8 @@ Object.keys(SCALES).forEach((s)=>{
 
 export const TET24 = new Array(24).fill(0.25);
 
+export const TET12 = new Array(12).fill(0.5);
+
 export const ACCIDENTALS = {
     FLAT: 'FLAT',
     SHARP: 'SHARP',

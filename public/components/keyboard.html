@@ -1,0 +1,81 @@
+<style>
+    .keyboard {
+        width: 12px;
+    }
+
+    .keyboard-key {
+        cursor: pointer;
+        border-bottom: 1px solid #ccc;
+        position: relative;
+    }
+
+    .keyboard-key .keyboard-tooltip{
+        position: absolute;
+        font-size: 18px;
+        background-color: #000;
+        color: #fff;
+        left: 100%;
+        z-index: 9;
+        padding: 5px;
+        border-radius: 10px;
+        pointer-events: none;
+    }
+
+    .keyboard .key-playing {
+        background-color: #e91e63 !important;
+    }
+
+    .keyboard-key:hover {
+        background-color: #c8c8c8;
+    }
+
+    .white-keys {
+        height: 100%;
+    }
+
+    .black-keys {
+        height: 100%;
+        position: absolute;
+        top: 0;
+    }
+</style>
+<script>
+    this.keys = nigun.getScale({
+        root: 'C2',
+        steps: CONSTANTS.TET24,
+        align: false,
+        octaves: 4
+    });
+    this.playing = {};
+    this.removeTooltip = () => {
+        if (this.$tooltip) {
+            this.$tooltip.parentElement.removeChild(this.$tooltip)
+            delete this.$tooltip;
+        }
+    }
+    this.keys.forEach(k => {
+        const $k = DOM('.keyboard-key', {});
+        $k.style.height = `calc(100% / ${this.keys.length})`;
+        $k.onclick = () => {
+            if (this.playing[k.uniformFullname]) {
+                $k.classList.remove('key-playing');
+                this.playing[k.uniformFullname]._stop();
+                delete this.playing[k.uniformFullname];
+                return;
+            }
+            this.playing[k.uniformFullname] = nigun.instruments.keyboard.startFrequency(k.fq);
+            $k.classList.add('key-playing');
+        };
+        $k.onmouseenter = () => {
+            this.removeTooltip();
+            this.$tooltip = DOM('.keyboard-tooltip', {
+                innerHTML: k.uniformFullname
+            });
+            $k.appendChild(this.$tooltip);
+        };
+        $k.onmouseleave = this.removeTooltip;
+        this.keyboard.appendChild($k);
+    });
+</script>
+<div class="keyboard" ref="keyboard">
+</div>
