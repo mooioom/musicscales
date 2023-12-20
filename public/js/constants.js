@@ -652,6 +652,16 @@ export const SCALES = {
         title: 'Nikriz',
         steps: [1, 0.5, 1.5, 0.5, 1, 0.5, 1],
     },
+    'MAQAM_JIHARKAH': {
+        title: 'Jiharkah',
+        original: 'e𝄳',
+        steps: [0.75, 1, 1, 0.5, 1, 1, 0.75],
+    },
+    'MAQAM_NAWA_ATHAR': {
+        title: 'Nawa Athar',
+        original: 'c',
+        steps: [1, 0.5, 1.5, 0.5, 0.5, 1.5, 0.5],
+    },
     'AUGMENTED': {
         title: 'Augmented',
         steps: [1.5, 0.5, 1.5, 0.5, 1.5, 0.5]
