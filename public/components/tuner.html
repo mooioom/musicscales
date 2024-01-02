@@ -1,6 +1,9 @@
-<style></style>
-<script>
+<style>
+    .tuner{
 
+    }
+</style>
+<script>
     const PitchDetectors = await require('./js/pitchDetectors');
 
     function getNoteAndOctave(frequency) {
@@ -29,14 +32,20 @@
     }
 
     class PitchDetector {
-        constructor() {
-            this.audioContext = new(window.AudioContext || window.webkitAudioContext)(
-                { sampleRate: 32000 }
-            );
+        constructor(settings = {}) {
+            const DEFAULTS = {
+                onpitch: (pitch, data, gain)=>{
+                    console.log(pitch, data, gain);
+                },
+            };
+            this.audioContext = new(window.AudioContext || window.webkitAudioContext)({
+                sampleRate: 32000
+            });
             this.pitchDetectors = new PitchDetectors(this.audioContext);
             this.analyser = this.audioContext.createAnalyser();
             this.processor = this.audioContext.createScriptProcessor(1024, 1, 1);
             this.currentPitch = null;
+            this.settings = Object.assign(DEFAULTS, settings);
             window.ctx = this.audioContext;
         }
 
@@ -57,7 +66,7 @@
                         const gain = this.detectGain(audioData);
                         this.currentPitch = pitch;
                         this.currentGain = gain;
-                        console.log(pitch, getNoteAndOctave(pitch));
+                        this.settings.onpitch(pitch, getNoteAndOctave(pitch), gain);
                     };
                 })
                 .catch(error => {
@@ -97,11 +106,33 @@
         }
     }
 
+    this.data = [];
+
     this.startTuner = () => {
-        window.pd = new PitchDetector();
+        window.pd = new PitchDetector({
+            onpitch: (pitch, note, gain)=>{
+                this.data.push({
+                    pitch,
+                    note,
+                    gain,
+                });
+                console.log(pitch,note);
+                this.note.innerHTML = note.note || '-';
+                this.octave.innerHTML = note.octave && isFinite(note.octave) ? note.octave : '-';
+                this.cents.innerHTML = note.centsOff || '-';
+                this.fq.innerHTML = pitch ? pitch.toFixed(2) : '-' || '-';
+            }
+        });
         pd.start();
     }
+
 </script>
 <div>
     <button title="123" onclick="this.startTuner"></button>
+    <div class="tuner">
+        <div class="note" ref="note"></div>
+        <div class="octave" ref="octave"></div>
+        <div class="cents" ref="cents"></div>
+        <div class="fq" ref="fq"></div>
+    </div>
 </div>

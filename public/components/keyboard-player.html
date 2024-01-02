@@ -40,7 +40,7 @@
             })
             if (instrument.type === 'SAMPLER') return; // to allow natural fade
             if (sourceByKeys[keyId]) {
-                sourceByKeys[keyId].stop();
+                sourceByKeys[keyId]._stop();
                 delete sourceByKeys[keyId];
             }
         }

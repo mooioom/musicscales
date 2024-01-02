@@ -592,6 +592,14 @@ export const SCALES = {
         title: 'Acoustic',
         steps: [1, 1, 1, 0.5, 1, 0.5, 1],
     },
+    'MAQAM_AJAM': {
+        title: 'Ajam',
+        steps: [1, 1, 0.5, 1, 1, 1, 0.5],
+    },
+    'MAQAM_AJAM_NAHAWAND': {
+        title: 'Ajam (Nahawand)',
+        steps: [1, 1, 0.5, 1, 1, 0.5, 1],
+    },
     'MAQAM_BAYATI': {
         title: 'Bayati',
         steps: [0.75, 0.75, 1, 1, 0.5, 1, 1],
