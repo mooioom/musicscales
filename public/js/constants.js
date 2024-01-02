@@ -594,11 +594,26 @@ export const SCALES = {
     },
     'MAQAM_AJAM': {
         title: 'Ajam',
+        originalNote: 'C',
         steps: [1, 1, 0.5, 1, 1, 1, 0.5],
     },
     'MAQAM_AJAM_NAHAWAND': {
         title: 'Ajam (Nahawand)',
+        originalNote: 'C',
         steps: [1, 1, 0.5, 1, 1, 0.5, 1],
+    },
+    'MAQAM_AJAM_USHAYRAN': {
+        title: 'Ajam Ushayran',
+        originalNote: 'Bb',
+        steps: [1, 1, 0.5, 1, 1, 1, 0.5],
+    },
+    'MAQAM_ATHAR_KURD': {
+        title: 'Athar Kurd',
+        steps: [0.5, 1, 1.5, 0.5, 0.5, 1.5, 0.5]
+    },
+    'MAQAM_AWJ_IRAQ': {
+        title: 'Awj Iraq',
+        steps: [0.75, 1, 0.5, 1.5, 0.5, 1.5, 0.25]
     },
     'MAQAM_BAYATI': {
         title: 'Bayati',
@@ -662,12 +677,12 @@ export const SCALES = {
     },
     'MAQAM_JIHARKAH': {
         title: 'Jiharkah',
-        original: 'e𝄳',
+        originalNote: 'e𝄳',
         steps: [0.75, 1, 1, 0.5, 1, 1, 0.75],
     },
     'MAQAM_NAWA_ATHAR': {
         title: 'Nawa Athar',
-        original: 'c',
+        originalNote: 'c',
         steps: [1, 0.5, 1.5, 0.5, 0.5, 1.5, 0.5],
     },
     'AUGMENTED': {
