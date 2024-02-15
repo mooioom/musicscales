@@ -132,7 +132,7 @@
             </tr>
             <tr for="scale in app.getSimilarScales(undefined, 2)">
                 <td onclick="console.log(scale.name)">{{scale.title}}</td>
-                <td>{{scale.diff ? scale.diff / 4 : '-'}}</td>
+                <td>{{scale.diff ? scale.diff / 4 : 'Same'}}</td>
                 <td>{{scale.notes.join(' · ')}}</td>
             </tr>
         </table>

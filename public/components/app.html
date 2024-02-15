@@ -654,7 +654,7 @@
         const allUniformed = TET24.map(a=>(a.uniformFullname));
         const similarScales = [];
         Object.keys(CONSTANTS.SCALES).forEach(scaleName=>{
-            // if(compareScale === scaleName) return;
+            if(compareScale === scaleName) return;
             const scale2 = this.getScaleSingleOctave(undefined, undefined, scaleName);
             if(scale.length !== scale2.length) return;
             const scale2Uniformed = scale2.map(a=>(a.uniformFullname));

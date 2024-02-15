@@ -619,9 +619,17 @@ export const SCALES = {
         title: 'Bayati',
         steps: [0.75, 0.75, 1, 1, 0.5, 1, 1],
     },
+    'MAQAM_BAYATI_SHURI': {
+        title: 'Bayati Shuri',
+        steps: [0.75, 0.75, 1, 0.5, 1.5, 0.5, 1],
+    },
     'MAQAM_BAYATI_RAST': {
         title: 'Bayati (Rast)',
         steps: [0.75, 0.75, 1, 1, 0.75, 0.75, 1]
+    },
+    'MAQAM_FARAHFAZA': {
+        title: 'Farahfaza',
+        steps: [1, 0.5, 1, 1, 0.5, 1.5, 0.5]
     },
     'MAQAM_HIJAZ_RAST': {
         title: 'Hijaz (Rast)',
@@ -641,7 +649,7 @@ export const SCALES = {
     },
     'MAQAM_NAHAWAND': {
         title: 'Nahawand',
-        steps: [1, 0.5, 1, 1, 0.5, 1, 1]
+        steps: [1, 0.5, 1, 1, 0.5, 1.5, 0.5]
     },
     'MAQAM_RAST': {
         title: 'Rast',
@@ -662,6 +670,10 @@ export const SCALES = {
     'MAQAM_SIKAH_TURKISH': {
         title: 'Sikah (Turkish)',
         steps: [0.75, 1, 0.75, 1, 0.75, 1.25, 0.5]
+    },
+    'MAQAM_IRAQ': {
+        title: 'Iraq',
+        steps: [0.75, 1, 0.75, 0.75, 1, 1, 0.75]
     },
     'MAQAM_HUZAM': {
         title: 'Huzam',
