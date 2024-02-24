@@ -1,14 +1,19 @@
 <style>
-    .eq{
-        width: 400px;
+    .eq {
+        width: 300px;
+    }
+
+    .video {
+        width: 80px;
     }
 </style>
 <script>
-
     let equalizer;
+    let soundSource;
+    var audioContext = new(window.AudioContext || window.webkitAudioContext)();
 
     this.onselect = () => {
-        this.video.click();
+        this.videoInput.click();
     }
 
     function getBuffer(file) {
@@ -27,20 +32,23 @@
         });
     }
 
-    this.video.addEventListener('change', () => {
-        if (this.video.files && this.video.files[0]) {
-            var file = this.video.files[0];
+    this.videoInput.addEventListener('change', () => {
+        if (this.videoInput.files && this.videoInput.files[0]) {
+            var file = this.videoInput.files[0];
+
+            this.video.src = URL.createObjectURL(file);
+            this.video.load();
+
             // Do something with the selected video file.
             console.log('Selected video file:', file);
 
-            var audioContext = new(window.AudioContext || window.webkitAudioContext)();
             var fileData = new Blob([file]);
             var videoFileAsBuffer = getBuffer(file);
 
-            videoFileAsBuffer.then(function (data) {
-                audioContext.decodeAudioData(data).then(function (decodedAudioData) {
+            videoFileAsBuffer.then((data) => {
+                audioContext.decodeAudioData(data).then((decodedAudioData) => {
                     var mySoundBuffer = decodedAudioData;
-                    var soundSource = audioContext.createBufferSource();
+                    soundSource = audioContext.createBufferSource();
                     soundSource.buffer = mySoundBuffer;
 
                     // Create an Equalizer
@@ -53,26 +61,61 @@
                     soundSource.connect(equalizer);
                     equalizer.connect(audioContext.destination);
 
-                    soundSource.start();
+                    // soundSource.start();
+
+                    // this.video.volume = 0;
+                    // this.video.play();
 
                 });
             });
         }
     })
 
-    this.setGain = (v)=>{
-        if(equalizer){
+    this.setGain = (v) => {
+        if (equalizer) {
             equalizer.frequency.value = 2500;
-            equalizer.gain.value = -10 + v;
+            equalizer.gain.value = -20 + v;
         }
     }
 
+    this.download = () => {
+        if (soundSource) {
+            const audioDestination = audioContext.createMediaStreamDestination();
+            equalizer.connect(audioDestination);
+            const combinedStream = new MediaStream([this.video.captureStream().getVideoTracks()[0],
+                audioDestination.stream.getAudioTracks()[0]
+            ]);
+            const mediaRecorder = new MediaRecorder(combinedStream, {
+                mimeType: 'video/webm'
+            });
+            const recordedData = [];
+            mediaRecorder.ondataavailable = (event) => {
+                recordedData.push(event.data);
+            };
+            mediaRecorder.start();
+            soundSource.start();
+            this.video.play();
+            setTimeout(() => {
+                mediaRecorder.stop();
+                setTimeout(() => {
+                    const combinedData = new Blob(recordedData, {
+                        type: 'video/webm'
+                    });
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(combinedData);
+                    downloadLink.download = 'video_with_modified_audio.webm';
+                    downloadLink.click();
+                }, 100)
+            }, 5000); // Example: Stop recording after 10 seconds
+        }
+    }
 </script>
 <div>
     <div id="select-video-button" onclick="this.onselect($event)">Select Video</div>
-    <input ref="video" type="file" id="video-input" accept="video/mp4" style="display: none;" />
+    <input ref="videoInput" type="file" id="video-input" accept="video/mp4" style="display: none;" />
+    <video class="video" ref="video"></video>
     <div class="eq">
-        <slider onchange="(v)=>{ this.setGain(v) }" min="0" max="20" value="10" size="20"></slider>
+        <slider onchange="(v)=>{ this.setGain(v) }" min="0" max="40" value="20" size="20"></slider>
     </div>
-    
+    <div onclick="this.download($event)">Export & Download</div>
 </div>
