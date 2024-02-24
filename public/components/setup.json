@@ -36,6 +36,7 @@
         "mixer-instrument",
         "drawer",
         "scale-details",
-        "tuner"
+        "tuner",
+        "video-editor"
     ]
 }
