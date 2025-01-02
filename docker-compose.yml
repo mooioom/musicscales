@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  music-scales:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5080:80"
+    volumes:
+      - ./public:/app/public
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge 

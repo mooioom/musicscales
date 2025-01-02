@@ -1,5 +1,12 @@
 {
+  "name": "music-scales",
+  "version": "1.0.0",
+  "description": "A microtonal (24TET) app to create and explore music scales and maqams",
+  "main": "app.js",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
